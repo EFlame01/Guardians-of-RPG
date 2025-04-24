@@ -17,9 +17,14 @@ public class NPCCompanion : MonoBehaviour
     [SerializeField] public string cutSceneFlag;
     private float _speed;
     private int lastIndex = 0;
-
     private NpcData _npcData;
 
+    /// <summary>
+    /// When enabled, NPCCompanion will check the NPC data
+    /// to ensure that the character is in the last position
+    /// it was saved in, and whether or not the gameObject should
+    /// be active based on the Save data.
+    /// </summary>
     public void OnEnable()
     {
         _npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
@@ -37,12 +42,32 @@ public class NPCCompanion : MonoBehaviour
                 Destroy(gameObject);
     }
 
+    /// <summary>
+    /// When stated, NPCCompanion will set the NPC's speed
+    /// to the player's speed, and sets the start position
+    /// of the NPC Companion.
+    /// </summary>
     private void Start()
     {
         _speed = GameManager.Instance.PlayerSpeed;
         InitPosition();
     }
 
+    /// <summary>
+    /// At every frame, NPCCompanion will check
+    /// if the WayPoints should be reset based on
+    /// the method <c>CheckToClearWayPoints</c>
+    /// </summary>
+    private void Update()
+    {
+        CheckToClearWayPoints();
+    }
+
+    /// <summary>
+    /// During the fixed update, NPCCompanion will 
+    /// check the WayPoints and travel to them at 
+    /// every frame the player moves.
+    /// </summary>
     private void FixedUpdate()
     {
         if(CanMove())
@@ -90,11 +115,8 @@ public class NPCCompanion : MonoBehaviour
     private void InitPosition()
     {
         //CHECK IF CHARACTER SHOULD MOVE
-        if(ApartOfCutScene())
-        {
-            targetPos.ClearWayPoints();
+        if(CheckToClearWayPoints())
             return;
-        }
         
         Vector3 position = targetPos.Position;
         PlayerDirection direction = targetPos.Direction;
@@ -133,13 +155,59 @@ public class NPCCompanion : MonoBehaviour
     /// <returns>True if the NPC can travel, false otherwise.</returns>
     private bool CanMove()
     {
-        return !ApartOfCutScene() && targetPos.WayPoints.Count > lastIndex;
+        return !InCutScene() && targetPos.WayPoints.Count > lastIndex;
     }
 
-    private bool ApartOfCutScene()
+    /// <summary>
+    /// CheckToClearWayPoints determines if the 
+    /// WayPoints should be cleared based on the 
+    /// method <c>InCutScene</c>. If it is the case, 
+    /// it will clear the WayPoints for the character
+    /// and the target and return TRUE. otherwise, 
+    /// it will return FALSE.
+    /// </summary>
+    /// <returns><c>TRUE</c> if InCutScene() is true, <c>FALSE</c> if otherwise</returns>
+    private bool CheckToClearWayPoints()
     {
+        if(InCutScene())
+        {
+            charPos.ClearWayPoints();
+            targetPos.ClearWayPoints();
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// InCutScene() checks if the NPCCompanion is attached to a cut
+    /// scene or is currently in a cut scene. If it meets one of these
+    /// criteria, it will return TRUE. If it does not, it will return 
+    /// FALSE.
+    /// </summary>
+    /// <returns><c>TRUE</c> if in or attached to a cutscene. <c>FALSE</c> if otherwise.</returns>
+    private bool InCutScene()
+    {
+        if(cutSceneFlag == null || cutSceneFlag.Length == 0)
+            return false;
         if(StoryFlagManager.FlagDictionary[cutSceneFlag] == null)
             return false;
-        return StoryFlagManager.FlagDictionary[cutSceneFlag].Value == false;
+        if(StoryFlagManager.FlagDictionary[cutSceneFlag].Value == false)
+            return true;
+            
+        switch(GameManager.Instance.PlayerState)
+        {
+            case PlayerState.MOVING:
+            case PlayerState.NOT_MOVING:
+                return false;
+            case PlayerState.PAUSED:
+            case PlayerState.CUT_SCENE:
+            case PlayerState.TRANSITION:
+            case PlayerState.INTERACTING_WITH_OBJECT:
+            case PlayerState.CANNOT_MOVE:
+                return true;
+            default:
+                return true;
+
+        }
     }
 }
