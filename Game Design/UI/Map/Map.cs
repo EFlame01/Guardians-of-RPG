@@ -8,7 +8,7 @@ using TMPro.Examples;
 using System;
 using UnityEngine.SceneManagement;
 
-public class Map : MonoBehaviour
+public class Map : ButtonUI
 {
     [SerializeField] Button mapButton;
     [SerializeField] Camera mapCamera;
@@ -23,33 +23,10 @@ public class Map : MonoBehaviour
     private static string sceneName = "Tiro Town";
 
 
-    public void Start()
+    public override void Start()
     {
+        base.Start();
         ResetMapAtStart();
-    }
-
-    public void Update()
-    {
-        if(mapButton != null)
-        {
-            bool canBePressed = CanBePressed();
-            mapButton.interactable = canBePressed;
-        }
-    }
-
-    public bool CanBePressed()
-    {
-        return GameManager.Instance.PlayerState switch
-        {
-            PlayerState.MOVING => true,
-            PlayerState.NOT_MOVING => true,
-            PlayerState.PAUSED => false,
-            PlayerState.CANNOT_MOVE => false,
-            PlayerState.CUT_SCENE => false,
-            PlayerState.TRANSITION => false,
-            PlayerState.INTERACTING_WITH_OBJECT => false,
-            _ => false,
-        };
     }
 
     public static string GetSceneName()
@@ -133,7 +110,7 @@ public class Map : MonoBehaviour
         }
         cg.alpha = value;
 
-        cg.interactable = value == 1f ? true : false;
+        cg.interactable = value == 1f;
     }
 
     private IEnumerator ChangeCameraLocation(LocationInformation locationInformation)
@@ -160,7 +137,6 @@ public class Map : MonoBehaviour
 
     private void ExitMap()
     {
-        //TODO: Make function to send player back to previous location
         GameManager.Instance.PlayerState = PlayerState.TRANSITION;
         SceneLoader.walkInAnimation = false;
         SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);

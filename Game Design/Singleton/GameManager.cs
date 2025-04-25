@@ -12,6 +12,7 @@ public class GameManager : PersistentSingleton<GameManager>
     public bool EnableTouchPad = false;
 
     public bool EnableNarrationInputs = true;
+    public bool EnableButtons = true;
 
     public string Leaning = "FEMALE";
 
@@ -21,6 +22,21 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         base.Awake();
         SaveSystem.LoadSettingsData();
+    }
+
+    private void Update()
+    {
+        EnableButtons = Instance.PlayerState switch
+        {
+            PlayerState.MOVING => true,
+            PlayerState.NOT_MOVING => true,
+            PlayerState.PAUSED => false,
+            PlayerState.CANNOT_MOVE => false,
+            PlayerState.CUT_SCENE => false,
+            PlayerState.TRANSITION => false,
+            PlayerState.INTERACTING_WITH_OBJECT => false,
+            _ => false,
+        };
     }
 
     public static void SaveGame()

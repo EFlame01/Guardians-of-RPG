@@ -5,9 +5,10 @@ public class ButtonUI : MonoBehaviour
 {
 
     [SerializeField] private string _soundEffect;
-    private Button _button;
+    [SerializeField] private bool _narrationButton = true;
+    protected Button _button;
 
-    public void Start()
+    public virtual void Start()
     {
         _button = gameObject.GetComponent<Button>();
         AddButtonSound();
@@ -25,8 +26,12 @@ public class ButtonUI : MonoBehaviour
     /// </summary>
     private void EnableButton()
     {
-        if(_button != null)
+        if(_button == null)
+            return;
+        if(_narrationButton)
             _button.interactable = GameManager.Instance.EnableNarrationInputs;
+        else
+            _button.interactable = GameManager.Instance.EnableButtons;
     }
 
     /// <summary>

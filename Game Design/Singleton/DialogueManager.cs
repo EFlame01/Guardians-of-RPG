@@ -198,6 +198,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         _currentTextBox.ResetScrollBar();
         string displayText;
         int alphaIndex = 0;
+        GameManager.Instance.EnableNarrationInputs = false;
 
         for(int i = 0; i < _originalText.Length; i++)
         {
@@ -212,6 +213,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         AudioManager.Instance.StopSoundEffect("scroll_05");
 
         _dialogueIsPlaying = false;
+        GameManager.Instance.EnableNarrationInputs = true;
     }
 
     private void EndDialogue()
