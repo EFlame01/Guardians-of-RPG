@@ -12,6 +12,7 @@ using TMPro;
 /// </summary>
 public class OptionsMenu : MenuState
 {
+    //Serialize variables
     [SerializeField] private SliderBar volumeSlider;
     [SerializeField] private TextMeshProUGUI volumeValueText;
     [SerializeField] private GameObject sfxOn;
@@ -24,6 +25,10 @@ public class OptionsMenu : MenuState
         SetUpOptions();
     }
 
+    /// <summary>
+    /// Changes the volume dynamically
+    /// in game.
+    /// </summary>
     public void OnVolumeSliderChange()
     {
         int volumeVal = (int) (volumeSlider.slider.value);
@@ -32,17 +37,28 @@ public class OptionsMenu : MenuState
         AudioManager.Instance.AdjustVolume();
     }
 
+    /// <summary>
+    /// Turns sfx on or off depending on
+    /// the <paramref name="sfx"/> variable.
+    /// </summary>
+    /// <param name="sfx">boolean value that determines if sfx should be on or off.</param>
     public void OnSFXButtonPressed(bool sfx)
     {
         GameManager.Instance.GameSFX = sfx;
     }
 
+    /// <summary>
+    /// Saves the game.
+    /// </summary>
     public void OnSaveButtonPressed()
     {
         //TODO: optional - ask if they are sure they want to save progress
         GameManager.SaveGame();
     }
 
+    /// <summary>
+    /// Exits the game.
+    /// </summary>
     public void OnExitButtonPressed()
     {
         //TODO: optional - ask if they are sure they want to exit game
