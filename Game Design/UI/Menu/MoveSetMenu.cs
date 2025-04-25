@@ -4,8 +4,17 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+/// <summary>
+/// MoveMenu is a class that extends the
+/// <c>MenuState</c> class. MoveMenu
+/// allows you to look at the <c>Player</c>'s entire
+/// mopve-list divided into 2 parts: The Move List and
+/// the Move Set, along with the ability 
+/// to add and removes moves from the Move Set.
+/// </summary>
 public class MoveSetMenu : MenuState
 {
+    //Serialized Variables
     [SerializeField] private TextMeshProUGUI moveNameText;
     [SerializeField] private TextMeshProUGUI moveTypeText;
     [SerializeField] private TextMeshProUGUI movePowerText;
@@ -19,6 +28,7 @@ public class MoveSetMenu : MenuState
     [SerializeField] private Button removeButton;
     [SerializeField] private Button addButton;
 
+    //private variables
     private Move chosenBattleMove;
     private Move chosenMoveLearned;
 
@@ -36,34 +46,42 @@ public class MoveSetMenu : MenuState
         removeButton.interactable = chosenBattleMove != null;
     }
 
+    /// <summary>
+    /// Determines if a move can be removed from
+    /// the Battle Moves slot. After displaying
+    /// the results, it will then remove the move
+    /// from the Battle Moves slot if it is not the 
+    /// sole move in there.
+    /// </summary>
     public void OnRemoveButtonPressed()
     {
         Player player = Player.Instance();
-        if(player.MoveManager.TotalBattleMoves() == 1)
-        {
-            //TODO: narrate player needs at least one battle move
-            Debug.Log("Player needs to have at least one move in battle slot");
-        }
-        else
-        {
+        string results = CanRemoveMove();
+
+        if(player.MoveManager.TotalBattleMoves() > 1)
             player.MoveManager.RemoveBattleMove(chosenBattleMove.Name);
-            SetUpMoveSets();
-        }
+
+        SetUpMoveSets();
+        moveDescText.text = results;
     }
 
+    /// <summary>
+    /// Determines if a move can be added to the
+    /// Battle Moves slot. After displaying the
+    /// results, it will then add the move to the
+    /// Battle Moves slot if there is room in the 
+    /// Battle Moves slot for it.
+    /// </summary>
     public void OnAddButtonPressed()
     {
         Player player = Player.Instance();
-        if(player.MoveManager.TotalBattleMoves() == 4)
-        {
-            //TODO: narrate battle move slot is full.
-            Debug.Log("Battle Slot is full");
-        }
-        else
-        {
+        string results = CanAddMove();
+
+        if(player.MoveManager.TotalBattleMoves() < 4)
             player.MoveManager.AddToBattleMoves(chosenMoveLearned.Name);
-            SetUpMoveSets();
-        }
+        
+        SetUpMoveSets();
+        moveDescText.text = results;
     }
 
     private void SetUpMoveSets()
@@ -112,7 +130,7 @@ public class MoveSetMenu : MenuState
 
     private void DisplayMoveInformation()
     {
-        Move chosenMove = chosenBattleMove != null ? chosenBattleMove : chosenMoveLearned;
+        Move chosenMove = chosenBattleMove ?? chosenMoveLearned;
         
         if(chosenMove == null)
             return;
@@ -125,7 +143,7 @@ public class MoveSetMenu : MenuState
         moveDescText.text = chosenMove.Description;
     }
 
-    public void ClearMoves()
+    private void ClearMoves()
     {
         foreach(Transform child in battleMovesLayout)
         {
@@ -135,5 +153,19 @@ public class MoveSetMenu : MenuState
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private string CanRemoveMove()
+    {
+        if(Player.Instance().MoveManager.TotalBattleMoves() > 1)
+            return chosenBattleMove.Name + " was removed from the Battle Moves slot!";
+        return "You need at least one move in the Battle Moves slot...";
+    }
+
+    private string CanAddMove()
+    {
+        if(Player.Instance().MoveManager.TotalBattleMoves() < 4)
+            return chosenMoveLearned.Name + " was added to the Battle Moves slot!";
+        return "You have no room in your Battle Moves slot. Try removing a move in the list first.";
     }
 }
