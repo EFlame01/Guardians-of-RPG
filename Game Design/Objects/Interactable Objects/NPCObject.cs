@@ -92,7 +92,6 @@ public class NPCObject : InteractableObject, IDialogue
     /// </summary>
     public void StartDialogue()
     {
-        Debug.Log("Starting Dialogue for NPC Object...");
         TextBoxCharacter textBoxCharacter = Instantiate(_textBoxCharacterObject, transform).GetComponent<TextBoxCharacter>();
         textBoxCharacter.Sprite = _characterSprite;
         textBoxCharacter.CharacterName = _characterName;
