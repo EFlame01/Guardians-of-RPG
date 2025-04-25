@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class InventoryMenu : MenuState
 {
+    //Serialized Variables
     [SerializeField] TextMeshProUGUI itemTypeText;
     [SerializeField] TextMeshProUGUI itemNameText;
     [SerializeField] TextMeshProUGUI itemDescriptionText;
@@ -16,6 +17,7 @@ public class InventoryMenu : MenuState
     [SerializeField] Button useButton;
     [SerializeField] DiscardMenuOption discardMenuOptionWindow;
 
+    //private variables
     private ItemType itemType;
     private Item chosenItem;
 
@@ -33,23 +35,57 @@ public class InventoryMenu : MenuState
         CheckButtons();
     }
 
-    public void OnButtonTypePressed(ItemType type)
+    /// <summary>
+    /// Changes the type of items
+    /// needed to display in the inventory.
+    /// </summary>
+    /// <param name="type"></param>
+    public void OnButtonTypePressed(string type)
     {
-        itemType = type;
+        itemType = type switch{
+            "FOOD" => ItemType.FOOD,
+            "HEALING" => ItemType.HEALING,
+            "KEY" => ItemType.KEY,
+            "MEDICAL" => ItemType.MEDICAL,
+            "PRIORITY" => ItemType.PRIORITY,
+            "STAT_CHANGING" => ItemType.STAT_CHANGING,
+            _ => ItemType.KEY
+        };
         SetUpInventory();
     }
 
+    /// <summary>
+    /// After determining whether the item should
+    /// be equipped, it equips the item to the player
+    /// and displays the results.
+    /// </summary>
     public void OnEquipButtonPressed()
     {
         Player player = Player.Instance();
-        
-        player.Inventory.EquipItem(chosenItem.Name);
-        //TODO: let player know they have equipped item
+        string result = CanEquipItem();
+
+        if(result.Equals("You've equiped the " + chosenItem.Name + "!"))
+            player.Inventory.EquipItem(chosenItem.Name);
+
         SetUpInventory();
+        itemDescriptionText.text = result;
     }
 
+    /// <summary>
+    /// After determining whether the item should
+    /// be discarded, it discards the items from
+    /// the inventory and displays the results.
+    /// </summary>
     public void OnDiscardButtonPressed()
     {
+        string result = CanDiscardItem();
+        if(result.Equals("I wouldn't discard this. It could be important."))
+        {
+            SetUpInventory();
+            itemDescriptionText.text = result;
+            return;
+        }
+
         discardMenuOptionWindow.maxAmount = Player.Instance().Inventory.ItemList[chosenItem.Name];
         discardMenuOptionWindow.gameObject.SetActive(true);
         discardMenuOptionWindow.SetUpWindow();
@@ -58,29 +94,29 @@ public class InventoryMenu : MenuState
             Player.Instance().Inventory.ChangeItemAmount(chosenItem.Name, -1 * discardMenuOptionWindow.GetItemAmount());
             StartCoroutine(discardMenuOptionWindow.ResetWindow());
             SetUpInventory();
-            //TODO: Narrate item was discarded.
+            itemDescriptionText.text = result;
         });
     }
 
+    /// <summary>
+    /// After determining if the item can be used,
+    /// It uses the item for the player and displays
+    /// the results.
+    /// </summary>
     public void OnUseButtonPressed()
     {
         string result = CanUseItem();
-        //TODO: if they cannot use item, narrate that they cannot use item
         if(result.Equals("It won't have any effect."))
         {
-            //Narrate why player cannot use item
-            ClearContents();
-            itemDescriptionText.text = result;
             SetUpInventory();
+            itemDescriptionText.text = result;
         }
         else
         {
             chosenItem.UseItem(Player.Instance());
             Player.Instance().Inventory.ChangeItemAmount(chosenItem.Name, -1);
-            //TODO: narrate effects of item used
-            ClearContents();
-            itemDescriptionText.text = result;
             SetUpInventory();
+            itemDescriptionText.text = result;
         }
     }
 
@@ -111,7 +147,7 @@ public class InventoryMenu : MenuState
         Player player = Player.Instance();
 
         ClearContents();
-        itemTypeText.text = itemType.ToString();
+        itemTypeText.text = itemType.ToString().Replace("_", " ");
 
         foreach(KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
         {
@@ -169,5 +205,21 @@ public class InventoryMenu : MenuState
             default:
                 return "It won't have any effect.";
         }
+    }
+
+    private string CanEquipItem()
+    {
+        if(Player.Instance().Item != null)
+            return "You are already holding an item. Unequip item from the Player Information section first.";
+        else
+            return "You've equiped the " + chosenItem.Name + "!";
+    }
+
+    private string CanDiscardItem()
+    {
+        if(chosenItem.Type.Equals(ItemType.KEY))
+            return "I wouldn't discard this. It could be important.";
+        else
+            return "You've discarded the " + chosenItem.Name + "!";
     }
 }
