@@ -4,23 +4,44 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// QuestMenu is a class that extends the
+/// <c>MenuState</c> class. QuestMenu
+/// allows you to look at the <c>Player</c>'s entire
+/// quest divided into 3 sections:
+/// <list type="bullet">
+///     <item>INCOMPLETE</item>
+///     <item>COMPLETE</item>
+///     <item>ALL</item>
+/// </list>
+/// 
+/// </summary>
 public class QuestMenu : MenuState
 {
+    //Serialized variables
     [SerializeField] private GameObject questWidgetPrefab;
     [SerializeField] private Transform questListLayout;
     [SerializeField] private Sprite questCompleteSprite;
     [SerializeField] private Sprite questIncompleteSprite;
+    [SerializeField] private Button incompleteButton;
 
+    //private variable
     private string questStatusTab;
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
-        questStatusTab = "COMPLETED";
+        incompleteButton.Select();
+        questStatusTab = "INCOMPLETED";
         SetUpQuestLayout();
     }
 
+    /// <summary>
+    /// Displays a list of quests depending
+    /// the Quest's <paramref name="status"/> (COMPLETE, INCOMPLETE, or both)
+    /// </summary>
+    /// <param name="status">The status of the <c>Quest</c> you wish to see displayed</param>
     public void OnQuestStatusButtonPressed(string status)
     {
         questStatusTab = status;
