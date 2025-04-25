@@ -22,6 +22,7 @@ public class SignObject : InteractableObject, IDialogue
     {
         if(CanInteract && !_readSign)
         {
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _readSign = true;
             ReadObject();
         }
@@ -42,6 +43,7 @@ public class SignObject : InteractableObject, IDialogue
     private void ReadObject()
     {
         StartDialogue();
+        CheckForInteraction = true;
     }
 
     /// <summary>

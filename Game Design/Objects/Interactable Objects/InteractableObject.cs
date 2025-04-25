@@ -13,6 +13,7 @@ public abstract class InteractableObject : MonoBehaviour
     [SerializeField] protected Light2D _myLight2D;
     [SerializeField] protected InputActionReference Select;
     protected bool CanInteract;
+    protected bool CheckForInteraction;
     protected bool IsThisObjectDetected;
     protected static bool ObjectDetected;
 
@@ -24,6 +25,7 @@ public abstract class InteractableObject : MonoBehaviour
     virtual public void Update()
     {
         HandleInput();
+        CheckPlayerInteraction();
     }
 
     /// <summary>
@@ -118,6 +120,25 @@ public abstract class InteractableObject : MonoBehaviour
         }
         else
             return PlayerDirection.NONE;
+    }
+
+    /// <summary>
+    /// Checks if the player is still interacting with
+    /// one of the InteractableObjects in the game.
+    /// If it is not, it will set the PlayerState to 
+    /// NOT_MOVING.
+    /// </summary>
+    private void CheckPlayerInteraction()
+    {
+        if(!CheckForInteraction)
+            return;
+        if(!GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
+            return;
+        if(DialogueManager.Instance.DialogueEnded)
+        {
+            GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
+            CheckForInteraction = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D)

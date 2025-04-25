@@ -56,6 +56,7 @@ public class NPCObject : InteractableObject, IDialogue
     {
         if(CanInteract && !_talkedToPlayer)
         {
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _talkedToPlayer = true;
             if(isSitting)
                 StartDialogue();
@@ -91,12 +92,14 @@ public class NPCObject : InteractableObject, IDialogue
     /// </summary>
     public void StartDialogue()
     {
+        Debug.Log("Starting Dialogue for NPC Object...");
         TextBoxCharacter textBoxCharacter = Instantiate(_textBoxCharacterObject, transform).GetComponent<TextBoxCharacter>();
         textBoxCharacter.Sprite = _characterSprite;
         textBoxCharacter.CharacterName = _characterName;
         textBoxCharacter.SetUpCharacterTextBox();
         textBoxCharacter.OpenTextBox();
         textBoxCharacter.StartNarration(_dialogueData);
+        CheckForInteraction = true;
     }
 
     public virtual void OnCollisionEnter2D(Collision2D collider2D)

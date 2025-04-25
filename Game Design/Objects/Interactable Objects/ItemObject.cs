@@ -37,6 +37,7 @@ public class ItemObject : InteractableObject, IDialogue
     {
         if(CanInteract && !_openedItem)
         {
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _openedItem = true;
             StartCoroutine(OpenItemObect());
         }
@@ -54,6 +55,7 @@ public class ItemObject : InteractableObject, IDialogue
         yield return new WaitForSeconds(0.4f);
         StartDialogue();
         _itemData.UpdateItemData(true);
+        CheckForInteraction = true;
     }
 
     /// <summary>

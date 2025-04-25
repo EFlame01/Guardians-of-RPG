@@ -37,8 +37,9 @@ public class WellObject : InteractableObject, IDialogue
 
     public override void InteractWithObject()
     {
+        GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
         if(CanInteract && _wellData.DaysWithoutWater > 0 && !usingWell)
-        {   
+        {
             usingWell = true;
             GetWater();
         }
@@ -47,6 +48,7 @@ public class WellObject : InteractableObject, IDialogue
             usingWell = true;
             DontGetWater();
         }
+        CheckForInteraction = true;
     }
 
     // Update is called once per frame
@@ -62,10 +64,6 @@ public class WellObject : InteractableObject, IDialogue
 
     public void StartDialogue()
     {
-        // TextBox textBox = Instantiate(_textBoxObject).GetComponent<TextBox>();
-        // textBox.OpenTextBox();
-        // textBox.StartNarration(_dialogueData);
-
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
     }
 
