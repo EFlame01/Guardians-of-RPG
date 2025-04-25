@@ -4,6 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// InventoryMenu is a class that extends the
+/// <c>MenuState</c> class. InventoryMenu
+/// allows you to look at the <c>Player</c>'s entire
+/// inventory divided into sections, along with
+/// the ability to equip, discard, and to use said
+/// items.
+/// </summary>
 public class InventoryMenu : MenuState
 {
     //Serialized Variables
