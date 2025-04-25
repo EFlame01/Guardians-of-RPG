@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// OptionsMenu is a class that extends the
+/// <c>MenuState</c> class. OptionsMenu
+/// allows you to change certain aspects of,
+/// as well as save and exit the game.
+/// </summary>
 public class OptionsMenu : MenuState
 {
     [SerializeField] private SliderBar volumeSlider;
