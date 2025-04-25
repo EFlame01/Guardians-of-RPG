@@ -8,17 +8,27 @@ using TMPro.Examples;
 using System;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Map is a class that extends the <c>ButtonUI</c> class.
+/// In addition to it's purpose as a button, Map also
+/// acts as a way to interface with the map feature in the
+/// game, giving the player the ability to find out where
+/// they are in relation to the world, and interesting
+/// details about it.
+/// </summary>
 public class Map : ButtonUI
 {
-    [SerializeField] Button mapButton;
-    [SerializeField] Camera mapCamera;
-    [SerializeField] CanvasGroup buttonGroup;
-    [SerializeField] CanvasGroup informationWidget;
-    [SerializeField] TextMeshProUGUI nameText;
-    [SerializeField] TextMeshProUGUI countryText;
-    [SerializeField] TextMeshProUGUI continentText;
-    [SerializeField] TextMeshProUGUI descriptionText;
+    //Serialized varialbes
+    [SerializeField] public Button mapButton;
+    [SerializeField] public Camera mapCamera;
+    [SerializeField] public CanvasGroup buttonGroup;
+    [SerializeField] public CanvasGroup informationWidget;
+    [SerializeField] public TextMeshProUGUI nameText;
+    [SerializeField] public TextMeshProUGUI countryText;
+    [SerializeField] public TextMeshProUGUI continentText;
+    [SerializeField] public TextMeshProUGUI descriptionText;
 
+    //private variables
     private bool mapReset;
     private static string sceneName = "Tiro Town";
 
@@ -29,11 +39,19 @@ public class Map : ButtonUI
         ResetMapAtStart();
     }
 
+    /// <summary>
+    /// Gets the name of the scene.
+    /// </summary>
+    /// <returns>The name of the scene</returns>
     public static string GetSceneName()
     {
         return sceneName;
     }
 
+    /// <summary>
+    /// Saves the current scene name and transitions
+    /// the player to the map scene.
+    /// </summary>
     public void OnMapButtonPressed()
     {
         mapButton.interactable = false;
@@ -42,6 +60,18 @@ public class Map : ButtonUI
         SceneLoader.Instance.LoadScene("Map Scene", TransitionType.FADE_TO_BLACK);
     }
 
+    /// <summary>
+    /// Showcases the <c>LocationInformation</c> details
+    /// surrounding the location that was selected. Details
+    /// include:
+    /// <list type="bullet">
+    ///     <item>Name of Province</item>
+    ///     <item>Country</item>
+    ///     <item>Continent</item>
+    ///     <item>Province Description</item>
+    /// </list>
+    /// </summary>
+    /// <param name="id">The id correlating to <c>LocationInformation</c></param>
     public void OnLocationPressed(string id)
     {
         mapReset = false;
@@ -57,6 +87,10 @@ public class Map : ButtonUI
         StartCoroutine(ChangeCameraLocation(locationInformation));
     }
 
+    /// <summary>
+    /// Resets the map and returns player
+    /// to the original scene.
+    /// </summary>
     public void OnBackButtonPressed()
     {
         if(!mapReset)

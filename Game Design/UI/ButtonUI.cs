@@ -1,16 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ButtonUI is a class that is the 
+/// foundation for how all other buttons
+/// that extend this class will act.
+/// ButtonUI determines whether the button
+/// should be interactable in real time, and
+/// it determines what sound effect the
+/// button should make when it is clicked.
+/// </summary>
 public class ButtonUI : MonoBehaviour
 {
 
+    //Serialize variables
     [SerializeField] private string _soundEffect;
     [SerializeField] private bool _narrationButton = true;
-    protected Button _button;
+
+    //protected variables
+    protected Button UIButton;
 
     public virtual void Start()
     {
-        _button = gameObject.GetComponent<Button>();
+        UIButton = gameObject.GetComponent<Button>();
         AddButtonSound();
         EnableButton();
     }
@@ -26,12 +38,12 @@ public class ButtonUI : MonoBehaviour
     /// </summary>
     private void EnableButton()
     {
-        if(_button == null)
+        if(UIButton == null)
             return;
         if(_narrationButton)
-            _button.interactable = GameManager.Instance.EnableNarrationInputs;
+            UIButton.interactable = GameManager.Instance.EnableNarrationInputs;
         else
-            _button.interactable = GameManager.Instance.EnableButtons;
+            UIButton.interactable = GameManager.Instance.EnableButtons;
     }
 
     /// <summary>
@@ -40,7 +52,6 @@ public class ButtonUI : MonoBehaviour
     /// </summary>
     private void AddButtonSound()
     {
-        if(_button != null)
-            _button.onClick.AddListener(() => AudioManager.Instance.PlaySoundEffect(_soundEffect));
+        UIButton?.onClick.AddListener(() => AudioManager.Instance.PlaySoundEffect(_soundEffect));
     }
 }
