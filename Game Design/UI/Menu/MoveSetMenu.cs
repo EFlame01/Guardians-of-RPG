@@ -5,10 +5,10 @@ using TMPro;
 using UnityEngine.UI;
 
 /// <summary>
-/// MoveMenu is a class that extends the
-/// <c>MenuState</c> class. MoveMenu
+/// MoveSetMenu is a class that extends the
+/// <c>MenuState</c> class. MoveSetMenu
 /// allows you to look at the <c>Player</c>'s entire
-/// mopve-list divided into 2 parts: The Move List and
+/// move-list divided into 2 parts: The Move List and
 /// the Move Set, along with the ability 
 /// to add and removes moves from the Move Set.
 /// </summary>
