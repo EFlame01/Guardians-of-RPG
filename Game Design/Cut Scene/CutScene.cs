@@ -4,6 +4,7 @@ using UnityEngine.Playables;
 using System.Linq;
 using System;
 using UnityEditorInternal;
+using TMPro.Examples;
 
 /// <summary>
 /// CutScene is a class that is used to create and start all 
@@ -138,12 +139,17 @@ public class CutScene : MonoBehaviour
     {
         if(!EndDirection.Equals(PlayerDirection.NONE))
             PlayerSpawn.PlayerDirection = EndDirection;
+
         director.Stop();
+        ResetCamera();
         if(ResumeOnEnd)
             GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
-
+        
         for(int i = 0; i < animators.Length; i++)
-            animators[i].runtimeAnimatorController = _tempControllers[i];
+        {
+            if(animators[i] != null && _tempControllers[i] != null)
+                animators[i].runtimeAnimatorController = _tempControllers[i];
+        }
 
         _tempControllers = null;
         
@@ -157,7 +163,7 @@ public class CutScene : MonoBehaviour
     /// <summary>
     /// Finds the track index 'female player track'
     /// </summary>
-    private void FindTrack()
+    private void FindTrack(string trackName)
     {
         // var director = GetComponent<PlayableDirector>();
         if (director != null && director.playableAsset != null)// && director.playableAsset != null
@@ -166,7 +172,7 @@ public class CutScene : MonoBehaviour
             var bindings = director.playableAsset.outputs.ToArray();
             for (int i = 0; i < bindings.Length; i++)
             {
-                if (bindings[i].streamName.Equals("female player track"))
+                if (bindings[i].streamName.Equals(trackName))
                 {
                     _trackIndex = i;
                     break;
@@ -180,13 +186,31 @@ public class CutScene : MonoBehaviour
     /// </summary>
     private void Mute(bool mute)
     {
-        FindTrack();
+        FindTrack("female player track");
         if (_trackIndex == -1)
             return;
 
         TimelineAsset asset = director.playableAsset as TimelineAsset;
         asset.GetOutputTrack(_trackIndex).muted = mute;
         director.RebuildGraph();
+    }
+
+    /// <summary>
+    /// Resets the camera position to the default
+    /// position.
+    /// </summary>
+    private void ResetCamera()
+    {
+        FindTrack("camera animation track");
+        Debug.Log("camera animation track found: " + (_trackIndex != -1));
+        if(_trackIndex == -1)
+            return;
+        
+        TimelineAsset asset = director.playableAsset as TimelineAsset;
+        AnimationTrack cameraAnimationTrack = (AnimationTrack) asset.GetOutputTrack(_trackIndex);
+        cameraAnimationTrack.position = new Vector3(0,0,0);
+        Debug.Log(cameraAnimationTrack.position);
+        asset.GetOutputTrack(_trackIndex) = cameraAnimationTrack;
     }
 
     /// <summary>

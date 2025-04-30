@@ -56,7 +56,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[0],
                     itemAttributes[1],
                     itemAttributes[2].Replace('~', ','),
-                    ItemType.HEALING,
+                    ItemType.KEY,
                     int.Parse(itemAttributes[4])
                 );
                 break;
@@ -78,7 +78,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[0],
                     itemAttributes[1],
                     itemAttributes[2].Replace('~', ','),
-                    ItemType.MEDICAL,
+                    ItemType.PRIORITY,
                     int.Parse(itemAttributes[4]),
                     int.Parse(itemAttributes[8])
                 );
@@ -89,7 +89,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[0],
                     itemAttributes[1],
                     itemAttributes[2].Replace('~', ','),
-                    ItemType.MEDICAL,
+                    ItemType.STAT_CHANGING,
                     int.Parse(itemAttributes[4]),
                     itemAttributes[9].Split('~'),
                     Array.ConvertAll(itemAttributes[10].Split('~'), int.Parse)

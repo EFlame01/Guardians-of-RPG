@@ -160,7 +160,8 @@ public class InventoryMenu : MenuState
         foreach(KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
         {
             Item i = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
-            if(i.Type.Equals(itemType) && itemInfo.Value > 0)
+            Debug.Log(itemInfo + ": " + i);
+            if(i != null && i.Type.Equals(itemType) && itemInfo.Value > 0)
             {
                 Button button = Instantiate(itemButtonObjectPrefab, listLayout);
                 TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
