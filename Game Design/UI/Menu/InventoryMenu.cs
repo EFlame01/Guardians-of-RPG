@@ -160,7 +160,6 @@ public class InventoryMenu : MenuState
         foreach(KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
         {
             Item i = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
-            Debug.Log(itemInfo + ": " + i);
             if(i != null && i.Type.Equals(itemType) && itemInfo.Value > 0)
             {
                 Button button = Instantiate(itemButtonObjectPrefab, listLayout);
