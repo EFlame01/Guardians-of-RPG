@@ -210,7 +210,6 @@ public class CutScene : MonoBehaviour
         AnimationTrack cameraAnimationTrack = (AnimationTrack) asset.GetOutputTrack(_trackIndex);
         cameraAnimationTrack.position = new Vector3(0,0,0);
         Debug.Log(cameraAnimationTrack.position);
-        asset.GetOutputTrack(_trackIndex) = cameraAnimationTrack;
     }
 
     /// <summary>
