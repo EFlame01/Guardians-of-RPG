@@ -20,6 +20,7 @@ public class ShopMenu : MenuState
 
     private string _buyOrSell = "BUY";
     private Item _item;
+    private string _itemName;
 
     public override void Start()
     {
@@ -38,6 +39,11 @@ public class ShopMenu : MenuState
         };
         SetUpButtons();
         SetUpShop();
+    }
+
+    public void OnItemSelectedButton()
+    {
+        _item = ItemMaker.Instance.GetItemBasedOnName(_itemName);
     }
 
     public void OnPurchase()
@@ -90,9 +96,10 @@ public class ShopMenu : MenuState
     {
         Player player = Player.Instance();
         _item = null;
+        _itemName = null;
 
-        playerBitText.text = player.Bits;
-        itemNameText.text.text = "";
+        playerBitText.text = player.Bits.ToString();
+        itemNameText.text = "";
         itemDescriptionText.text = "";
         itemPriceText.text = "";
         itemQuantityText.text = "_";
