@@ -123,6 +123,23 @@ public abstract class InteractableObject : MonoBehaviour
     }
 
     /// <summary>
+    /// Determines which side the player
+    /// should be facing to read the sign.
+    /// </summary>
+    /// <returns>side to read sign.</returns>
+    protected PlayerDirection GetObjectFacingSide()
+    {
+        return GetCollisionSide() switch
+        {
+            PlayerDirection.UP => PlayerDirection.DOWN,
+            PlayerDirection.DOWN => PlayerDirection.UP,
+            PlayerDirection.LEFT => PlayerDirection.RIGHT,
+            PlayerDirection.RIGHT => PlayerDirection.LEFT,
+            _ => PlayerDirection.DOWN,
+        };
+    }
+
+    /// <summary>
     /// Checks if the player is still interacting with
     /// one of the InteractableObjects in the game.
     /// If it is not, it will set the PlayerState to 

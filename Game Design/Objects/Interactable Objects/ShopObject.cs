@@ -3,37 +3,67 @@ using UnityEngine;
 
 public class ShopObject : InteractableObject
 {
-    [SerializeField] private PlayerDirection _directionToReadSign;
-    [SerializeField] ShopList shopList;
-    [SerializeField] ShopMenu shopMenu;
+    [SerializeField] private PlayerDirection _directionToUseShop;
+    [SerializeField] private string shopName;
+    [SerializeField] private ShopList shopList;
+    [SerializeField] private ShopMenu shopMenu;
+
+    private bool _useShop;
 
     public override void InteractWithObject()
     {
-        if(!ObjectDetected)
+        if(CanInteract && !_useShop)
         {
-            if(GetComponent<Collider2D>().gameObject.tag.Equals("Player"))
-                RevealObjectIsInteractable(true);
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+            _useShop = true;
+            OpenShop();
         }
-        else if(IsThisObjectDetected)
-        {
+    }
 
-        }
-        else
-            RevealObjectIsInteractable(false);
+    private void OpenShop()
+    {
+        //TODO: open shop menu
+        //TODO: pause game
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D)
     {
+        if(ObjectDetected)
+            return;
 
+        if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseShop) && GetObjectFacingSide().Equals(_directionToUseShop))
+            RevealObjectIsInteractable(true);
     }
     
     private void OnTriggerStay2D(Collider2D collider2D)
     {
+        if(!ObjectDetected)
+        {
+            //check if object should be detected
+            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseShop) && GetObjectFacingSide().Equals(_directionToUseShop))
+                RevealObjectIsInteractable(true);
+            else
+                RevealObjectIsInteractable(false);
+        }
 
+        if(IsThisObjectDetected)
+        {
+            //check if object should be detected
+            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseShop) && GetObjectFacingSide().Equals(_directionToUseShop))
+                RevealObjectIsInteractable(true);  
+            else
+                RevealObjectIsInteractable(false);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collider2D)
     {
-
+        if(collider2D.gameObject.tag.Equals("Player"))
+        {
+            _useShop = false;
+            CanInteract = false;
+            IsThisObjectDetected = false;
+            HideInputSymbol();
+        }
     }
 }

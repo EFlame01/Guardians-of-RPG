@@ -46,29 +46,12 @@ public class SignObject : InteractableObject, IDialogue
         CheckForInteraction = true;
     }
 
-    /// <summary>
-    /// Determines which side the player
-    /// should be facing to read the sign.
-    /// </summary>
-    /// <returns>side to read sign.</returns>
-    private PlayerDirection GetSignFacingSide()
-    {
-        return GetCollisionSide() switch
-        {
-            PlayerDirection.UP => PlayerDirection.DOWN,
-            PlayerDirection.DOWN => PlayerDirection.UP,
-            PlayerDirection.LEFT => PlayerDirection.RIGHT,
-            PlayerDirection.RIGHT => PlayerDirection.LEFT,
-            _ => PlayerDirection.DOWN,
-        };
-    }
-
     private void OnCollisionEnter2D(Collision2D collider2D)
     {
         if(ObjectDetected)
             return;
 
-        if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToReadSign) && GetSignFacingSide().Equals(_directionToReadSign))
+        if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToReadSign) && GetObjectFacingSide().Equals(_directionToReadSign))
             RevealObjectIsInteractable(true);
     }
 
@@ -77,7 +60,7 @@ public class SignObject : InteractableObject, IDialogue
         if(!ObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToReadSign) && GetSignFacingSide().Equals(_directionToReadSign))
+            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToReadSign) && GetObjectFacingSide().Equals(_directionToReadSign))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
@@ -86,7 +69,7 @@ public class SignObject : InteractableObject, IDialogue
         if(IsThisObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToReadSign) && GetSignFacingSide().Equals(_directionToReadSign))
+            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToReadSign) && GetObjectFacingSide().Equals(_directionToReadSign))
                 RevealObjectIsInteractable(true);  
             else
                 RevealObjectIsInteractable(false);

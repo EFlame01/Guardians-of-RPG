@@ -16,6 +16,7 @@ public class ShopMenu : MenuState
     [SerializeField] public TextMeshProUGUI playerBitText;
     [SerializeField] public Transform listLayout;
     [SerializeField] public double provincePriceRate;
+    [SerializeField] public TextMeshProUGUI shopNameText;
     // [SerializeField] public ShopList shopList;
 
     private string _buyOrSell = "BUY";
