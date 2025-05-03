@@ -69,7 +69,7 @@ public class ShopMenu : MenuState
     public void OnItemSelectedButton()
     {
         _item = ItemMaker.Instance.GetItemBasedOnName(_itemName);
-        _itemName = item.Name;
+        _itemName = _item.Name;
         itemNameText.text = _item.Name;
         itemDescriptionText.text = _item.Description;
         itemPriceText.text = GetItemPrice().ToString();

@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class ShopList
 {
-    [SerializeField] string[] itemNames;
-    [SerializeField] double buyRate;
-    [SerializeField] double sellRate;
+    [SerializeField] public string[] itemNames;
+    [SerializeField] public double buyRate;
+    [SerializeField] public double sellRate;
 }
