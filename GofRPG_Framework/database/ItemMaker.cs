@@ -36,6 +36,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[2].Replace('~', ','),
                     ItemType.FOOD,
                     int.Parse(itemAttributes[4]),
+                    int.Parse(itemAttributes[11]),
                     int.Parse(itemAttributes[5])
                 );
                 break;
@@ -47,6 +48,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[2].Replace('~', ','),
                     ItemType.HEALING,
                     int.Parse(itemAttributes[4]),
+                    int.Parse(itemAttributes[11]),
                     int.Parse(itemAttributes[6])
                 );
                 break;
@@ -68,6 +70,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[2].Replace('~', ','),
                     ItemType.MEDICAL,
                     int.Parse(itemAttributes[4]),
+                    int.Parse(itemAttributes[11]),
                     int.Parse(itemAttributes[5]),
                     itemAttributes[7].Split('~')
                 );
@@ -80,6 +83,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[2].Replace('~', ','),
                     ItemType.PRIORITY,
                     int.Parse(itemAttributes[4]),
+                    int.Parse(itemAttributes[11]),
                     int.Parse(itemAttributes[8])
                 );
                 break;
@@ -91,6 +95,7 @@ public class ItemMaker : Singleton<ItemMaker>
                     itemAttributes[2].Replace('~', ','),
                     ItemType.STAT_CHANGING,
                     int.Parse(itemAttributes[4]),
+                    int.Parse(itemAttributes[11]),
                     itemAttributes[9].Split('~'),
                     Array.ConvertAll(itemAttributes[10].Split('~'), int.Parse)
                 );

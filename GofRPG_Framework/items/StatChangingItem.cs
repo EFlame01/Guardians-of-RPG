@@ -12,13 +12,14 @@ public class StatChangingItem : Item
     public int[] _values {get; private set;}
 
     //Constructor
-    public StatChangingItem(string name, string pluralName, string description, ItemType type, int level, string[] stats, int[] values)
+    public StatChangingItem(string name, string pluralName, string description, ItemType type, int level, int price, string[] stats, int[] values)
     {
         Name = name;
         PluralName = pluralName;
         Description = description;
         Type = type;
         DiscardAfterUse = true;
+        Price = price;
         _stats = stats;
         _values = values;
     }

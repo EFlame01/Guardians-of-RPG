@@ -11,13 +11,14 @@ public class HealingItem : Item
     private double _healPercent;
 
     //Constructor
-    public HealingItem(string name, string pluralName, string description, ItemType type, int level, double healPercent)
+    public HealingItem(string name, string pluralName, string description, ItemType type, int level, int price, double healPercent)
     {
         Name = name;
         PluralName = pluralName;
         Description = description;
         Type = type;
         DiscardAfterUse = false;
+        Price = price;
         _healPercent = healPercent;
     }
 

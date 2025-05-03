@@ -14,6 +14,7 @@ public class Item
     public int Level {get; protected set;}
     public bool DiscardAfterUse {get; protected set;}
     public bool InUse {get; protected set;}
+    public int Price {get; protected set;}
 
     ///<summary> 
     /// The <paramref name="character"/> uses the item.

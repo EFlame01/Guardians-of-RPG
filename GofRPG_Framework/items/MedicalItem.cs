@@ -12,13 +12,14 @@ public class MedicalItem : Item
     public string[] _statusConditions {get; private set;}
 
     //Constructor
-    public MedicalItem(string name, string pluralName, string description, ItemType type, int level, int healAmount, string[] statusConditions)
+    public MedicalItem(string name, string pluralName, string description, ItemType type, int level, int price, int healAmount, string[] statusConditions)
     {
         Name = name;
         PluralName = pluralName;
         Description = description;
         Type = type;
         DiscardAfterUse = true;
+        Price = price;
         _healAmount = healAmount;
         _statusConditions = statusConditions;
     }

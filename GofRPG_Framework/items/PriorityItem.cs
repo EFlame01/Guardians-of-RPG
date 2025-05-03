@@ -12,13 +12,14 @@ public class PriorityItem : Item
     private int _priorityProb;
 
     //Constructor
-    public PriorityItem(string name, string pluralName, string description, ItemType type, int level, int priorityStage)
+    public PriorityItem(string name, string pluralName, string description, ItemType type, int level, int price, int priorityStage)
     {
         Name = name;
         PluralName = pluralName;
         Description = description;
         Type = type;
         DiscardAfterUse = false;
+        Price = price;
 
         _priorityProb = priorityStage switch
         {

@@ -15,13 +15,14 @@ public class FoodItem : Item
 
     //Constructor
 
-    public FoodItem(string name, string pluralName, string description, ItemType type, int level, int healAmount)
+    public FoodItem(string name, string pluralName, string description, ItemType type, int level, int price, int healAmount)
     {
         Name = name;
         PluralName = pluralName;
         Description = description;
         Type = type;
         DiscardAfterUse = true;
+        Price = price;
         _healAmount = healAmount;
     }
 

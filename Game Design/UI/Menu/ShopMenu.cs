@@ -4,21 +4,34 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ShopMenu is a class that extends the <c>MenuState</c>
+/// class. ShopMenu will be activated once the 
+/// <c>ShopObject</c> has been interacted with. From
+/// there, the ShopMenu will open a mneu that allows you
+/// to buy and sell things from a shop, with prices
+/// varying based on the price rate.
+/// </summary>
 public class ShopMenu : MenuState
 {
+    //Serialize variables
     [SerializeField] public Button buyTabSelect;
     [SerializeField] public Button buyButton;
     [SerializeField] public Button sellButton;
+    [SerializeField] public Button itemButtonPrefab;
+    [SerializeField] public TextMeshProUGUI shopNameText;
     [SerializeField] public TextMeshProUGUI itemNameText;
     [SerializeField] public TextMeshProUGUI itemDescriptionText;
     [SerializeField] public TextMeshProUGUI itemPriceText;
     [SerializeField] public TextMeshProUGUI itemQuantityText;
     [SerializeField] public TextMeshProUGUI playerBitText;
     [SerializeField] public Transform listLayout;
-    [SerializeField] public double provincePriceRate;
-    [SerializeField] public TextMeshProUGUI shopNameText;
-    // [SerializeField] public ShopList shopList;
 
+    //variables to be assigned by ShopObject class
+    public double provincePriceRate;
+    public ShopList shopList;
+
+    //private variables
     private string _buyOrSell = "BUY";
     private Item _item;
     private string _itemName;
@@ -30,6 +43,11 @@ public class ShopMenu : MenuState
         OnCommerceTabSelected(_buyOrSell);
     }
 
+    /// <summary>
+    /// Changes the setting in the ShopMenu
+    /// from either buying or selling.
+    /// </summary>
+    /// <param name="buyOrSell"></param>
     public void OnCommerceTabSelected(string buyOrSell)
     {
         _buyOrSell = buyOrSell switch
@@ -38,18 +56,31 @@ public class ShopMenu : MenuState
             "SELL" => "SELL",
             _ => "BUY"
         };
-        SetUpButtons();
+        // SetUpButtons();
         SetUpShop();
     }
 
+    /// <summary>
+    /// Displays the item information
+    /// of the item you selected. From there
+    /// it will determine if you will buy 
+    /// or sell the item.
+    /// </summary>
     public void OnItemSelectedButton()
     {
         _item = ItemMaker.Instance.GetItemBasedOnName(_itemName);
+        _itemName = item.Name;
+        itemNameText.text = _item.Name;
+        itemDescriptionText.text = _item.Description;
+        itemPriceText.text = GetItemPrice().ToString();
+        SetUpButtons();
+        //TODO: enable buttons for quanity amount
+
     }
 
     public void OnPurchase()
     {
-
+        
     }
 
     public void OnSell()
@@ -109,6 +140,14 @@ public class ShopMenu : MenuState
         {
             Destroy(child.gameObject);
         }
+    }
+
+    private int GetItemPrice()
+    {
+        if(_buyOrSell.Equals("SELL"))
+            return (int)((double)_item.Price * shopList.sellRate);
+        else
+            return (int)((double)_item.Price * shopList.buyRate);
     }
 
 }
