@@ -28,13 +28,11 @@ public class ShopMenu : MenuState
     [SerializeField] public Transform listLayout;
 
     //variables to be assigned by ShopObject class
-    public double provincePriceRate;
     public ShopList shopList;
 
     //private variables
     private string _buyOrSell = "BUY";
     private Item _item;
-    private string _itemName;
 
     public override void Start()
     {
@@ -56,7 +54,6 @@ public class ShopMenu : MenuState
             "SELL" => "SELL",
             _ => "BUY"
         };
-        // SetUpButtons();
         SetUpShop();
     }
 
@@ -66,16 +63,14 @@ public class ShopMenu : MenuState
     /// it will determine if you will buy 
     /// or sell the item.
     /// </summary>
-    public void OnItemSelectedButton()
+    public void OnItemSelectedButton(string itemName)
     {
-        _item = ItemMaker.Instance.GetItemBasedOnName(_itemName);
-        _itemName = _item.Name;
+        _item = ItemMaker.Instance.GetItemBasedOnName(itemName);
         itemNameText.text = _item.Name;
         itemDescriptionText.text = _item.Description;
         itemPriceText.text = GetItemPrice().ToString();
         SetUpButtons();
         //TODO: enable buttons for quanity amount
-
     }
 
     public void OnPurchase()
@@ -117,6 +112,7 @@ public class ShopMenu : MenuState
     private void SetUpBuy()
     {
         //TODO: Display list of items that are for sale at shop based on ShopList
+        // Button button = itemButtonPrefab
     }
 
     private void SetUpSell()
@@ -128,7 +124,6 @@ public class ShopMenu : MenuState
     {
         Player player = Player.Instance();
         _item = null;
-        _itemName = null;
 
         playerBitText.text = player.Bits.ToString();
         itemNameText.text = "";
