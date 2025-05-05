@@ -25,6 +25,7 @@ public class ShopObject : InteractableObject
         //TODO: open shop menu
         //TODO: pause game
         shopMenu.shopList = shopList;
+        shopMenu.shopName = shopName;
         Instantiate(shopMenu, null);
         GameManager.Instance.PlayerState = PlayerState.PAUSED;
     }

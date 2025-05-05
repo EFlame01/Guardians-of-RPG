@@ -34,6 +34,8 @@ public class ShopMenu : MenuState
 
     //variables to be assigned by ShopObject class
     public ShopList shopList;
+    public string shopName;
+    public ItemType itemType = ItemType.FOOD;
 
     //private variables
     private string _buyOrSell = "BUY";
@@ -44,6 +46,8 @@ public class ShopMenu : MenuState
     {
         base.Start();
         buyTabSelect?.Select();
+        buyButton.interactable = false;
+        sellButton.interactable = false;
         OnCommerceTabSelected(_buyOrSell);
     }
 
@@ -72,6 +76,8 @@ public class ShopMenu : MenuState
     public void OnItemSelectedButton(Item item)
     {
         _item = item;
+        _itemAmount = 1;
+        itemQuantityText.text = _itemAmount.ToString();
         itemNameText.text = _item.Name;
         itemDescriptionText.text = _item.Description;
         itemPriceText.text = GetItemPrice().ToString();
@@ -140,6 +146,7 @@ public class ShopMenu : MenuState
     public void OnLessButtonPressed()
     {
         _itemAmount = Mathf.Clamp(_itemAmount - 1, 0, _itemAmount);
+        itemQuantityText.text = _itemAmount.ToString();
         itemPriceText.text = GetItemPrice().ToString();
     }
 
@@ -150,15 +157,36 @@ public class ShopMenu : MenuState
     public void OnMoreButtonPressed()
     {
         _itemAmount = Mathf.Clamp(_itemAmount + 1, 1, 100);
+        itemQuantityText.text = _itemAmount.ToString();
         itemPriceText.text = GetItemPrice().ToString();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="itemTypeOption"></param>
+    public void OnItemTypePressed(string itemTypeOption)
+    {
+        itemType = itemTypeOption switch{
+            "FOOD" => ItemType.FOOD,
+            "HEALING" => ItemType.HEALING,
+            "MEDICAL" => ItemType.MEDICAL,
+            "PRIORITY" => ItemType.PRIORITY,
+            "STAT_CHANGING" => ItemType.STAT_CHANGING,
+            _ => ItemType.FOOD
+        };
+
+        SetUpShop();
     }
 
     private void SetUpButtons()
     {
-        buyButton.interactable = _buyOrSell != "SELL";
-        sellButton.interactable = _buyOrSell == "SELL";
+        buyButton.interactable = _buyOrSell.Equals("BUY");
+        sellButton.interactable = _buyOrSell.Equals("SELL");
         lessButton.interactable = false;
         moreButton.interactable = false;
+
+        Debug.Log(_buyOrSell.Equals("BUY") + " " + _buyOrSell.Equals("SELL"));
     }
 
     private void SetUpShop()
@@ -207,14 +235,17 @@ public class ShopMenu : MenuState
         foreach(KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
         {
             Item item = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
-            Button button = Instantiate(itemButtonPrefab, buyListLayout);
-            TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
-            TextMeshProUGUI itemAmountText = button.GetComponentsInChildren<TextMeshProUGUI>()[1];
-            
-            itemNameText.text = itemInfo.Key;
-            itemAmountText.text = "X" + itemInfo.Value;
+            if(item.Type.Equals(itemType))
+            {
+                Button button = Instantiate(itemButtonPrefab, buyListLayout);
+                TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
+                TextMeshProUGUI itemAmountText = button.GetComponentsInChildren<TextMeshProUGUI>()[1];
+                
+                itemNameText.text = itemInfo.Key;
+                itemAmountText.text = "X" + itemInfo.Value;
 
-            button.onClick.AddListener(() => OnItemSelectedButton(item));
+                button.onClick.AddListener(() => OnItemSelectedButton(item));
+            }
         }
     }
 
@@ -224,11 +255,14 @@ public class ShopMenu : MenuState
         _item = null;
 
         playerBitText.text = player.Bits.ToString();
+        shopNameText.text = shopName;
         itemNameText.text = "";
         itemDescriptionText.text = "";
-        itemPriceText.text = "";
+        itemPriceText.text = "0";
         itemQuantityText.text = "_";
 
+        buyButton.interactable = false;
+        sellButton.interactable = false;
         lessButton.interactable = false;
         moreButton.interactable = false;
 
