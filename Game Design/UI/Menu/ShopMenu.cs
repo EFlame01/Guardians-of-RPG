@@ -162,7 +162,8 @@ public class ShopMenu : MenuState
     }
 
     /// <summary>
-    /// 
+    /// Changes the list of items being displayed
+    /// in the player's inventory
     /// </summary>
     /// <param name="itemTypeOption"></param>
     public void OnItemTypePressed(string itemTypeOption)
