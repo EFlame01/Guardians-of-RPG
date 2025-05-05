@@ -18,6 +18,8 @@ public class ShopMenu : MenuState
     [SerializeField] public Button buyTabSelect;
     [SerializeField] public Button buyButton;
     [SerializeField] public Button sellButton;
+    [SerializeField] public Button lessButton;
+    [SerializeField] public Button moreButton;
     [SerializeField] public Button itemButtonPrefab;
     [SerializeField] public TextMeshProUGUI shopNameText;
     [SerializeField] public TextMeshProUGUI itemNameText;
@@ -25,7 +27,10 @@ public class ShopMenu : MenuState
     [SerializeField] public TextMeshProUGUI itemPriceText;
     [SerializeField] public TextMeshProUGUI itemQuantityText;
     [SerializeField] public TextMeshProUGUI playerBitText;
-    [SerializeField] public Transform listLayout;
+    [SerializeField] public GameObject buyLayout;
+    [SerializeField] public GameObject sellLayout;
+    [SerializeField] public Transform buyListLayout;
+    [SerializeField] public Transform sellListLayout;
 
     //variables to be assigned by ShopObject class
     public ShopList shopList;
@@ -33,6 +38,7 @@ public class ShopMenu : MenuState
     //private variables
     private string _buyOrSell = "BUY";
     private Item _item;
+    private int _itemAmount;
 
     public override void Start()
     {
@@ -63,35 +69,72 @@ public class ShopMenu : MenuState
     /// it will determine if you will buy 
     /// or sell the item.
     /// </summary>
-    public void OnItemSelectedButton(string itemName)
+    public void OnItemSelectedButton(Item item)
     {
-        _item = ItemMaker.Instance.GetItemBasedOnName(itemName);
+        _item = item;
         itemNameText.text = _item.Name;
         itemDescriptionText.text = _item.Description;
         itemPriceText.text = GetItemPrice().ToString();
         SetUpButtons();
-        //TODO: enable buttons for quanity amount
+        lessButton.interactable = true;
+        moreButton.interactable = true;
     }
 
     public void OnPurchase()
     {
-        
+        Player player = Player.Instance();
+        int price = GetItemPrice();
+        int level = _item.Level;
+        string itemName = _itemAmount > 1 ? _item.PluralName : _item.Name;
+
+        if(level > player.Level)
+        {
+            SetUpShop();
+            itemDescriptionText.text = "You are not a high enough level to obtain this.";
+            return;
+        }
+        else if(price > Player.Instance().Bits)
+        {
+            SetUpShop();
+            itemDescriptionText.text = "You do not have enough bits to obtain this.";
+            return;
+        }
+
+        player.Inventory.AddItem(_item.Name, _itemAmount);
+        player.SetBits(player.Bits - price);
+        SetUpShop();
+        itemDescriptionText.text = "You purchased " + _itemAmount + " " + itemName + "!";
     }
 
     public void OnSell()
     {
+        Player player = Player.Instance();
+        int price = GetItemPrice();
+        string itemName = _itemAmount > 1 ? _item.PluralName : _item.Name;
 
+        if(_itemAmount > player.Inventory.ItemList[_item.Name])
+        {
+            SetUpShop();
+            itemDescriptionText.text = "You do not have enough to sell.";
+            return;
+        }
+
+        player.Inventory.AddItem(_item.Name, -1 * _itemAmount);
+        player.SetBits(player.Bits + price);
+        SetUpShop();
+        itemDescriptionText.text = "You sold " + _itemAmount + " " + itemName + "!";
     }
 
     private void SetUpButtons()
     {
         buyButton.interactable = _buyOrSell != "SELL";
         sellButton.interactable = _buyOrSell == "SELL";
+        lessButton.interactable = false;
+        moreButton.interactable = false;
     }
 
     private void SetUpShop()
     {
-        Player player = Player.Instance();
         ClearContents();
         switch(_buyOrSell)
         {
@@ -111,13 +154,40 @@ public class ShopMenu : MenuState
 
     private void SetUpBuy()
     {
-        //TODO: Display list of items that are for sale at shop based on ShopList
-        // Button button = itemButtonPrefab
+        sellLayout.SetActive(false);
+        buyLayout.SetActive(true);
+        foreach(string itemName in shopList.itemNames)
+        {
+            Item item = ItemMaker.Instance.GetItemBasedOnName(itemName);
+            Button button = Instantiate(itemButtonPrefab, buyListLayout);
+            TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
+            TextMeshProUGUI itemAmountText = button.GetComponentsInChildren<TextMeshProUGUI>()[1];
+            
+            itemNameText.text = item.Name;
+            itemAmountText.text = "";
+
+            button.onClick.AddListener(() => OnItemSelectedButton(item));
+        }
     }
 
     private void SetUpSell()
     {
-        //TODO: Diaplay player's items that they can sell
+        Player player = Player.Instance();
+
+        sellLayout.SetActive(true);
+        buyLayout.SetActive(false);
+        foreach(KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
+        {
+            Item item = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
+            Button button = Instantiate(itemButtonPrefab, buyListLayout);
+            TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
+            TextMeshProUGUI itemAmountText = button.GetComponentsInChildren<TextMeshProUGUI>()[1];
+            
+            itemNameText.text = itemInfo.Key;
+            itemAmountText.text = "X" + itemInfo.Value;
+
+            button.onClick.AddListener(() => OnItemSelectedButton(item));
+        }
     }
 
     private void ClearContents()
@@ -131,18 +201,27 @@ public class ShopMenu : MenuState
         itemPriceText.text = "";
         itemQuantityText.text = "_";
 
-        foreach(Transform child in listLayout)
+        lessButton.interactable = false;
+        moreButton.interactable = false;
+
+        if(_buyOrSell.Equals("SELL"))
         {
-            Destroy(child.gameObject);
+            foreach(Transform child in sellListLayout)
+                Destroy(child.gameObject);
+        }
+        else
+        {
+            foreach(Transform child in buyListLayout)
+                Destroy(child.gameObject);
         }
     }
 
     private int GetItemPrice()
     {
         if(_buyOrSell.Equals("SELL"))
-            return (int)((double)_item.Price * shopList.sellRate);
+            return (int)((double)_item.Price * shopList.sellRate * _itemAmount);
         else
-            return (int)((double)_item.Price * shopList.buyRate);
+            return (int)((double)_item.Price * shopList.buyRate * _itemAmount);
     }
 
 }
