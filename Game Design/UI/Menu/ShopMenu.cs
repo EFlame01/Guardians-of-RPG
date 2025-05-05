@@ -80,6 +80,10 @@ public class ShopMenu : MenuState
         moreButton.interactable = true;
     }
 
+    /// <summary>
+    /// Purchases the item from the shop and adds the items
+    /// to the player's inventory.
+    /// </summary>
     public void OnPurchase()
     {
         Player player = Player.Instance();
@@ -106,6 +110,10 @@ public class ShopMenu : MenuState
         itemDescriptionText.text = "You purchased " + _itemAmount + " " + itemName + "!";
     }
 
+    /// <summary>
+    /// Sells the player's items to the shop and 
+    /// removes the items from the player's inventory
+    /// </summary>
     public void OnSell()
     {
         Player player = Player.Instance();
@@ -123,6 +131,26 @@ public class ShopMenu : MenuState
         player.SetBits(player.Bits + price);
         SetUpShop();
         itemDescriptionText.text = "You sold " + _itemAmount + " " + itemName + "!";
+    }
+
+    /// <summary>
+    /// Decrements the number of items the player
+    /// may wish to purchase/sell.
+    /// </summary>
+    public void OnLessButtonPressed()
+    {
+        _itemAmount = Mathf.Clamp(_itemAmount - 1, 0, _itemAmount);
+        itemPriceText.text = GetItemPrice().ToString();
+    }
+
+    /// <summary>
+    /// Increments the number of items the player
+    /// may wish to purchase/sell.
+    /// </summary>
+    public void OnMoreButtonPressed()
+    {
+        _itemAmount = Mathf.Clamp(_itemAmount + 1, 1, 100);
+        itemPriceText.text = GetItemPrice().ToString();
     }
 
     private void SetUpButtons()

@@ -24,6 +24,9 @@ public class ShopObject : InteractableObject
     {
         //TODO: open shop menu
         //TODO: pause game
+        shopMenu.shopList = shopList;
+        Instantiate(shopMenu, null);
+        GameManager.Instance.PlayerState = PlayerState.PAUSED;
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D)
