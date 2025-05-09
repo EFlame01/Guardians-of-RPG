@@ -160,5 +160,6 @@ public static class Units
     public const string ITEM_DATA_PATH = "/game_data/items.rpg";
     public const string NPC_DATA_PATH = "/game_data/npcs.rpg";
     public const string WELL_DATA_PATH = "/game_data/wells.rpg";
+    public const string MEDICAL_CENTER_DATA_PATH = "/game_data/medical_centers.rpg";
     public const string MAP_DATA_PATH = "/game_data/maps.rpg";
 }

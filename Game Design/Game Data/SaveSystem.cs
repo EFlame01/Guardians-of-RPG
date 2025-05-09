@@ -257,6 +257,32 @@ public class SaveSystem : Singleton<SaveSystem>
         return data;
     }
 
+    public static void SaveMedicalCenterData()
+    {
+        MedicalCenterDataContainer wellDataList = new MedicalCenterDataContainer();
+        string json = JsonUtility.ToJson(wellDataList);
+        
+        if(File.Exists(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH))
+            File.Delete(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH);
+        
+        File.WriteAllText(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH, json);
+        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.MEDICAL_CENTER_DATA_PATH);
+    }
+
+    public static MedicalCenterDataContainer LoadMedicalCenterData()
+    {
+        if(!File.Exists(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH))
+            return null;
+
+        DataEncoder.Instance.DecodeFile(Units.MEDICAL_CENTER_DATA_PATH);
+        string json = DataEncoder.GetData();
+        
+        MedicalCenterDataContainer data = JsonUtility.FromJson<MedicalCenterDataContainer>(json);
+        data.LoadMedicalCenterDataIntoGame();
+        
+        return data;
+    }
+
     public static void SaveSettingsData()
     {
         SettingsData data = new SettingsData();

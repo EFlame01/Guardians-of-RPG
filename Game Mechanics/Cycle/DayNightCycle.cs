@@ -92,6 +92,7 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
         {
             TimeOfDay = Units.MORNING;
             WellDataContainer.IncrementWellDay();
+            MedicalCenterDataContainer.ResetNumOfTimesUsed();
             GameManager.Instance.NumberOfDays++;
         }
         else

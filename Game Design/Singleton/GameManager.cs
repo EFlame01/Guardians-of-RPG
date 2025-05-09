@@ -50,6 +50,7 @@ public class GameManager : PersistentSingleton<GameManager>
         SaveSystem.SaveQuestData();
         SaveSystem.SaveStoryFlagData();
         SaveSystem.SaveWellData();
+        SaveSystem.SaveMedicalCenterData();
     }
 
     public static void LoadGame()
@@ -61,6 +62,7 @@ public class GameManager : PersistentSingleton<GameManager>
         SaveSystem.LoadQuestData();
         SaveSystem.LoadStoryFlagData();
         SaveSystem.LoadWellData();
+        SaveSystem.LoadMedicalCenterData();
 
         SceneLoader.Instance.LoadScene(playerData.sceneName, TransitionType.FADE_TO_BLACK);
     }
