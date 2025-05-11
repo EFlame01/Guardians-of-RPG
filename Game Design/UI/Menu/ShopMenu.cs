@@ -230,15 +230,14 @@ public class ShopMenu : MenuState
     private void SetUpSell()
     {
         Player player = Player.Instance();
-
         sellLayout.SetActive(true);
         buyLayout.SetActive(false);
         foreach(KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
         {
             Item item = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
-            if(item.Type.Equals(itemType))
+            if(item != null && item.Type.Equals(itemType) && itemInfo.Value > 0)
             {
-                Button button = Instantiate(itemButtonPrefab, buyListLayout);
+                Button button = Instantiate(itemButtonPrefab, sellListLayout);
                 TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
                 TextMeshProUGUI itemAmountText = button.GetComponentsInChildren<TextMeshProUGUI>()[1];
                 

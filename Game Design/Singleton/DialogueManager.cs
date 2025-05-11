@@ -329,6 +329,12 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             TextBox.EndNarration();
     }
 
+    public IEnumerator WaitUntilDialogueIsOver()
+    {
+        while(!DialogueEnded)
+            yield return null;
+    }
+
     private void SetUpDialogueVariables()
     {
         if(CurrentStory.variablesState["playerName"] != null)

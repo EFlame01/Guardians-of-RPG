@@ -23,21 +23,17 @@ public class MedicalObject : InteractableObject
     public void OnEnable()
     {
         _medicalCenterData = MedicalCenterDataContainer.GetMedicalCenterData(_medicalCenterID);
-        //TEST - Delete later
         if(_medicalCenterData == null)
         {
             _medicalCenterData = new MedicalCenterData(_medicalCenterID, _numOfUses, _maxUses);
             MedicalCenterDataContainer.MedicalCenterDataList.Add(_medicalCenterData);
         }
-        //end of TEST
         _numHeals = _medicalCenterData == null ? _maxUses : _medicalCenterData.Limit;
     }
 
     public override void Update()
     {
         base.Update();
-
-        _story = DialogueManager.Instance.CurrentStory;
 
         if(CheckToUpdateStory())
         {
@@ -48,25 +44,23 @@ public class MedicalObject : InteractableObject
 
     public override void InteractWithObject()
     {
-        if(CanInteract && !_useMedicalCenter && _medicalCenterData.NumOfTimesUsed < _medicalCenterData.Limit)
+        if(CanInteract && !_useMedicalCenter)
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _useMedicalCenter = true;
-            StartCoroutine(UseMedicalCenter());
-        }
-        else if(CanInteract && !_useMedicalCenter && _medicalCenterData.NumOfTimesUsed >= _medicalCenterData.Limit)
-        {
-            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-            _useMedicalCenter = true;
-            StartCoroutine(DontUseMedicalCenter());
+
+            if(_medicalCenterData.NumOfTimesUsed < _medicalCenterData.Limit)
+                StartCoroutine(UseMedicalCenter());
+            else
+                StartCoroutine(DontUseMedicalCenter());
         }
     }
 
     private IEnumerator UseMedicalCenter()
     {
         PlayDialogue(_useMCDialogue);
-        while(!DialogueManager.Instance.DialogueEnded)
-            yield return null;
+        
+        yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
 
         if(!_stopCheckingStoryUpdate)
             EndMedicalCare();
@@ -75,15 +69,15 @@ public class MedicalObject : InteractableObject
     private IEnumerator DontUseMedicalCenter()
     {
         PlayDialogue(_cannotUseMCDialogue);
-        while(!DialogueManager.Instance.DialogueEnded)
-            yield return null;
+        
+        yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
+        
         EndMedicalCare();
     }
 
     private IEnumerator UpdateStory()
     {
-        while(!DialogueManager.Instance.DialogueEnded)
-            yield return null;
+        yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
             
         yield return HealPlayer();
     }
@@ -98,8 +92,7 @@ public class MedicalObject : InteractableObject
 
         PlayDialogue(_usedMCDialogue);
 
-        while(!DialogueManager.Instance.DialogueEnded)
-            yield return null;
+        yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
         
         yield return new WaitForSeconds(0.5f);
 
@@ -120,6 +113,8 @@ public class MedicalObject : InteractableObject
 
     private bool CheckToUpdateStory()
     {
+        _story = DialogueManager.Instance.CurrentStory;
+
         return (
             _story != null && 
             _story.variablesState["acceptsMedicalHelp"] != null && 
