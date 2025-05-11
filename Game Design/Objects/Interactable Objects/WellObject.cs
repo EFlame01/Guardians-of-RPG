@@ -59,7 +59,7 @@ public class WellObject : InteractableObject, IDialogue
         _story = DialogueManager.Instance.CurrentStory;
 
         if(_story != null)
-            ModifyStory();
+            UpdateStory();
     }
 
     public void StartDialogue()
@@ -84,7 +84,7 @@ public class WellObject : InteractableObject, IDialogue
         StartDialogue();
     }
 
-    public void ModifyStory()
+    public void UpdateStory()
     {
         if(_story.variablesState["takesWater"] != null && (bool)_story.variablesState["takesWater"])
         {

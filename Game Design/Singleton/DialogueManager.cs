@@ -37,6 +37,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     private string _pluralName = "";
     private string _itemType = "";
     private int _number = 0;
+    private bool _clickedAlready = false;
 
     //Getters and Setters
     public void SetTextBox(TextBox textBox)
@@ -240,36 +241,39 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void SetUpConfirmation()
     {
-        // List<Choice> choices = CurrentStory.currentChoices;
-
+        List<Choice> choices = CurrentStory.currentChoices;
+        _clickedAlready = false;
         ConfirmationTextBox.ConfirmButton.onClick.AddListener(() =>
         {
-            try
-            {
-                CurrentStory.ChooseChoiceIndex(0);
-                Story tempStory = CurrentStory;
-                DisplayNextDialogue(_dialogueData);
-            } catch(Exception e){
-                Debug.LogWarning("Error at choice index 0: " + e.Message);
-            }
+            ClickedOption(0);
         });
 
         ConfirmationTextBox.CancelButton.onClick.AddListener(() =>
         {
-            try
-            {
-                CurrentStory.ChooseChoiceIndex(1);
-                Story tempStory = CurrentStory;
-                DisplayNextDialogue(_dialogueData);
-            } catch(Exception e) {
-                Debug.LogWarning("Error at choice index 1: " + e.Message);
-            }
+            ClickedOption(1);
         });
+    }
+
+    private void ClickedOption(int index)
+    {
+        if(_clickedAlready)
+            return;
+        
+        _clickedAlready = true;
+        try
+        {
+            CurrentStory.ChooseChoiceIndex(index);
+            Story tempStory = CurrentStory;
+            DisplayNextDialogue(_dialogueData);
+        } catch(Exception e){
+            Debug.LogWarning("Error at choice index" + index + ": " + e.Message);
+        }
     }
 
     private void SetUpDecision()
     {
         List<Choice> choices = CurrentStory.currentChoices;
+        _clickedAlready = false;
         if(choices.Count <= 0 || _originalText.Length <= 0)
         {
             EndDialogue();
@@ -290,6 +294,11 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void MakeDecision(Choice choice, List<Choice> currentChoices)
     {
+        if(_clickedAlready)
+            return;
+        
+        _clickedAlready = true;
+        
         //Finds the index of the choice based on how many options are in the list
         for(int i = 0; i < currentChoices.Count; i++)
         {

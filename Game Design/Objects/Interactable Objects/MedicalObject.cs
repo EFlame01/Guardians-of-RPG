@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Ink.Runtime;
 
 public class MedicalObject : InteractableObject
 {
@@ -9,16 +10,19 @@ public class MedicalObject : InteractableObject
     [SerializeField] public int _maxUses;
     [SerializeField] public DialogueData _useMCDialogue;
     [SerializeField] public DialogueData _cannotUseMCDialogue;
+    [SerializeField] public DialogueData _usedMCDialogue;
+    [SerializeField] public Animator animator;
 
     private bool _useMedicalCenter;
     private Story _story;
+    private bool _stopCheckingStoryUpdate;
     private DialogueData _dialogueData;
     private MedicalCenterData _medicalCenterData;
     private int _numHeals;
 
     public void OnEnable()
     {
-        _medicalCenterData = MedicalDataContainer.GetMedicalCenterData(_medicalCenterID);
+        _medicalCenterData = MedicalCenterDataContainer.GetMedicalCenterData(_medicalCenterID);
         //TEST - Delete later
         if(_medicalCenterData == null)
         {
@@ -29,13 +33,26 @@ public class MedicalObject : InteractableObject
         _numHeals = _medicalCenterData == null ? _maxUses : _medicalCenterData.Limit;
     }
 
+    public override void Update()
+    {
+        base.Update();
+
+        _story = DialogueManager.Instance.CurrentStory;
+
+        if(CheckToUpdateStory())
+        {
+            _stopCheckingStoryUpdate = true;
+            StartCoroutine(UpdateStory());
+        }
+    }
+
     public override void InteractWithObject()
     {
         if(CanInteract && !_useMedicalCenter && _medicalCenterData.NumOfTimesUsed < _medicalCenterData.Limit)
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _useMedicalCenter = true;
-            StartCoroutine(UseMedicalCenter());
+            UseMedicalCenter();
         }
         else if(CanInteract && !_useMedicalCenter && _medicalCenterData.NumOfTimesUsed >= _medicalCenterData.Limit)
         {
@@ -47,21 +64,71 @@ public class MedicalObject : InteractableObject
 
     private void UseMedicalCenter()
     {
-        Debug.Log("MEDICAL SHOP IN USE");
-        //TODO: Ask if they want to use the medical center.
-        //      If they want to use the medical center, heal
-        //      display another message that they have been healed
-        _dialogueData = _useMCDialogue;
-        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        PlayDialogue(_useMCDialogue);
     }
 
     private void DontUseMedicalCenter()
     {
-        Debug.Log("MEDICAL SHOP NOT IN USE");
-        //TODO: Tell them that they cannot use the medical center because they
-        //      exceeded the amount of times they can use it.
-        _dialogueData = _cannotUseMCDialogue;
+        PlayDialogue(_cannotUseMCDialogue);
+        //TODO: Wait for dialogue to be finished
+        //      before calling next function;
+        EndMedicalCare();
+    }
+
+    private IEnumerator UpdateStory()
+    {
+        while(!DialogueManager.Instance.DialogueEnded)
+            yield return null;
+            
+        yield return HealPlayer();
+    }
+
+    private IEnumerator HealPlayer()
+    {
+        RestorePlayerHealth();
+        yield return new WaitForSeconds(0.5f);
+
+        animator.Play("heal");
+        yield return new WaitForSeconds(1.5f);
+
+        PlayDialogue(_usedMCDialogue);
+
+        while(!DialogueManager.Instance.DialogueEnded)
+            yield return null;
+        
+        yield return new WaitForSeconds(0.5f);
+
+        EndMedicalCare();
+    }
+
+    private void EndMedicalCare()
+    {
+        GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
+        _stopCheckingStoryUpdate = false;
+    }
+
+    private void PlayDialogue(DialogueData dialogueData)
+    {
+        _dialogueData = dialogueData;
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+    }
+
+    private bool CheckToUpdateStory()
+    {
+        return (
+            _story != null && 
+            _story.variablesState["acceptsMedicalHelp"] != null && 
+            (bool)_story.variablesState["acceptsMedicalHelp"] && 
+            !_stopCheckingStoryUpdate
+        );
+    }
+
+    private void RestorePlayerHealth()
+    {
+        Player player = Player.Instance();
+        player.BaseStats.ResetStats();
+        player.BaseStats.SetHp(player.BaseStats.FullHp);
+        _medicalCenterData.NumOfTimesUsed++;
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D)

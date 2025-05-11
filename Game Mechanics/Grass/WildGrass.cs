@@ -11,12 +11,13 @@ public class WildGrass : MonoBehaviour
 
     public void Update()
     {
-        UpdateGrassAnimation();
+        if(GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
+            UpdateGrassAnimation();
     }
 
     public void UpdateGrassAnimation()
     {
-        if(InGrass() && GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
+        if(InGrass())
             animator.Play("grass");
         else
             animator.Play("none");
