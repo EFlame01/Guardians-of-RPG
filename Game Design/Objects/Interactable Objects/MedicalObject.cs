@@ -52,26 +52,31 @@ public class MedicalObject : InteractableObject
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _useMedicalCenter = true;
-            UseMedicalCenter();
+            StartCoroutine(UseMedicalCenter());
         }
         else if(CanInteract && !_useMedicalCenter && _medicalCenterData.NumOfTimesUsed >= _medicalCenterData.Limit)
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _useMedicalCenter = true;
-            DontUseMedicalCenter();
+            StartCoroutine(DontUseMedicalCenter());
         }
     }
 
-    private void UseMedicalCenter()
+    private IEnumerator UseMedicalCenter()
     {
         PlayDialogue(_useMCDialogue);
+        while(!DialogueManager.Instance.DialogueEnded)
+            yield return null;
+
+        if(!_stopCheckingStoryUpdate)
+            EndMedicalCare();
     }
 
-    private void DontUseMedicalCenter()
+    private IEnumerator DontUseMedicalCenter()
     {
         PlayDialogue(_cannotUseMCDialogue);
-        //TODO: Wait for dialogue to be finished
-        //      before calling next function;
+        while(!DialogueManager.Instance.DialogueEnded)
+            yield return null;
         EndMedicalCare();
     }
 
