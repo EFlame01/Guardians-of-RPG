@@ -22,6 +22,10 @@ public class CutScene : MonoBehaviour
     [SerializeField] public PlayerDirection EndDirection;
     [SerializeField] public ActivateObject ActivateObject;
     [SerializeField] private bool _refreshCutScene;
+    [SerializeField] public int TimeOfDay;
+    [SerializeField] public bool StartTimer;
+    [SerializeField] public string TrackName;
+    [SerializeField] public bool PlayMusicOnStart;
 
     private int _trackIndex;
     private RuntimeAnimatorController[] _tempControllers;
@@ -34,17 +38,15 @@ public class CutScene : MonoBehaviour
         //If we have an active object component
         //  check if game object should be destoryed
         //  before starting the cut scene
-        if(ActivateObject != null)
-        {
-            bool activate = ActivateObject.DetermineActivateCriteria();
-            bool deactivate = ActivateObject.DetermineDeactivateCriteria();
-            if(!activate || deactivate)
-            {
-                // Debug.Log("Cut Scene for gameObject " + gameObject.name + " did not meet the activate criteria, or it met the deactivate criteria: " + activate + " " + deactivate);
-                gameObject.SetActive(false);
-                return;
-            }
-        }
+        ActivateCutScene();
+
+        //Set time of day and determine if timer should start
+        //  or day should be paused for cut scene
+        SetDay();
+
+        //Set Music
+        if(PlayMusicOnStart)
+            SetMusic();
 
         //If this cut scene should be played
         //  immediately, then start the cut scene
@@ -236,6 +238,32 @@ public class CutScene : MonoBehaviour
             cutSceneState.IsDone = false;
             RefreshCutScene(cutSceneState.NextState);
         }
+    }
+
+    private void ActivateCutScene()
+    {
+        if(ActivateObject != null)
+        {
+            bool activate = ActivateObject.DetermineActivateCriteria();
+            bool deactivate = ActivateObject.DetermineDeactivateCriteria();
+            if(!activate || deactivate)
+            {
+                // Debug.Log("Cut Scene for gameObject " + gameObject.name + " did not meet the activate criteria, or it met the deactivate criteria: " + activate + " " + deactivate);
+                gameObject.SetActive(false);
+                return;
+            }
+        }
+    }
+
+    private void SetDay()
+    {
+        DayNightCycle dayNightCycle = new DayNightCycle();
+        dayNightCycle.SetTimeOfDay(TimeOfDay, StartTimer);
+    }
+
+    private void SetMusic()
+    {
+        AudioManager.Instance.BlendMusic(TrackName);
     }
 
     public void OnTriggerEnter2D(Collider2D collider2D)

@@ -137,6 +137,14 @@ public class AudioManager : PersistentSingleton<AudioManager>
         StartCoroutine(StartFade(0.1f, _audioSource.volume, music.Volume * GameManager.Instance.GameVolume));
     }
 
+    public void BlendMusic(string trackName)
+    {
+        AudioSource tempAudioSource = _audioSource;
+        
+        StopCurrentMusic(false, tempAudioSource);
+        PlayMusic(trackName, false);
+    }
+
     /// <summary>
     /// Initializes the audio dictionary.
     /// </summary>
@@ -191,5 +199,88 @@ public class AudioManager : PersistentSingleton<AudioManager>
         
         if(targetVolume <= 0f)
             _audioSource.volume = 0f;
+    }
+
+    /// <summary>
+    /// Plays the name of the song either gradually
+    /// or immediately for temporary <paramref name="audioSource"/>
+    /// </summary>
+    /// <param name="name">The name of the song</param>
+    /// <param name="immediately">Determines whether to play the song gradually or immediately</param>
+    /// <param name="audioSource">Temporary audio source</param>
+    public void PlayMusic(string name, bool immediately, AudioSource audioSource)
+    {
+        if(name == null)
+            Debug.Log(name + " not found. Cannot play music.");
+            
+        Sound music = _audioDictionary[name];
+
+        if(name == null || music == null || name.Equals(_currentMusic))
+            return;
+
+        //play music.
+        _currentMusic = name;
+        audioSource.clip = music.Clip;
+        audioSource.pitch = music.Pitch;
+        audioSource.loop = true;
+        
+        if(immediately)
+            audioSource.volume = music.Volume * GameManager.Instance.GameVolume;
+        else
+        {
+            audioSource.volume = 0f;
+            StartCoroutine(StartFade(1f, audioSource.volume, music.Volume * GameManager.Instance.GameVolume, audioSource));
+        }
+        audioSource.Play();
+    }
+
+    /// <summary>
+    /// Stops the current song from playing either
+    /// gradually or immediately for temporary
+    /// <paramref name="audioSource"/>
+    /// </summary>
+    /// <param name="immediately">Determines whether to stop the song gradually or immediately</param>
+    /// <param name="audioSource">Temporary audio source</param>
+    private void StopCurrentMusic(bool immediately, AudioSource audioSource)
+    {
+        if(!audioSource.isPlaying)
+            return;
+
+        if(_audioDictionary[_currentMusic] == null)
+            return;
+
+        if(!immediately)
+            StartCoroutine(StartFade(1f, audioSource.volume, 0f, audioSource));
+        else
+        {
+            audioSource.Stop();
+            audioSource.volume = 0f;
+        }
+
+        _currentMusic = null;
+    }
+
+    /// <summary>
+    /// Coroutine that fades music either in our out for temporary
+    /// <paramref name="audioSource"/>
+    /// </summary>
+    /// <param name="duration">Amount of time the fade should last</param>
+    /// <param name="startVolume">Start volume</param>
+    /// <param name="targetVolume">End volume</param>
+    /// <param name="audioSource">temporary audio source</param>
+    /// <returns></returns>
+    private IEnumerator StartFade(float duration, float startVolume, float targetVolume, AudioSource audioSource)
+    {
+        float currentTime = 0f;
+
+        while(currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, currentTime/duration);
+            yield return null;
+        }
+        
+        if(targetVolume <= 0f)
+            audioSource.volume = 0f;
     }
 }
