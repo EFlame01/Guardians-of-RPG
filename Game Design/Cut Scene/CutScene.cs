@@ -12,18 +12,22 @@ using TMPro.Examples;
 /// </summary>
 public class CutScene : MonoBehaviour
 {
+    [Header("Director")]
     [SerializeField] public float StartTime;
     [SerializeField] public CutSceneState CurrentState;
     [SerializeField] public PlayableDirector director;
     [SerializeField] public Animator[] animators;
+    [Header("Cut Scene State")]
     [SerializeField] public PlayerState TransitionOrCutScene;
     [SerializeField] public bool PlayOnStart;
     [SerializeField] public bool ResumeOnEnd;
     [SerializeField] public PlayerDirection EndDirection;
     [SerializeField] public ActivateObject ActivateObject;
     [SerializeField] private bool _refreshCutScene;
+    [Header("Day/Night Cycle")]
     [SerializeField] public int TimeOfDay;
     [SerializeField] public bool StartTimer;
+    [Header("Music")]
     [SerializeField] public string TrackName;
     [SerializeField] public bool PlayMusicOnStart;
 
@@ -257,13 +261,18 @@ public class CutScene : MonoBehaviour
 
     private void SetDay()
     {
-        DayNightCycle dayNightCycle = new DayNightCycle();
-        dayNightCycle.SetTimeOfDay(TimeOfDay, StartTimer);
+        try{
+            DayNightCycle.Instance.SetTimeOfDay(TimeOfDay, StartTimer);
+        } catch(Exception e)
+        {
+            Debug.LogWarning(e.Message);
+        }
     }
 
     private void SetMusic()
     {
-        AudioManager.Instance.BlendMusic(TrackName);
+        if(TrackName == null || TrackName.Length == 0)
+            AudioManager.Instance.BlendMusic(TrackName);
     }
 
     public void OnTriggerEnter2D(Collider2D collider2D)

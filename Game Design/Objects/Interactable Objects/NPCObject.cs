@@ -74,6 +74,10 @@ public class NPCObject : InteractableObject, IDialogue
         TurnToPlayer();
         yield return new WaitForSeconds(0.2f);
         StartDialogue();
+        while(DialogueManager.Instance.DialogueEnded)
+            yield return null;
+        
+        GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }
 
     /// <summary>

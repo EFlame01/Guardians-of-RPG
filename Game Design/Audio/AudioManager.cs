@@ -81,13 +81,14 @@ public class AudioManager : PersistentSingleton<AudioManager>
     /// <param name="immediately">Determines whether to play the song gradually or immediately</param>
     public void PlayMusic(string name, bool immediately)
     {
-        if(name == null)
+        if(name == null || name.Length == 0)
             Debug.Log(name + " not found. Cannot play music.");
             
         Sound music = _audioDictionary[name];
 
         if(name == null || music == null || name.Equals(_currentMusic))
             return;
+
 
         //play music.
         _currentMusic = name;

@@ -12,12 +12,17 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class FightState : CutSceneState
 {
+    [Header("Battle System Data")]
     [SerializeField] public string Environment;
     [SerializeField] public BattleCharacterData BattlePlayerData;
     [SerializeField] public BattleCharacterData[] BattleAlliesData;
     [SerializeField] public BattleCharacterData[] BattleEnemiesData;
+    [Header("Transition")]
     [SerializeField] public TransitionType TransitionType;
+    [Header("Story Flags")]
     [SerializeField] public string[] StoryFlagsIfWon;
+    [Header("Music")]
+    [SerializeField] public string TrackName;
 
     public override void Enter()
     {
@@ -34,6 +39,11 @@ public class FightState : CutSceneState
     public override void Exit()
     {
         base.Exit();
+    }
+
+    private void SetUpBattleMusic()
+    {
+        AudioManager.Instance.PlayMusic(TrackName, true);
     }
 
     private void SetUpForBattle()

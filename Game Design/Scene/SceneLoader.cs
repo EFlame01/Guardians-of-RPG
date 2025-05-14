@@ -118,11 +118,13 @@ public class SceneLoader : Singleton<SceneLoader>
     /// </summary>
     private void WalkIn()
     {
+        Debug.Log("Test 1: Made it to WalkIn()...");
         walkInAnimation = false;
 
         if(CutScenesActive())
             return;
                 
+        Debug.Log("Test 2: No cut scenes are active...");
         switch(PlayerSpawn.PlayerDirection)
         {
             case PlayerDirection.DOWN:
@@ -155,6 +157,7 @@ public class SceneLoader : Singleton<SceneLoader>
                 break;
         }
 
+        Debug.Log("Test 3: PlayableDirector used: " + (_walkCutScene.director != null));
         _walkCutScene.gameObject.SetActive(true);
         _walkCutScene.StartCutScene();
     }
@@ -174,7 +177,10 @@ public class SceneLoader : Singleton<SceneLoader>
         foreach(CutScene cutScene in _cutScenes)
         {
             if(cutScene != null && cutScene.gameObject.activeSelf && cutScene.PlayOnStart)
+            {
+                Debug.Log("Active Cut Scene: " + cutScene.gameObject.name + " " + cutScene.gameObject.activeSelf);
                 return true;
+            }
         }
 
         return false;
