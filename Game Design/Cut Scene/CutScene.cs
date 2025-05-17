@@ -36,14 +36,17 @@ public class CutScene : MonoBehaviour
     private bool _cutSceneStarted;
     private CutSceneState _head;
 
-    // Start is called before the first frame update
-    public void Start()
+    public void Awake()
     {
         //If we have an active object component
         //  check if game object should be destoryed
         //  before starting the cut scene
         ActivateCutScene();
+    }
 
+    // Start is called before the first frame update
+    public void Start()
+    {
         //Set time of day and determine if timer should start
         //  or day should be paused for cut scene
         SetDay();
@@ -147,7 +150,7 @@ public class CutScene : MonoBehaviour
             PlayerSpawn.PlayerDirection = EndDirection;
 
         director.Stop();
-        ResetCamera();
+        // ResetCamera();
         if(ResumeOnEnd)
             GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
         
@@ -164,6 +167,8 @@ public class CutScene : MonoBehaviour
             RefreshCutScene(_head);
             CurrentState = _head;
         }
+
+        CameraFocus.ResetCamera = true;
     }
 
     /// <summary>

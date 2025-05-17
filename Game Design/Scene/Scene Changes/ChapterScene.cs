@@ -27,6 +27,8 @@ public class ChapterScene : MonoBehaviour
         PartText.text = PartName;
         ChapterText.text = ChapterName;
 
+        AudioManager.Instance.StopCurrentMusic(false);
+
         if(ChapterStoryFlag != null)
             Player.Instance().StoryFlagManager.UpdateFlag(ChapterStoryFlag, true);
 

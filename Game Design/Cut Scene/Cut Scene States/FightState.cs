@@ -28,6 +28,7 @@ public class FightState : CutSceneState
     {
         base.Enter();
         SetStoryFlagsInCutScene();
+        SetUpBattleMusic();
         SetUpForBattle();
     }
 

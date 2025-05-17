@@ -12,7 +12,7 @@ public class SceneMusicPlayer : MonoBehaviour
 
     private bool _musicStarted;
 
-    public void Awake()
+    public void Start()
     {
         PlayMusic();
     }
