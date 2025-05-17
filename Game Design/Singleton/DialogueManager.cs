@@ -21,6 +21,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     //public variables
     public bool DialogueEnded {get; private set;}
+    public bool DialogueContinued {get; private set;}
     public Story CurrentStory;
 
     //private variables
@@ -85,6 +86,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     public void DisplayNextDialogue(DialogueData dialogueData)
     {
         DialogueEnded = false;
+        DialogueContinued = true;
 
         //assigns global _dialogueData variable to use for further methods
         _dialogueData = dialogueData;
@@ -214,6 +216,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         AudioManager.Instance.StopSoundEffect("scroll_05");
 
         _dialogueIsPlaying = false;
+        DialogueContinued = false;
         GameManager.Instance.EnableNarrationInputs = true;
     }
 
@@ -224,6 +227,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         _currentTextBox.EndNarration();
         _dialogueEnded = false;
         DialogueEnded = true;
+        DialogueContinued = false;
         CloseRightTextBox(null);
     }
 

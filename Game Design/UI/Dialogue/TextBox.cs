@@ -129,6 +129,9 @@ public class TextBox : MonoBehaviour
 
     protected void ContinueNarration()
     {
-        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        if(!DialogueManager.Instance.DialogueContinued)
+        {
+            DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        }
     }
 }
