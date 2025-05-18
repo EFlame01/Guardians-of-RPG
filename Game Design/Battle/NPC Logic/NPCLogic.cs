@@ -11,8 +11,8 @@ public class NPCLogic
 {
     //public variables
     public Character character;
-    public List<Character> CharacterAllies {get; private set;}
-    public List<Character> CharacterEnemies {get; private set;}
+    public List<Character> CharacterAllies { get; private set; }
+    public List<Character> CharacterEnemies { get; private set; }
 
     //Constructor
     public NPCLogic(Character c)
@@ -32,10 +32,10 @@ public class NPCLogic
         List<Character> targets = new List<Character>();
         Player player = Player.Instance();
         string type = character.Type;
-        
-        if(type.Equals("ALLY"))
+
+        if (type.Equals("ALLY"))
             AddCharactersToTargetList(CharacterAllies, CharacterEnemies, false);
-        else if(type.Equals("ENEMY"))
+        else if (type.Equals("ENEMY"))
             AddCharactersToTargetList(CharacterEnemies, CharacterAllies, true);
         else
             Debug.Log(type);
@@ -53,16 +53,20 @@ public class NPCLogic
     {
         List<Move> allMoves = new List<Move>();
 
-        foreach(Move move in character.BattleMoves)
+        foreach (Move move in character.BattleMoves)
         {
-            if(move != null)
+            if (move != null)
                 allMoves.Add(move);
         }
 
-        if(allMoves.Count > 0)
+        if (allMoves.Count > 0)
         {
-            int randomIndex = Random.Range(0, 100)%allMoves.Count;
-            character.BattleStatus.ChosenMove = character.BattleMoves[randomIndex];
+            int randomIndex = Random.Range(0, 100) % allMoves.Count;
+            Move move = character.BattleMoves[randomIndex];
+            if (CanUseMove(move, CharacterAllies, CharacterEnemies))
+                character.BattleStatus.ChosenMove = character.BattleMoves[randomIndex];
+            else
+                character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
         }
         else
             character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
@@ -81,26 +85,26 @@ public class NPCLogic
     public void SetRandomTargets()
     {
         Move move = character.BattleStatus.ChosenMove;
-        int allyIndex =  CharacterAllies.Count <= 0 ? -1 : Random.Range(0, 100)%CharacterAllies.Count;
-        int enemyIndex =  CharacterEnemies.Count <= 0 ? -1 : Random.Range(0,100)%CharacterEnemies.Count;
-        
-        if(move == null)
+        int allyIndex = CharacterAllies.Count <= 0 ? -1 : Random.Range(0, 100) % CharacterAllies.Count;
+        int enemyIndex = CharacterEnemies.Count <= 0 ? -1 : Random.Range(0, 100) % CharacterEnemies.Count;
+
+        if (move == null)
             return;
-        
-        switch(move.Target)
+
+        switch (move.Target)
         {
             case MoveTarget.USER:
                 character.BattleStatus.ChosenTargets.Add(character);
                 break;
             case MoveTarget.ENEMY:
-                if(enemyIndex != -1)
+                if (enemyIndex != -1)
                     character.BattleStatus.ChosenTargets.Add(CharacterEnemies[enemyIndex]);
                 break;
             case MoveTarget.ALL_ENEMIES:
                 character.BattleStatus.ChosenTargets.AddRange(CharacterEnemies.ToArray());
                 break;
             case MoveTarget.ALLY:
-                if(allyIndex != -1)
+                if (allyIndex != -1)
                     character.BattleStatus.ChosenTargets.Add(CharacterAllies[allyIndex]);
                 break;
             case MoveTarget.ALL_ALLIES:
@@ -164,19 +168,46 @@ public class NPCLogic
     private void AddCharactersToTargetList(List<Character> allies, List<Character> enemies, bool isPlayerEnemy)
     {
         Player player = Player.Instance();
-        if(player.BaseStats.Hp > 0)
+        if (player.BaseStats.Hp > 0)
             allies.Add(player);
-        
-        foreach(Character c in BattleSimStatus.Allies)
+
+        foreach (Character c in BattleSimStatus.Allies)
         {
-            if(c.BaseStats.Hp > 0 && !c.Id.Equals(character.Id))
+            if (c.BaseStats.Hp > 0 && !c.Id.Equals(character.Id))
                 allies.Add(c);
         }
 
-        foreach(Character c in BattleSimStatus.Enemies)
+        foreach (Character c in BattleSimStatus.Enemies)
         {
-            if(c.BaseStats.Hp > 0 && !c.Id.Equals(character.Id))
+            if (c.BaseStats.Hp > 0 && !c.Id.Equals(character.Id))
                 enemies.Add(c);
+        }
+    }
+
+    private bool CanUseMove(Move move, List<Character> allies, List<Character> enemies)
+    {
+        MoveTarget moveTarget = move.Target;
+
+        switch (moveTarget)
+        {
+            case MoveTarget.USER:
+            case MoveTarget.EVERYONE:
+            case MoveTarget.ALL_ALLIES:
+                return true;
+            case MoveTarget.ENEMY:
+            case MoveTarget.ALL_ENEMIES:
+                if (enemies.Count == 0)
+                    return false;
+                else
+                    return true;
+            case MoveTarget.ALLY:
+            case MoveTarget.ALLY_SIDE:
+                if (allies.Count == 0)
+                    return false;
+                else
+                    return true;
+            default:
+                return true;
         }
     }
 }

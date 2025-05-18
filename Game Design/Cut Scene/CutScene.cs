@@ -25,6 +25,7 @@ public class CutScene : MonoBehaviour
     [SerializeField] public ActivateObject ActivateObject;
     [SerializeField] private bool _refreshCutScene;
     [Header("Day/Night Cycle")]
+    [SerializeField] public bool SetDayOnStart;
     [SerializeField] public int TimeOfDay;
     [SerializeField] public bool StartTimer;
     [Header("Music")]
@@ -49,7 +50,8 @@ public class CutScene : MonoBehaviour
     {
         //Set time of day and determine if timer should start
         //  or day should be paused for cut scene
-        SetDay();
+        if(SetDayOnStart)
+            SetDay(false);
 
         //Set Music
         if(PlayMusicOnStart)
@@ -146,29 +148,37 @@ public class CutScene : MonoBehaviour
     /// </summary>
     private void EndCutScene()
     {
-        if(!EndDirection.Equals(PlayerDirection.NONE))
+        if (!EndDirection.Equals(PlayerDirection.NONE))
             PlayerSpawn.PlayerDirection = EndDirection;
 
         director.Stop();
         // ResetCamera();
-        if(ResumeOnEnd)
+        if (ResumeOnEnd)
             GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
-        
-        for(int i = 0; i < animators.Length; i++)
+
+        for (int i = 0; i < animators.Length; i++)
         {
-            if(animators[i] != null && _tempControllers[i] != null)
+            if (animators[i] != null && _tempControllers[i] != null)
                 animators[i].runtimeAnimatorController = _tempControllers[i];
         }
 
         _tempControllers = null;
-        
-        if(_refreshCutScene)
+
+        if (_refreshCutScene)
         {
             RefreshCutScene(_head);
             CurrentState = _head;
         }
 
         CameraFocus.ResetCamera = true;
+        try
+        {
+            DayNightCycle.Instance.ResumeTimer();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 
     /// <summary>
@@ -264,10 +274,10 @@ public class CutScene : MonoBehaviour
         }
     }
 
-    private void SetDay()
+    private void SetDay(bool startTimer)
     {
         try{
-            DayNightCycle.Instance.SetTimeOfDay(TimeOfDay, StartTimer);
+            DayNightCycle.Instance.SetTimeOfDay(TimeOfDay, startTimer);
         } catch(Exception e)
         {
             Debug.LogWarning(e.Message);

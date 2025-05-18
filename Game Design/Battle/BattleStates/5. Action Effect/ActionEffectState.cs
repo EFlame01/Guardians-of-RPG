@@ -62,13 +62,13 @@ public class ActionEffectState : BattleState
 
     private void CheckStatus()
     {
-        if(_battleActionEffect.Target.BaseStats.Hp == 0)
+        if (_battleActionEffect.Target.BaseStats.Hp == 0)
         {
             BattleSimStatus.RoundKnockOuts.Add(_battleActionEffect.Target);
             BattleSimStatus.Graveyard.Add(_battleActionEffect.Target);
-            if(_battleActionEffect.Target.Type.Equals("ALLY"))
+            if (_battleActionEffect.Target.Type.Equals("ALLY"))
                 BattleSimStatus.Allies.Remove(_battleActionEffect.Target);
-            else if(_battleActionEffect.Target.Type.Equals("ENEMY"))
+            else if (_battleActionEffect.Target.Type.Equals("ENEMY"))
                 BattleSimStatus.Enemies.Remove(_battleActionEffect.Target);
         }
         if(_battleActionEffect.TargetQueue.Count == 0)
