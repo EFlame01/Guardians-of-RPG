@@ -31,13 +31,15 @@ public class SceneMusicPlayer : MonoBehaviour
     /// </summary>
     private void PlayMusic()
     {
-        if(CanStartMusicPlayer())
+        if (CanStartMusicPlayer())
         {
             _musicStarted = true;
-            AudioManager.Instance.PlayMusic(trackName, playTrackImmediately);
+            // AudioManager.Instance.PlayMusic(trackName, playTrackImmediately);
+            AudioManager.Instance.BlendMusic(trackName);
         }
         else
-            AudioManager.Instance.StopCurrentMusic(true);
+            return;
+            // AudioManager.Instance.StopCurrentMusic(true);
     }
 
     /// <summary>

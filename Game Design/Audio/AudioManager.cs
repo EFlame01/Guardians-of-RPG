@@ -208,6 +208,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         if(trackName.Equals(_currentMusic))
             return;
 
+        Debug.Log("Blending Music");
         AudioSource tempAudioSource = _audioSource;
         
         StopCurrentMusic(false, tempAudioSource);
