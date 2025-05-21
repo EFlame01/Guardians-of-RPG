@@ -137,7 +137,9 @@ public class CutScene : MonoBehaviour
             director.Resume();
         else
             director.Play();
-            
+
+        SetMusic();
+
         _cutSceneStarted = true;
     }
 
@@ -152,7 +154,6 @@ public class CutScene : MonoBehaviour
             PlayerSpawn.PlayerDirection = EndDirection;
 
         director.Stop();
-        // ResetCamera();
         if (ResumeOnEnd)
             GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
 
@@ -267,7 +268,6 @@ public class CutScene : MonoBehaviour
             bool deactivate = ActivateObject.DetermineDeactivateCriteria();
             if(!activate || deactivate)
             {
-                // Debug.Log("Cut Scene for gameObject " + gameObject.name + " did not meet the activate criteria, or it met the deactivate criteria: " + activate + " " + deactivate);
                 gameObject.SetActive(false);
                 return;
             }
@@ -286,8 +286,11 @@ public class CutScene : MonoBehaviour
 
     private void SetMusic()
     {
-        if(TrackName == null || TrackName.Length == 0)
-            AudioManager.Instance.BlendMusic(TrackName);
+        if (TrackName == null || TrackName.Length > 0)
+        {
+            Debug.Log(TrackName);
+            StartCoroutine(AudioManager.Instance.BlendMusic(TrackName));
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D collider2D)

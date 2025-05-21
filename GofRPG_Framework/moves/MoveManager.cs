@@ -100,7 +100,7 @@ public class MoveManager
     /// </summary>
     /// <param name="moveName">name of the move</param>
     /// <returns></returns>
-    private bool MoveExistsInBattleSlot(string moveName)
+    public bool MoveExistsInBattleSlot(string moveName)
     {
         Move[] moves = Player.Instance().BattleMoves;
         foreach(Move move in moves)

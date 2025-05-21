@@ -34,8 +34,8 @@ public class SceneMusicPlayer : MonoBehaviour
         if (CanStartMusicPlayer())
         {
             _musicStarted = true;
-            // AudioManager.Instance.PlayMusic(trackName, playTrackImmediately);
-            AudioManager.Instance.BlendMusic(trackName);
+            AudioManager.Instance.PlayMusic(trackName, playTrackImmediately);
+            // AudioManager.Instance.BlendMusic(trackName);
         }
         else
             return;
@@ -48,9 +48,16 @@ public class SceneMusicPlayer : MonoBehaviour
     /// <returns><c>TRUE</c> if we can play music. <c>FALSE</c> if otherwise.</returns>
     private bool CanStartMusicPlayer()
     {
-        if(GameManager.Instance.PlayerState.Equals(PlayerState.CUT_SCENE))
-            return false;
+        // if (GameManager.Instance.PlayerState.Equals(PlayerState.CUT_SCENE))
+        //     return false;
 
-        return true;
+        // return true;
+
+        return (GameManager.Instance.PlayerState) switch
+        {
+            PlayerState.CUT_SCENE => false,
+            PlayerState.TRANSITION => false,
+            _ => true
+        };
     }
 }

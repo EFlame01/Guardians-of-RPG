@@ -50,7 +50,7 @@ public class Level
             return null;
         
         foreach(Move move in moves)
-            if(move.Level == player.Level)
+            if((move.Level == player.Level) && !(player.MoveManager.MoveExistsInBattleSlot(move.Name)))
                 learnedMoves.Add(move);
 
         return learnedMoves.ToArray();

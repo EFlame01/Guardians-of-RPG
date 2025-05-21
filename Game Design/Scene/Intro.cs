@@ -178,7 +178,8 @@ public class Intro : MonoBehaviour, IDialogue
 
     private void Intro5()
     {
-        ActivateState(5); 
+        ActivateState(5);
+        player = Player.Instance();
         player.SetArchetype(archetype);
         player.SetBaseStats
         (
