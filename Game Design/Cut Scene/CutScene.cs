@@ -172,14 +172,7 @@ public class CutScene : MonoBehaviour
         }
 
         CameraFocus.ResetCamera = true;
-        try
-        {
-            DayNightCycle.Instance.ResumeTimer();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
+        SetDay(StartTimer);
     }
 
     /// <summary>
