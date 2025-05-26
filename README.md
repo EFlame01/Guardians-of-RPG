@@ -249,6 +249,3 @@ This README file explains the mechanics behind the framework used to code the ga
     * StoryFlagData
     * WellData
     * WellDataContainer
-
-
-
