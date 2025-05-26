@@ -6,7 +6,95 @@ Guardians of RPG is a 16-bit turn based Role Playing Game where you wake up as t
 This README file explains the mechanics behind the framework used to code the game. In other words, cloning this repo will not give you access to the version of the game for yourself, it will give you the skeletal structure to design a game with similar mechanics. All you need to do is study this README file to understand how everything works.
 ## Table of Contents
 ### Section 1 How Code is Organized
-### Section 2 Game Design
+### Section 2: GofRPG_Framework
+1. Character
+    * Character
+    * Player
+2. Archetype
+    * Archetype
+    * RegularSwordsman
+    * DualSwordsman
+    * Knight
+    * HeavyShielder
+    * EnergyManipulator
+    * NatureManipulator
+    * MixedMartialArtist
+    * Berserker
+    * CombatSpecialist
+    * WeaponSpecialist
+3. Stats
+    * BaseStats
+4. Quests
+    * Quest
+    * QuestManager
+5. Items
+    * Item
+    * ItemType
+    * FoodItem
+    * HealingItem
+    * KeyItem
+    * MedicalItem
+    * PriorityItem
+    * StatChangingItem
+    * Inventory
+6. Moves
+    * Move
+    * MoveType
+    * MoveTarget
+    * RegularMove
+    * PriorityMove
+    * StatChangingMove
+    * StatusChangingMove
+    * HealingMove
+    * KnockoutMove
+    * ProtectMove
+    * CounterMove
+    * MoveManager
+7. Status
+    * BattleStatus
+    * Blind
+    * Burn
+    * Charm
+    * Confuse
+    * Deafen
+    * Exhaustion
+    * Flinch
+    * Frighten
+    * Frozen
+    * Petrified
+    * Poison
+    * Restrain
+    * Sleep
+    * Stun
+    * TurnStatus
+8. Effects
+    * Effect
+    * EffectType
+    * EffectOrigin
+    * AnnounceEffect
+    * HealthBoostEffect
+    * ImmunityEffect
+    * NegationEffect
+    * RechargeEffect
+    * RecoilEffect
+    * StabBoostEffect
+    * StatChangeEffect
+    * StatusConditionEffect
+9. Abilities
+    * Ability
+    * AbilityManager
+10. Database
+    * CharacterMaker
+    * MoveMaker
+    * ItemMaker
+    * QuestMaker
+    * EffectMaker
+    * AbilityMaker
+    * StoryFlagMaker
+    * MapDescMaker
+    * DataEncoder
+11. Units
+### Section 3 Game Design
 1. Singleton
     * DialogueManager
     * GameManager
@@ -161,6 +249,6 @@ This README file explains the mechanics behind the framework used to code the ga
     * StoryFlagData
     * WellData
     * WellDataContainer
-### Section 3: GofRPG_Framework
+
 
 
