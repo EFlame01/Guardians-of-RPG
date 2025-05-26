@@ -6,7 +6,7 @@ Guardians of RPG is a 16-bit turn based Role Playing Game where you wake up as t
 This README file explains the mechanics behind the framework used to code the game. In other words, cloning this repo will not give you access to the version of the game for yourself, it will give you the skeletal structure to design a game with similar mechanics. All you need to do is study this README file to understand how everything works.
 ## Table of Contents
 ### [Section 1: How Code is Organized](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-1-how-code-is-organized-1)
-### [Section 2: GofRPG_Framework](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-2-gofRPG_framework)
+### [Section 2: GofRPG_Framework](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-2-gofRPG_framework-1)
 1. Character
     * Character
     * Player
@@ -94,7 +94,7 @@ This README file explains the mechanics behind the framework used to code the ga
     * MapDescMaker
     * DataEncoder
 11. Units
-### [Section 3 Game Design](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-3-game-design)
+### [Section 3 Game Design](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-3-game-design-1)
 1. Singleton
     * DialogueManager
     * GameManager
