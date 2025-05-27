@@ -6,7 +6,7 @@ Guardians of RPG is a 16-bit turn based Role Playing Game where you wake up as t
 This README file explains the mechanics behind the framework used to code the game. In other words, cloning this repo will not give you access to the version of the game for yourself, it will give you the skeletal structure to design a game with similar mechanics. All you need to do is study this README file to understand how everything works.
 ## Table of Contents
 ### [Section 1: How Code is Organized](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-1-how-code-is-organized-1)
-### [Section 2: GofRPG_Framework](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-2-gofrpg-base-code-1)
+### [Section 2: GofRPG Base Code](https://github.com/EFlame01/Guardians-of-RPG/blob/main/README.md/#section-2-gofrpg-base-code-1)
 1. Character
     * Character
     * Player
@@ -250,6 +250,17 @@ This README file explains the mechanics behind the framework used to code the ga
     * WellData
     * WellDataContainer
 ## Section 1: How Code is Organized
-The code is organized into 2 parts: The GofRPG base code and the Game Design code. GofRPG base code holds the core mechanics of Guardians of RPG.
+The code is organized into 2 folders: The GofRPG Base Code and the Game Design code.
+* GofRPG Base Code is the folder that holds the core mechanics of the Guardians of RPG.
+* Game Design is the folder that houses the files that interact specifically with the Unity game engine.
+
+In other words, There is an order of levels in which the code directly interacts with the user:
+> GofRPG Base Code folder >> Game Design folder>> Unity Engine >> User
+
+To learn more about a specific part, you may either explore section 2 for the base code, or section 3 for the game design code.
 ## Section 2: GofRPG Base Code
+### Chapter 1: Character
+In Guardians of RPG, a Character is a specialized NPC with attributes that make them able to battle, use items, and more. The following chapter will discuss the different types of Character classes in the base code.
+#### Character
+#### Player 
 ## Section 3: Game Design
