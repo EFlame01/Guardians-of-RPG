@@ -12,6 +12,7 @@ using UnityEngine;
 /// </summary>
 public class NPCObject : InteractableObject, IDialogue
 {
+    [Header("NPCObject Properties")]
     [SerializeField] protected PlayerSprite _npcSprite;
     [SerializeField] private string _characterName;
     [SerializeField] private Sprite _characterSprite;
