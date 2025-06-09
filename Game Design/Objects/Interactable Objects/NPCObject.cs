@@ -85,7 +85,7 @@ public class NPCObject : InteractableObject, IDialogue
     /// After determining which side the player
     /// is on, turns to the said player.
     /// </summary>
-    private void TurnToPlayer()
+    protected void TurnToPlayer()
     {
         _npcSprite.PerformIdleAnimation(GetCollisionSide());
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// FightObject is a class that extends the 
@@ -13,62 +14,66 @@ using UnityEngine;
 public class FightObject : NPCObject
 {
     [Header("FightObject Properties")]
-    [SerializeField] private Transform _leftView;
-    [SerializeField] private Transform _rightView;
-    [SerializeField] private Transform _topView;
-    [SerializeField] private Transform _bottomView;
-    [SerializeField] private WayPoint[] _wayPoints;
-    [SerializeField] private float _speed;
-    [SerializeField] private float _waitTime;
-    [SerializeField] private DialogueData _dialogueData2;
-    [SerializeField] private bool _npcLost;
+    [SerializeField] public string Environment;
+    [SerializeField] public BattleCharacterData BattlePlayerData;
+    [SerializeField] public BattleCharacterData[] BattleAlliesData;
+    [SerializeField] public BattleCharacterData[] BattleEnemiesData;
+    [Header("Transition")]
+    [SerializeField] public TransitionType TransitionType;
+    [Header("Story Flags")]
+    [SerializeField] public bool startedeBattle;
+    [SerializeField] public string[] StoryFlagsIfWon;
+    [Header("Music")]
+    [SerializeField] public string TrackName;
 
     public override void InteractWithObject()
     {
         if (CanInteract)
-            StartCoroutine(ConfrontPlayer1());
+            StartCoroutine(ConfrontPlayer());
     }
 
-    public IEnumerator ConfrontPlayer1()
+    public IEnumerator ConfrontPlayer()
     {
-        yield return PlayEmote();
-        yield return Engage();
-
-        while (!DialogueManager.Instance.DialogueEnded)
+        TurnToPlayer();
+        StartDialogue();
+        while(!DialogueManager.Instance.DialogueEnded)
             yield return null;
-
-        yield return StartFight();
+        StartFight();
     }
 
-    public IEnumerator ConfrontPlayer2()
+    public void StartFight()
     {
-        yield return PlayEmote();
-        yield return WalkTowardsPlayer();
-        yield return Engage();
-
-        while (!DialogueManager.Instance.DialogueEnded)
-            yield return null;
-
-        yield return StartFight();
+        SetUpBattleMusic();
+        SetUpForBattle();
     }
 
-    public IEnumerator PlayEmote()
+    private void SetUpBattleMusic()
     {
-        yield return null;
+        AudioManager.Instance.PlayMusic(TrackName, true);
     }
 
-    public IEnumerator WalkTowardsPlayer()
+    private void SetUpForBattle()
     {
-        yield return null;
-    }
+        BattleInformation.Environment = Environment;
+        BattleInformation.BattlePlayerData = BattlePlayerData;
+        BattleInformation.PlayerPosition = transform.position;
+        BattleInformation.StoryFlagsIfWon = StoryFlagsIfWon;
+        
+        Debug.Log(PlayerSpawn.PlayerPosition);
 
-    public IEnumerator Engage()
-    {
-        yield return null;
-    }
+        for(int i = 0; i < BattleAlliesData.Length; i++)
+        {
+            if(BattleAlliesData[i] != null)
+                BattleInformation.BattleAlliesData[i] = BattleAlliesData[i];
+        }
 
-    public IEnumerator StartFight()
-    {
-        yield return null;
+        for(int i = 0; i < BattleEnemiesData.Length; i++)
+        {
+            if(BattleEnemiesData[i] != null)
+                BattleInformation.BattleEnemiesData[i] = BattleEnemiesData[i];
+        }
+
+        BattleSimStatus.SceneName = SceneManager.GetActiveScene().name;
+        SceneLoader.Instance.LoadScene("Battle Scene", TransitionType);
     }
 }

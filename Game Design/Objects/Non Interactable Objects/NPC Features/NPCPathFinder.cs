@@ -4,14 +4,14 @@ using UnityEngine;
 public class NPCPathFinder : MonoBehaviour
 {
     [SerializeField] public WayPoint[] _wayPoints;
-    [SerializeField] private float _speed;
-    [SerializeField] private float _waitTime;
+    [SerializeField] protected float _speed;
+    [SerializeField] protected float _waitTime;
     [SerializeField] public PlayerSprite _npcSprite;
 
-    private Vector3 _startPosition;
-    private int _wayPointIndex;
-    private WalkCycleState _walkCycleState;
-    private bool _waiting;
+    protected Vector3 _startPosition;
+    protected int _wayPointIndex;
+    protected WalkCycleState _walkCycleState;
+    protected bool _waiting;
 
     public void Start()
     {
@@ -91,8 +91,7 @@ public class NPCPathFinder : MonoBehaviour
 
 
     //Collision Methods
-
-    public void OnCollisionEnter2D(Collision2D collider2D)
+    public virtual void OnCollisionEnter2D(Collision2D collider2D)
     {
         if(!collider2D.gameObject.tag.Equals("Player"))
             return;
@@ -101,7 +100,7 @@ public class NPCPathFinder : MonoBehaviour
         _waiting = false;
     }
 
-    public void OnCollisionExit2D(Collision2D collider2D)
+    public virtual void OnCollisionExit2D(Collision2D collider2D)
     {
         if(!collider2D.gameObject.tag.Equals("Player"))
             return;
@@ -110,7 +109,7 @@ public class NPCPathFinder : MonoBehaviour
         _waiting = true;
     }
 
-    public void OnCollisionStay2D(Collision2D collider2D)
+    public virtual void OnCollisionStay2D(Collision2D collider2D)
     {
         if(!collider2D.gameObject.tag.Equals("Player"))
             return;
@@ -118,7 +117,7 @@ public class NPCPathFinder : MonoBehaviour
         _waiting = false;
     }
 
-    public void OnTriggerEnter2D(Collider2D collider2D)
+    public virtual void OnTriggerEnter2D(Collider2D collider2D)
     {
         if(!collider2D.gameObject.tag.Equals("Player"))
             return;
@@ -127,7 +126,7 @@ public class NPCPathFinder : MonoBehaviour
         _waiting = false;
     }
 
-    public void OnTriggerExit2D(Collider2D collider2D)
+    public virtual void OnTriggerExit2D(Collider2D collider2D)
     {
         if(!collider2D.gameObject.tag.Equals("Player"))
             return;
@@ -136,7 +135,7 @@ public class NPCPathFinder : MonoBehaviour
         _waiting = true;
     }
 
-    public void OnTriggerStay2D(Collider2D collider2D)
+    public virtual void OnTriggerStay2D(Collider2D collider2D)
     {
         if(!collider2D.gameObject.tag.Equals("Player"))
             return;
