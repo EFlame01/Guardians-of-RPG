@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ink.Runtime;
 
 /// <summary>
 /// ItemObject is a class that extends the
@@ -15,9 +16,10 @@ public class ItemObject : InteractableObject, IDialogue
     [SerializeField] public string[] Items;
     [SerializeField] public int[] AmountsPerItem;
     [SerializeField] public ObjectSprite ItemSprite;
-    [SerializeField] private GameObject _textBox;
-    [SerializeField] private DialogueData _dialogueData;
-    
+    [SerializeField] private DialogueData _itemLootSingular;
+    [SerializeField] private DialogueData _itemLootPlural;
+
+    private DialogueData _dialogueData;
     private bool _openedItem;
     private ItemData _itemData;
 
@@ -65,14 +67,41 @@ public class ItemObject : InteractableObject, IDialogue
     /// </summary>
     public void StartDialogue()
     {
-        TextBox textBox = Instantiate(_textBox).GetComponent<TextBox>();
+        //Convert string to actual Item objects
         Item[] items = ConvertListToItems();
 
-        for(int i = 0; i < Items.Length; i++)
+        //Place Items in inventory
+        for (int i = 0; i < Items.Length; i++)
             PlaceItemsInBag(items[i], AmountsPerItem[i]);
-        
-        textBox.OpenTextBox();
-        textBox.StartNarration(_dialogueData);
+
+        //Convert placeholder text based on items and how many their are
+        if (items.Length == 1)
+        {
+            _dialogueData = _itemLootSingular;
+            DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+            DialogueManager.Instance.CurrentStory.variablesState["itemAmount"] = AmountsPerItem[0];
+            DialogueManager.Instance.CurrentStory.variablesState["itemName"] = AmountsPerItem[0] > 1 ? items[0].PluralName : items[0].Name;
+            DialogueManager.Instance.CurrentStory.variablesState["itemType"] = items[0].Type.ToString();
+        }
+        else
+        {
+            _dialogueData = _itemLootPlural;
+            DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+            string listItems = "";
+            for (int i = 0; i < items.Length; i++)
+            {
+                int itemAmount = AmountsPerItem[i];
+                string itemName = AmountsPerItem[i] > 1 ? items[i].PluralName : items[i].Name; ;
+                if (i + 1 == items.Length)
+                    listItems += "and " + itemAmount + " " + itemName;
+                else
+                    listItems += itemAmount + " " + itemName + ", ";
+            }
+            DialogueManager.Instance.CurrentStory.variablesState["listItems"] = listItems;
+        }
+
+        //Open text box and start dialogue
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
     }
 
     /// <summary>

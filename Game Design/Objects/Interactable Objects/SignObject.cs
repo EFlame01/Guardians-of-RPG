@@ -30,14 +30,16 @@ public class SignObject : InteractableObject, IDialogue
 
     public void StartDialogue()
     {
-        if(_textBoxObject != null)
-        {
-            TextBox textBox = Instantiate(_textBoxObject).GetComponent<TextBox>();
-            textBox.OpenTextBox();
-            textBox.StartNarration(_dialogueData);
-        }
-        else
-            DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        // if(_textBoxObject != null)
+        // {
+        //     TextBox textBox = Instantiate(_textBoxObject).GetComponent<TextBox>();
+        //     textBox.OpenTextBox();
+        //     textBox.StartNarration(_dialogueData);
+        // }
+        // else
+        //     DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
     }
 
     /// <summary>

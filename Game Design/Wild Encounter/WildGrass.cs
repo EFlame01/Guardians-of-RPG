@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.Examples;
@@ -25,6 +26,13 @@ public class WildGrass : MonoBehaviour
 
     private bool InGrass()
     {
-        return Physics2D.OverlapCircle(playerTransform.position, 0.2f, grassLayer) != null;
+        try
+        {
+            return Physics2D.OverlapCircle(playerTransform.position, 0.2f, grassLayer) != null;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }
