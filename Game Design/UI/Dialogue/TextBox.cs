@@ -77,9 +77,14 @@ public class TextBox : MonoBehaviour
     /// </summary>
     public void EndNarration()
     {
-        _textBoxOpened = false;
-        StartCoroutine(EndTextBoxAnimation());
-        IsClosed = true;
+        try{
+            _textBoxOpened = false;
+            StartCoroutine(EndTextBoxAnimation());
+            IsClosed = true;
+        } catch(Exception e)
+        {
+            Debug.LogWarning(e.Message);
+        }
     }
 
     /// <summary>

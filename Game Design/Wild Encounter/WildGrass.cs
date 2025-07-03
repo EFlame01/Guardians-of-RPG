@@ -9,19 +9,31 @@ public class WildGrass : MonoBehaviour
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Animator animator;
     [SerializeField] public LayerMask grassLayer;
+    private bool resetAnimation;
 
     public void Update()
     {
-        if(GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
-            UpdateGrassAnimation();
+        UpdateGrassAnimation();
     }
 
     public void UpdateGrassAnimation()
     {
-        if(InGrass() && GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
+        if(InGrass())
+        {
+            resetAnimation = true;
+            if(InGrass() && GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
             animator.Play("grass");
+            else if(InGrass() && !GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
+                animator.Play("none");
+        }
         else
-            animator.Play("none");
+        {
+            if(resetAnimation)
+            {
+                resetAnimation = false;
+                animator.Play("none");
+            }
+        }
     }
 
     private bool InGrass()
