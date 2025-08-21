@@ -13,8 +13,11 @@ using Ink.Runtime;
 public class ItemObject : InteractableObject, IDialogue
 {
     [SerializeField] public string itemID;
+    //-------TODO: delete Items[] and AmountsPerItem[]-------
     [SerializeField] public string[] Items;
     [SerializeField] public int[] AmountsPerItem;
+    //-------------------------------------------------------
+    [SerializeField] public ItemObjectStruct[] Items_; //TODO: change name to Items
     [SerializeField] public ObjectSprite ItemSprite;
     [SerializeField] private DialogueData _itemLootSingular;
     [SerializeField] private DialogueData _itemLootPlural;
@@ -22,6 +25,12 @@ public class ItemObject : InteractableObject, IDialogue
     private DialogueData _dialogueData;
     private bool _openedItem;
     private ItemData _itemData;
+
+    public struct ItemObjectStruct
+    {
+        public string itemName;
+        public int itemAmount;
+    }
 
     public void OnEnable()
     {
@@ -67,6 +76,49 @@ public class ItemObject : InteractableObject, IDialogue
     /// </summary>
     public void StartDialogue()
     {
+        //---------------------------------TODO: use new method----------------------------------------- 
+        /*
+        int typesOfItems = 0;
+        Item[] items = new Item[Items_.Length];
+        foreach(ItemObjectStruct i in Items_)
+        {
+            Item item = ItemMaker.Instance.GetItemBasedOnName(i.itemName);
+            PlaceItemsInBag(item, i.itemAmount);
+            items[typesOfItems] = item;
+            typesOfItems++;
+        }
+
+        if(typesOfItems == 1)
+        {
+            _dialogueData = _itemLootSingular;
+            DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+            DialogueManager.Instance.CurrentStory.variablesState["itemAmount"] = Items_[0].itemAmount;
+            DialogueManager.Instance.CurrentStory.variablesState["itemName"] = Items_[0].itemAmount > 1 ? items[0].PluralName : items[0].Name;
+            DialogueManager.Instance.CurrentStory.variablesState["itemType"] = items[0].Type.ToString();
+        }
+        else if(typesOfItems > 1)
+        {
+            _dialogueData = _itemLootPlural;
+            DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+            string listItems = "";
+            for (int i = 0; i < items.Length; i++)
+            {
+                int itemAmount = Items_[i].itemAmount;
+                string itemName = itemAmount > 1 ? items[i].PluralName : items[i].Name; ;
+                if (i + 1 == items.Length)
+                    listItems += "and " + itemAmount + " " + itemName;
+                else
+                    listItems += itemAmount + " " + itemName + ", ";
+            }
+            DialogueManager.Instance.CurrentStory.variablesState["listItems"] = listItems;
+        }
+
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        */
+        //----------------------------------------------------------------------------------------------
+        
+        //-------------------------------TODO: delete the old method--------------------------------------
+        
         //Convert string to actual Item objects
         Item[] items = ConvertListToItems();
 
@@ -102,6 +154,8 @@ public class ItemObject : InteractableObject, IDialogue
 
         //Open text box and start dialogue
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        
+        //----------------------------------------------------------------------------------------------
     }
 
     /// <summary>

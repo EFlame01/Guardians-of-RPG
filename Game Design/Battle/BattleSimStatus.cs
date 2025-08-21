@@ -46,7 +46,7 @@ public class BattleSimStatus
     {
         if(type.Equals("ALLY"))
         {
-            if(Allies.Count > 1)
+            if(Allies.Count > 0)
                 return true;
             foreach(Character c in Graveyard)
             {
@@ -57,7 +57,7 @@ public class BattleSimStatus
         }
         else if(type.Equals("ENEMY"))
         {
-            if(Enemies.Count > 1)
+            if(Enemies.Count > 0)
                 return true;
             else
                 return false;
