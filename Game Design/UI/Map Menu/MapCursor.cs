@@ -16,6 +16,8 @@ public class MapCursor : MonoBehaviour
 
     [SerializeField] public Transform Cursor;
     [SerializeField] public ButtonField[] ButtonFields;
+    [SerializeField] public float x_offset;
+    [SerializeField] public float y_offset;
 
     [Serializable]
     public struct ButtonField
@@ -32,7 +34,7 @@ public class MapCursor : MonoBehaviour
         foreach(ButtonField buttonField in ButtonFields)
         {
             if(sceneName.Contains(buttonField.name))
-                Cursor.position = new Vector3(buttonField.button.position.x - 10f, buttonField.button.position.y + 50f, 0f);
+                Cursor.position = new Vector3(buttonField.button.position.x - x_offset, buttonField.button.position.y + y_offset, 0f);
             
         }
     }

@@ -32,7 +32,8 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
             Timer += Time.fixedDeltaTime;
             TimeRemaining -= Time.fixedDeltaTime;
         }
-        Debug.Log("Day Night Cycle NOT Active...");
+        else
+            Debug.Log("Day Night Cycle NOT Active...");
 
         if((int)Timer%(int)Units.TIME_PER_PART == 0)
             ChangeTimeOfDay();
