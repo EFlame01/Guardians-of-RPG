@@ -16,8 +16,11 @@ public class MapCursor : MonoBehaviour
 
     [SerializeField] public Transform Cursor;
     [SerializeField] public ButtonField[] ButtonFields;
-    [SerializeField] public float x_offset;
-    [SerializeField] public float y_offset;
+    [SerializeField] public float x_offset = 1f;
+    [SerializeField] public float y_offset = 15f;
+
+    // private bool doneWithStart;
+    // private Vector2 currentPos = new Vector2(0,0);
 
     [Serializable]
     public struct ButtonField
@@ -37,5 +40,14 @@ public class MapCursor : MonoBehaviour
                 Cursor.position = new Vector3(buttonField.button.position.x - x_offset, buttonField.button.position.y + y_offset, 0f);
             
         }
+        
+        // currentPos = new Vector2(Cursor.position.x, Cursor.position.y);
+        // doneWithStart = true;
+    }
+
+    public void Update()
+    {
+        // if(doneWithStart)
+        //     Cursor.position = new Vector3(currentPos.x - x_offset, currentPos.y + y_offset, 0f);
     }
 }
