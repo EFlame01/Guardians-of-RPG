@@ -279,7 +279,7 @@ public class CutScene : MonoBehaviour
 
     private void SetMusic()
     {
-        if (TrackName == null || TrackName.Length > 0)
+        if (TrackName != null && TrackName.Length > 0)
         {
             Debug.Log(TrackName);
             StartCoroutine(AudioManager.Instance.BlendMusic(TrackName));

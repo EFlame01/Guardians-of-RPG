@@ -162,14 +162,13 @@ public class AudioManager : PersistentSingleton<AudioManager>
             _audioSource2.pitch = music.Pitch;
             _audioSource2.loop = music.Loop;
 
-            StopCurrentMusic(false);
-            PlayMusic(trackName, false);
-
-            while ((_audioSource1.volume == _audioSource1.volume * GameManager.Instance.GameVolume) && (_audioSource2.volume == _audioSource2.volume * GameManager.Instance.GameVolume))
-                yield return null;
+            StartCoroutine(StartFade(1f, _audioSource1.volume, 0f));
+            StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume));
 
             (_audioSource2, _audioSource1) = (_audioSource1, _audioSource2);
         }
+
+        yield return null;
     }
 
     /// <summary>
