@@ -132,6 +132,8 @@ public class BattleSimulator : MonoBehaviour
         } catch(Exception e){
             Debug.LogWarning(e.ToString());
         }
+        //TODO: create method in sceneloader to fade music out
+        AudioManager.Instance.StopCurrentMusic(false);
         SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
     }
 
