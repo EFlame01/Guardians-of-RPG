@@ -165,6 +165,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
             StartCoroutine(StartFade(1f, _audioSource1.volume, 0f));
             StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume));
 
+            yield return new WaitForSeconds(1f);
             (_audioSource2, _audioSource1) = (_audioSource1, _audioSource2);
         }
 
