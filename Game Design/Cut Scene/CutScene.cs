@@ -36,7 +36,7 @@ public class CutScene : MonoBehaviour
     private RuntimeAnimatorController[] _tempControllers;
     private bool _cutSceneStarted;
     private CutSceneState _head;
-    private bool _musicStarted;
+    // private bool _musicStarted;
 
     public void Awake()
     {
@@ -139,7 +139,7 @@ public class CutScene : MonoBehaviour
         else
             director.Play();
 
-        SetMusic();
+        // SetMusic();
 
         _cutSceneStarted = true;
     }
@@ -280,14 +280,14 @@ public class CutScene : MonoBehaviour
 
     private void SetMusic()
     {
-        if(_musicStarted)
-            return;
+        // if(_musicStarted)
+        //     return;
         
         if (TrackName != null && TrackName.Length > 0)
         {
             Debug.Log(TrackName);
             StartCoroutine(AudioManager.Instance.BlendMusic(TrackName));
-            _musicStarted = true;
+            // _musicStarted = true;
         }
     }
 

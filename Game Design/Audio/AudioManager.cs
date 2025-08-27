@@ -10,6 +10,9 @@ using UnityEngine;
 ///</summary>
 public class AudioManager : PersistentSingleton<AudioManager>
 {
+    [Header("Current Track")]
+    [SerializeField] private string _currentMusic;
+
     [Header("Sound Effects")]
     [SerializeField] private Sound[] _soundList;
 
@@ -20,7 +23,6 @@ public class AudioManager : PersistentSingleton<AudioManager>
     private AudioSource _audioSource2;
     private AudioSource _soundSource;
     private Dictionary<string, Sound> _audioDictionary;
-    private string _currentMusic;
 
     protected override void Awake()
     {
@@ -111,7 +113,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         else
         {
             _audioSource1.volume = 0f;
-            StartCoroutine(StartFade(1f, _audioSource1.volume, music.Volume * GameManager.Instance.GameVolume));
+            StartCoroutine(StartFade(1f, _audioSource1.volume, music.Volume * GameManager.Instance.GameVolume, _audioSource1));
         }
         _audioSource1.Play();
     }
@@ -133,7 +135,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
             return;
 
         if (!immediately)
-            StartCoroutine(StartFade(1f, _audioSource1.volume, 0f));
+            StartCoroutine(StartFade(1f, _audioSource1.volume, 0f, _audioSource1));
         else
         {
             _audioSource1.Stop();
@@ -148,7 +150,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         if (_currentMusic == null)
             return;
         Sound music = _audioDictionary[_currentMusic];
-        StartCoroutine(StartFade(0.1f, _audioSource1.volume, music.Volume * GameManager.Instance.GameVolume));
+        StartCoroutine(StartFade(0.1f, _audioSource1.volume, music.Volume * GameManager.Instance.GameVolume, _audioSource1));
     }
 
     public IEnumerator BlendMusic(string trackName)
@@ -157,15 +159,21 @@ public class AudioManager : PersistentSingleton<AudioManager>
         if (trackName != null && trackName.Length > 0 && !trackName.Equals(_currentMusic))
         {
             Sound music = _audioDictionary[trackName];
+            _currentMusic = music.Name;
+            
             _audioSource2.clip = music.Clip;
-            _audioSource2.volume = music.Volume;
             _audioSource2.pitch = music.Pitch;
-            _audioSource2.loop = music.Loop;
+            _audioSource2.loop = true;
 
-            StartCoroutine(StartFade(1f, _audioSource1.volume, 0f));
-            StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume));
+            StartCoroutine(StartFade(1f, _audioSource1.volume, 0f, _audioSource1));
+            StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume, _audioSource2));
+            
+            _audioSource2.Play();
 
             yield return new WaitForSeconds(1f);
+            
+            _audioSource1.Stop();
+            
             (_audioSource2, _audioSource1) = (_audioSource1, _audioSource2);
         }
 
@@ -204,6 +212,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
         _soundList = null;
 
         _audioSource1.playOnAwake = false;
+        _audioSource2.playOnAwake = false;
         _soundSource.playOnAwake = false;
     }
 
@@ -214,18 +223,18 @@ public class AudioManager : PersistentSingleton<AudioManager>
     /// <param name="startVolume">Start volume</param>
     /// <param name="targetVolume">End volume</param>
     /// <returns></returns>
-    private IEnumerator StartFade(float duration, float startVolume, float targetVolume)
+    private IEnumerator StartFade(float duration, float startVolume, float targetVolume, AudioSource audioSource)
     {
         float currentTime = 0f;
 
         while (currentTime < duration)
         {
             currentTime += Time.deltaTime;
-            _audioSource1.volume = Mathf.Lerp(startVolume, targetVolume, currentTime / duration);
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, currentTime / duration);
             yield return null;
         }
 
         if (targetVolume <= 0f)
-            _audioSource1.volume = 0f;
+            audioSource.volume = 0f;
     }
 }
