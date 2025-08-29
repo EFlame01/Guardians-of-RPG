@@ -24,7 +24,7 @@ public class NPCObject : InteractableObject, IDialogue
     [SerializeField] public bool isSitting = false;
 
     private bool _talkedToPlayer;
-    private NpcData _npcData;
+    protected NpcData _npcData;
 
     public void OnEnable()
     {
@@ -70,7 +70,7 @@ public class NPCObject : InteractableObject, IDialogue
     /// Turns to player and starts the dialogue.
     /// </summary>
     /// <returns></returns>
-    private IEnumerator TalkToPlayer()
+    public IEnumerator TalkToPlayer()
     {
         TurnToPlayer();
         yield return new WaitForSeconds(0.2f);
@@ -85,7 +85,7 @@ public class NPCObject : InteractableObject, IDialogue
     /// After determining which side the player
     /// is on, turns to the said player.
     /// </summary>
-    protected void TurnToPlayer()
+    public void TurnToPlayer()
     {
         _npcSprite.PerformIdleAnimation(GetCollisionSide());
     }

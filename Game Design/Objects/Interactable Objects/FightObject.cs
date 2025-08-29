@@ -14,6 +14,11 @@ using UnityEngine.SceneManagement;
 public class FightObject : NPCObject
 {
     [Header("FightObject Properties")]
+    [SerializeField] public PlayerDirection NPCDirection;
+    [SerializeField] public PlayerDirection PlayerViewDirection;
+    [SerializeField] public Animator exclamationEmote;
+    [SerializeField] public PlayerSprite NPCSprite;
+    [Header("FightObject Properties")]
     [SerializeField] public string Environment;
     [SerializeField] public BattleCharacterData BattlePlayerData;
     [SerializeField] public BattleCharacterData[] BattleAlliesData;
@@ -26,23 +31,93 @@ public class FightObject : NPCObject
     [Header("Music")]
     [SerializeField] public string TrackName;
 
+    private bool _bumpIntoPlayer;
+
     public override void InteractWithObject()
     {
         if (CanInteract)
-            StartCoroutine(ConfrontPlayer());
+        {
+            CanInteract = false;
+            StartCoroutine(ConfrontPlayer1());
+        }
     }
 
-    public IEnumerator ConfrontPlayer()
+    public IEnumerator ConfrontPlayer1()
     {
-        TurnToPlayer();
-        StartDialogue();
-        while(!DialogueManager.Instance.DialogueEnded)
+        if(!_npcData.foughtPlayer)
+        {
+            Debug.Log("ConfrontPlayer1()...");
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+            TurnToPlayer();
+            yield return TalkToPlayer();
+            StartFight();
+        }
+        else
+            base.InteractWithObject();
+    }
+
+    public IEnumerator ConfrontPlayer2()
+    {
+        if(!_npcData.foughtPlayer)
+        {
+            Debug.Log("ConfrontPlayer2()...");
+            CanInteract = false;
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+            yield return PerformExclamation();
+            yield return WalkToPlayer();
+            NPCSprite.PerformIdleAnimation(PlayerViewDirection);
+            yield return new WaitForSeconds(0.5f);
+            yield return TalkToPlayer();
+            StartFight();
+        }
+        else
+            base.InteractWithObject();
+    }
+
+    private IEnumerator PerformExclamation()
+    {
+        exclamationEmote.Play("surprised");
+        yield return new WaitForSeconds(1f);
+        exclamationEmote.Play("no_emote");
+    }
+
+    private IEnumerator WalkToPlayer()
+    {
+        Vector2 direction = Vector2.zero;
+        switch (PlayerViewDirection)
+        {
+            case PlayerDirection.UP:
+                //walk up
+                NPCSprite.PerformWalkAnimation("walk_up");
+                direction = Vector2.up;
+                break;
+            case PlayerDirection.LEFT:
+                NPCSprite.PerformWalkAnimation("walk_left");
+                direction = Vector2.left;
+                break;
+            case PlayerDirection.DOWN:
+                NPCSprite.PerformWalkAnimation("walk_down");
+                direction = Vector2.down;
+                break;
+            case PlayerDirection.RIGHT:
+                NPCSprite.PerformWalkAnimation("walk_right");
+                direction = Vector2.right;
+                break;
+            default:
+                break;
+        }
+        while(!_bumpIntoPlayer)
+        {
+            //move to player position
+            transform.Translate(direction.normalized * 3 * Time.fixedDeltaTime);
             yield return null;
-        StartFight();
+        }
     }
 
-    public void StartFight()
+    private void StartFight()
     {
+        _npcData.foughtPlayer = true;
+        startedeBattle = true;
         SetUpBattleMusic();
         SetUpForBattle();
     }
@@ -56,7 +131,7 @@ public class FightObject : NPCObject
     {
         BattleInformation.Environment = Environment;
         BattleInformation.BattlePlayerData = BattlePlayerData;
-        BattleInformation.PlayerPosition = transform.position;
+        BattleInformation.PlayerPosition = PlayerSpawn.PlayerPosition;
         BattleInformation.StoryFlagsIfWon = StoryFlagsIfWon;
         
         Debug.Log(PlayerSpawn.PlayerPosition);
@@ -75,5 +150,13 @@ public class FightObject : NPCObject
 
         BattleSimStatus.SceneName = SceneManager.GetActiveScene().name;
         SceneLoader.Instance.LoadScene("Battle Scene", TransitionType);
+    }
+
+    public void OnTriggerEnter2D(Collider2D collider2D)
+    {
+        if(collider2D.gameObject.tag.Equals("Player")) 
+            _bumpIntoPlayer = true;
+        else
+            _bumpIntoPlayer = false;
     }
 }

@@ -176,7 +176,7 @@ public abstract class InteractableObject : MonoBehaviour
         {
             //either up or down
             if(PlayerSpawn.PlayerPosition.y > transform.position.y)
-                transform.position = new Vector3(transform.position.x, transform.position.y, -5);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0);
             else
                 transform.position = new Vector3(transform.position.x, transform.position.y, 5);
         }
