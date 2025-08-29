@@ -18,6 +18,7 @@ public class FightObject : NPCObject
     [SerializeField] public PlayerDirection PlayerViewDirection;
     [SerializeField] public Animator exclamationEmote;
     [SerializeField] public PlayerSprite NPCSprite;
+    [SerializeField] public DialogueData DialogueDataAfterBattle;
     [Header("FightObject Properties")]
     [SerializeField] public string Environment;
     [SerializeField] public BattleCharacterData BattlePlayerData;
@@ -32,28 +33,31 @@ public class FightObject : NPCObject
     [SerializeField] public string TrackName;
 
     private bool _bumpIntoPlayer;
+    private bool _confrontedPlayer;
 
     public override void InteractWithObject()
     {
         if (CanInteract)
         {
             CanInteract = false;
-            StartCoroutine(ConfrontPlayer1());
+            if(_npcData.foughtPlayer)
+                ConfrontPlayer3();
+            else
+                StartCoroutine(ConfrontPlayer1());
         }
     }
 
-    public IEnumerator ConfrontPlayer1()
+    private IEnumerator ConfrontPlayer1()
     {
-        if(!_npcData.foughtPlayer)
+        if(!_confrontedPlayer)
         {
             Debug.Log("ConfrontPlayer1()...");
+            _confrontedPlayer = true;
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             TurnToPlayer();
             yield return TalkToPlayer();
             StartFight();
         }
-        else
-            base.InteractWithObject();
     }
 
     public IEnumerator ConfrontPlayer2()
@@ -61,6 +65,7 @@ public class FightObject : NPCObject
         if(!_npcData.foughtPlayer)
         {
             Debug.Log("ConfrontPlayer2()...");
+            _confrontedPlayer = true;
             CanInteract = false;
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             yield return PerformExclamation();
@@ -70,8 +75,18 @@ public class FightObject : NPCObject
             yield return TalkToPlayer();
             StartFight();
         }
-        else
-            base.InteractWithObject();
+    }
+
+    private void ConfrontPlayer3()
+    {
+        if(!_talkedToPlayer)
+        {
+            Debug.Log("ConfrontPlayer3()...");
+            _talkedToPlayer = true;
+            _dialogueData = DialogueDataAfterBattle;
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+            StartCoroutine(TalkToPlayer());
+        }
     }
 
     private IEnumerator PerformExclamation()
@@ -116,8 +131,13 @@ public class FightObject : NPCObject
 
     private void StartFight()
     {
-        _npcData.foughtPlayer = true;
         startedeBattle = true;
+        _npcData.foughtPlayer = true;
+        _npcData.Position = transform.position;
+        if(PlayerViewDirection.Equals(PlayerDirection.NONE))
+            _npcData.direction = GetCollisionSide().ToString();
+        else
+            _npcData.direction = PlayerViewDirection.ToString();
         SetUpBattleMusic();
         SetUpForBattle();
     }
@@ -152,11 +172,16 @@ public class FightObject : NPCObject
         SceneLoader.Instance.LoadScene("Battle Scene", TransitionType);
     }
 
-    public void OnTriggerEnter2D(Collider2D collider2D)
+    public override void OnCollisionEnter2D(Collision2D collision2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player")) 
-            _bumpIntoPlayer = true;
+        if(GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
+        {
+            if(collision2D.gameObject.tag.Equals("Player"))
+                _bumpIntoPlayer = true;
+            else
+                _bumpIntoPlayer = false;
+        }
         else
-            _bumpIntoPlayer = false;
+            base.OnCollisionEnter2D(collision2D);
     }
 }

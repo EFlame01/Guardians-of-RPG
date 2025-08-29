@@ -17,23 +17,49 @@ public class NPCObject : InteractableObject, IDialogue
     [SerializeField] private string _characterName;
     [SerializeField] private Sprite _characterSprite;
     [SerializeField] private GameObject _textBoxCharacterObject;
-    [SerializeField] private DialogueData _dialogueData;
+    [SerializeField] protected DialogueData _dialogueData;
     [SerializeField] public string npcID;
     [SerializeField] public string[] flags;
     [SerializeField] public bool[] flagValues;
     [SerializeField] public bool isSitting = false;
 
-    private bool _talkedToPlayer;
+    protected bool _talkedToPlayer;
     protected NpcData _npcData;
 
     public void OnEnable()
     {
+        Debug.Log("NPCObject - OnEnable()...");
         _npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
         
         if(_npcData == null)
             return;
         
         transform.position = _npcData.Position;
+
+        if(_npcData.direction != null)
+        {
+            Debug.Log(_npcData.direction);
+            switch(_npcData.direction)
+            {
+                case "UP":
+                    _npcSprite.PerformIdleAnimation(PlayerDirection.UP);
+                    break;
+                case "LEFT":
+                    _npcSprite.PerformIdleAnimation(PlayerDirection.LEFT);
+                    break;
+                case "DOWN":
+                    _npcSprite.PerformIdleAnimation(PlayerDirection.DOWN);
+                    break;
+                case "RIGHT":
+                    _npcSprite.PerformIdleAnimation(PlayerDirection.RIGHT);
+                    break;
+                default:
+                    _npcSprite.PerformIdleAnimation(PlayerDirection.DOWN);
+                    break;
+            }
+        }
+        else
+            Debug.Log(_npcData.direction);
 
         if(flags.Length <= 0 )
             return;
@@ -75,9 +101,13 @@ public class NPCObject : InteractableObject, IDialogue
         TurnToPlayer();
         yield return new WaitForSeconds(0.2f);
         StartDialogue();
+        //TODO: Updating the PlayerState here is a temp fix.
+        //      Find out where PlayerState is changing to NOT_MOVING
+        //      Before the NPC talks to the player
+        GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
         while(!DialogueManager.Instance.DialogueEnded)
             yield return null;
-        
+        Debug.Log(DialogueManager.Instance.DialogueEnded);
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }
 
