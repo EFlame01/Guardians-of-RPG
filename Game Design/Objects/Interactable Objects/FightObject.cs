@@ -27,7 +27,7 @@ public class FightObject : NPCObject
     [Header("Transition")]
     [SerializeField] public TransitionType TransitionType;
     [Header("Story Flags")]
-    [SerializeField] public bool startedeBattle;
+    [SerializeField] public bool startedBattle;
     [SerializeField] public string[] StoryFlagsIfWon;
     [Header("Music")]
     [SerializeField] public string TrackName;
@@ -131,7 +131,7 @@ public class FightObject : NPCObject
 
     private void StartFight()
     {
-        startedeBattle = true;
+        startedBattle = true;
         _npcData.foughtPlayer = true;
         _npcData.Position = transform.position;
         if(PlayerViewDirection.Equals(PlayerDirection.NONE))
