@@ -9,7 +9,7 @@ public class FightObjectEyeLine : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Fight") && fightObject.NPCDirection == direction && ConfrontPlayer)
+        if(collider2D.gameObject.tag.Equals("Fight") && InEyeLine() && ConfrontPlayer && IsInteractable())
         {
             ConfrontPlayer = false;
             fightObject.PlayerViewDirection = direction;
@@ -19,7 +19,7 @@ public class FightObjectEyeLine : MonoBehaviour
 
     public void OnTriggerStay2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Fight") && fightObject.NPCDirection == direction && ConfrontPlayer)
+        if(collider2D.gameObject.tag.Equals("Fight") && InEyeLine() && ConfrontPlayer && IsInteractable())
         {
             ConfrontPlayer = false;
             fightObject.PlayerViewDirection = direction;
@@ -29,10 +29,20 @@ public class FightObjectEyeLine : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Fight") && fightObject.NPCDirection == direction && ConfrontPlayer)
+        if(collider2D.gameObject.tag.Equals("Fight") && InEyeLine() && ConfrontPlayer && IsInteractable())
         {
             ConfrontPlayer = true;
             fightObject.PlayerViewDirection = PlayerDirection.NONE;
         }    
+    }
+
+    private bool InEyeLine()
+    {
+        return fightObject.NPCDirection == direction;
+    }
+
+    private bool IsInteractable()
+    {
+        return GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING) || GameManager.Instance.PlayerState.Equals(PlayerState.MOVING);
     }
 }
