@@ -46,7 +46,7 @@ public class QuestState : CutSceneState, IDialogue
     {
         Player player = Player.Instance();
         bool questCompleted = player.QuestManager.MarkQuestCompleted(questID);
-        if(questCompleted)
+        if (questCompleted)
         {
             _dialogueData = QuestCompleteDialogueData;
             DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
@@ -54,34 +54,34 @@ public class QuestState : CutSceneState, IDialogue
             //TODO: determine more rewards for completing quests besides XP
             int xp = Level.DetermineXPForQuest();
             Level.GainXP(xp);
-            if(xp > 0)
+            if (xp > 0)
                 DialogueManager.Instance.CurrentStory.variablesState["reward"] = xp + "XP";
-            
-            if(Level.CanLevelUp())
+
+            if (Level.CanLevelUp())
             {
                 Level.LevelUpPlayer();
                 DialogueManager.Instance.CurrentStory.variablesState["levelUpText"] = "You are now level " + Player.Instance().Level;
             }
 
             Move[] moves = Level.DetermineLearnedMoves();
-            if(moves != null && moves.Length > 0)
+            if (moves != null && moves.Length > 0)
             {
                 string movesLearned = "You learned ";
 
-                if(moves.Length == 1)
+                if (moves.Length == 1)
                 {
                     movesLearned += moves[0].Name;
                     Player.Instance().MoveManager.AddMove(moves[0].Name);
                 }
                 else
                 {
-                    for(int i = 0; i < moves.Length; i++)
+                    for (int i = 0; i < moves.Length; i++)
                     {
                         Player.Instance().MoveManager.AddMove(moves[i].Name);
-                        
-                        if(i + 1 >= moves.Length)
+
+                        if (i + 1 >= moves.Length)
                             movesLearned += "and " + moves[i].Name;
-                        
+
                         else
                             movesLearned += moves[i] + ", ";
                     }
@@ -96,7 +96,8 @@ public class QuestState : CutSceneState, IDialogue
         }
         else
             Debug.LogWarning("QuestID " + questID + " does not exist or was not assigned to player...");
-        
+
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect("quest_completed"), true);
         StartDialogue();
     }
 
@@ -116,6 +117,7 @@ public class QuestState : CutSceneState, IDialogue
         else
             Debug.LogWarning("QuestID " + questID + " does not exist. Could not be assigned to player");
 
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect("quest_assigned", true));
         StartDialogue(); 
     }
 

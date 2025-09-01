@@ -60,6 +60,22 @@ public class AudioManager : PersistentSingleton<AudioManager>
         }
     }
 
+    public IEnumerator PlaySoundEffect(string name, bool lowerMusic)
+    {
+        if (!lowerMusic)
+        {
+            PlaySoundEffect(name);
+            return;
+        }
+        else
+        {
+            StopCurrentMusic(false);
+            PlaySoundEffect(name);
+            yield return new WaitForSeconds(1.5f);
+            PlayMusic(_currentMusic);
+        }
+    }
+
     /// <summary>
     /// Stops the name of a sound effect.
     /// </summary>
@@ -67,11 +83,11 @@ public class AudioManager : PersistentSingleton<AudioManager>
     public void StopSoundEffect(string name)
     {
         Sound sound = _audioDictionary[name];
-        
-        if(sound == null)
+
+        if (sound == null)
             return;
-        
-        if(sound.Source)
+
+        if (sound.Source)
             sound.Source.Stop();
         else
             _soundSource.Stop();
