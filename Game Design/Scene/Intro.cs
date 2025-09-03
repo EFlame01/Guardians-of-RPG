@@ -79,13 +79,18 @@ public class Intro : MonoBehaviour, IDialogue
     // Update is called once per frame
     void Update()
     {
-        if(story != null)
+        if (story != null)
             currentState = (int)story.variablesState["currentState"];
-        
-        if(DialogueManager.Instance.DialogueEnded)
-            StartGame();
-        
-        switch(currentState)
+
+        if (DialogueManager.Instance.DialogueEnded)
+        {
+            if (saveTheWorld.Equals("Yes"))
+                StartGame();
+            else
+                SceneLoader.Instance.LoadScene("Start Scene", TransitionType.FADE_TO_BLACK);
+        }
+
+        switch (currentState)
         {
             case 1:
                 Intro1();
@@ -116,14 +121,17 @@ public class Intro : MonoBehaviour, IDialogue
         story = DialogueManager.Instance.CurrentStory;
         currentState = (int)story.variablesState["currentState"];
     }
-    
+
     private void Intro1()
     {
-        if(story != null && saveTheWorld.Length <= 0)
+        if (story != null && saveTheWorld.Length <= 0)
+        {
             saveTheWorld = (string)story.variablesState["saveTheWorld"];
+            if (!saveTheWorld.Equals("Yes") && DialogueManager.Instance.DialogueEnded)
+                SceneLoader.Instance.LoadScene("Start Scene", TransitionType.FADE_TO_BLACK);
+        }
 
-        if(saveTheWorld.Equals("No") && DialogueManager.Instance.DialogueEnded)
-            SceneLoader.Instance.LoadScene("Start Scene", TransitionType.FADE_TO_BLACK);
+        Debug.Log(saveTheWorld);
     }
 
     private void Intro2()

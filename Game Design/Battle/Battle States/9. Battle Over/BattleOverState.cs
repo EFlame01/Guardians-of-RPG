@@ -184,7 +184,7 @@ public class BattleOverState : BattleState
     {
         //TODO: find victory song to play
         if (_winner.Equals("PLAYER"))
-            StartCorutine(AudioManager.Instance.BlendMusic("track 16"));
+            AudioManager.Instance.BlendMusic2("track 16");
         
         DialogueManager.Instance.CurrentStory = new Story(dialogueData.InkJSON.text);
         for (int i = 0; i < texts.Count; i++)

@@ -63,16 +63,14 @@ public class AudioManager : PersistentSingleton<AudioManager>
     public IEnumerator PlaySoundEffect(string name, bool lowerMusic)
     {
         if (!lowerMusic)
-        {
             PlaySoundEffect(name);
-            return;
-        }
         else
         {
-            StopCurrentMusic(false);
+            PauseMusic();
+            yield return new WaitForSeconds(0.5f);
             PlaySoundEffect(name);
-            yield return new WaitForSeconds(1.5f);
-            PlayMusic(_currentMusic);
+            yield return new WaitForSeconds(1f);
+            ResumeMusic();
         }
     }
 
@@ -196,6 +194,23 @@ public class AudioManager : PersistentSingleton<AudioManager>
         yield return null;
     }
 
+    public void BlendMusic2(string trackName)
+    {
+        StartCoroutine(BlendMusic(trackName));
+    }
+
+    public void PauseMusic()
+    {
+        StartCoroutine(StartFade(1f, _audioSource1.volume, 0f, _audioSource1));
+        _audioSource1.Pause();
+    }
+
+    public void ResumeMusic()
+    {
+        _audioSource1.UnPause();
+        StartCoroutine(StartFade(1f, 0f, _audioSource1.volume, _audioSource1));
+    }
+
     /// <summary>
     /// Initializes the audio dictionary.
     /// </summary>
@@ -205,15 +220,15 @@ public class AudioManager : PersistentSingleton<AudioManager>
         _audioSource2 = gameObject.AddComponent<AudioSource>();
         _soundSource = gameObject.AddComponent<AudioSource>();
         _audioDictionary = new Dictionary<string, Sound>();
-        
-        foreach(Sound music in _musicList)
+
+        foreach (Sound music in _musicList)
         {
             _audioDictionary[music.Name] = music;
         }
-        
-        foreach(Sound sound in _soundList)
+
+        foreach (Sound sound in _soundList)
         {
-            if(sound.AddSource)
+            if (sound.AddSource)
             {
                 sound.Source = gameObject.AddComponent<AudioSource>();
                 sound.Source.clip = sound.Clip;

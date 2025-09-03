@@ -12,6 +12,7 @@ public abstract class InteractableObject : MonoBehaviour
 {
     [SerializeField] protected Light2D _myLight2D;
     [SerializeField] protected InputActionReference Select;
+    [SerializeField] private SpriteRenderer _sprite;
     protected bool CanInteract;
     protected bool CheckForInteraction;
     protected bool IsThisObjectDetected;
@@ -160,13 +161,21 @@ public abstract class InteractableObject : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.tag.Equals("Player"))
         {
             //either up or down
-            if(PlayerSpawn.PlayerPosition.y > transform.position.y)
+            if (PlayerSpawn.PlayerPosition.y > transform.position.y)
+            {
                 transform.position = new Vector3(transform.position.x, transform.position.y, -5);
+                if (_sprite != null)
+                    _sprite.sortingOrder = 1;
+            }
             else
+            {
                 transform.position = new Vector3(transform.position.x, transform.position.y, 5);
+                if (_sprite != null)
+                    _sprite.sortingOrder = 0;
+            }
         }
     }
 
@@ -176,9 +185,17 @@ public abstract class InteractableObject : MonoBehaviour
         {
             //either up or down
             if(PlayerSpawn.PlayerPosition.y > transform.position.y)
-                transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y, -5);
+                if (_sprite != null)
+                    _sprite.sortingOrder = 1;
+            }
             else
+            {
                 transform.position = new Vector3(transform.position.x, transform.position.y, 5);
+                if (_sprite != null)
+                    _sprite.sortingOrder = 0;
+            }
         }
     }
 
