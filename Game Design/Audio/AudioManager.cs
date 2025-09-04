@@ -43,8 +43,8 @@ public class AudioManager : PersistentSingleton<AudioManager>
             return;
         
         Sound sound = _audioDictionary[name];
-        
-        if(sound != null)
+
+        if (sound != null)
         {
             Vector3 cameraPos = Camera.main.transform.position;
             float volume = GameManager.Instance.GameVolume * sound.Volume;
@@ -52,26 +52,20 @@ public class AudioManager : PersistentSingleton<AudioManager>
             _soundSource.clip = sound.Clip;
             _soundSource.pitch = sound.Pitch;
             _soundSource.loop = sound.Loop;
-            
-            if(sound.Source && !sound.Source.isPlaying)
+
+            if (sound.Source && !sound.Source.isPlaying)
                 sound.Source.Play();
-            else if(!sound.Source && !_soundSource.isPlaying)
+            else if (!sound.Source && !_soundSource.isPlaying)
                 _soundSource.Play();
         }
     }
 
-    public IEnumerator PlaySoundEffect(string name, bool lowerMusic)
+    public IEnumerator PlaySoundEffect2(string name)
     {
-        if (!lowerMusic)
-            PlaySoundEffect(name);
-        else
-        {
-            PauseMusic();
-            yield return new WaitForSeconds(0.5f);
-            PlaySoundEffect(name);
-            yield return new WaitForSeconds(1f);
-            ResumeMusic();
-        }
+        yield return PauseMusic();
+        PlaySoundEffect(name);
+        yield return new WaitForSeconds(1f);
+        ResumeMusic();
     }
 
     /// <summary>
@@ -199,16 +193,21 @@ public class AudioManager : PersistentSingleton<AudioManager>
         StartCoroutine(BlendMusic(trackName));
     }
 
-    public void PauseMusic()
+    public IEnumerator PauseMusic()
     {
         StartCoroutine(StartFade(1f, _audioSource1.volume, 0f, _audioSource1));
+        while (_audioSource1.volume != 0)
+            yield return null;
         _audioSource1.Pause();
+        Debug.Log("Music Paused");
     }
 
     public void ResumeMusic()
     {
+        Sound music = _audioDictionary[_currentMusic];
         _audioSource1.UnPause();
-        StartCoroutine(StartFade(1f, 0f, _audioSource1.volume, _audioSource1));
+        StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume, _audioSource1));
+        Debug.Log("Music UnPaused");
     }
 
     /// <summary>

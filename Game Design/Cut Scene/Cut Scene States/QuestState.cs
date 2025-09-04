@@ -97,7 +97,7 @@ public class QuestState : CutSceneState, IDialogue
         else
             Debug.LogWarning("QuestID " + questID + " does not exist or was not assigned to player...");
 
-        StartCoroutine(AudioManager.Instance.PlaySoundEffect("quest_completed", true));
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect2("quest_completed"));
         StartDialogue();
     }
 
@@ -117,7 +117,7 @@ public class QuestState : CutSceneState, IDialogue
         else
             Debug.LogWarning("QuestID " + questID + " does not exist. Could not be assigned to player");
 
-        StartCoroutine(AudioManager.Instance.PlaySoundEffect("quest_assigned", true));
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect2("quest_assigned"));
         StartDialogue(); 
     }
 
