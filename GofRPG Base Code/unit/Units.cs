@@ -126,25 +126,31 @@ public static class Units
 
     public class Music
     {
-        public const string OPENING_THEME = "";
-        public const string ENDING_THEME = "";
-        public const string OUTDOORS_1 = "";
-        public const string INDOORS_1 = "";
-        public const string INDOORS_2 = "";
-        public const string INDOORS_3 = "";
-        public const string REGULAR_BATTLE_THEME = "";
-        public const string WILD_BATTLE_THEME = "";
-        public const string RIVAL_BATTLE_THEME = "";
-        public const string BOSS_BATTLE_THEME = "";
-        public const string BINARY_BATTLE_THEME = "";
-        public const string BINARY_BOSS_BATTLE_THEME = "";
-        public const string VICTORY_THEME = "";
-        public const string ROUTE_1 = "";
-        public const string TIRO_TOWN_THEME = "";
-        public const string TIRO_TOWN_AUTHORITY_THEME = "";
-        public const string TOXIC_TRAILS_THEME = "";
-        public const string ESOIC_CITY_THEME = "";
-        public const string LONATURUS_THEME = "";
+        public const string OPENING_THEME = "opening_theme";
+        public const string ENDING_THEME = "ending_theme";
+        public const string OUTDOORS_1 = "outdoors_01";
+        public const string INDOORS_1 = "indoors_01";
+        public const string INDOORS_2 = "indoors_02";
+        public const string INDOORS_3 = "indoors_03";
+        public const string INDOORS_4 = "indoors_04";
+        public const string REGULAR_BATTLE_THEME = "regular_battle_theme";
+        public const string WILD_BATTLE_THEME = "wild_battle_theme";
+        public const string RIVAL_BATTLE_THEME = "rival_battle_theme";
+        public const string BOSS_BATTLE_THEME = "boss_battle_theme";
+        public const string AGENT_BOSS_BATTLE_THEME = "agent_boss_battle_theme";
+        public const string BINARY_BATTLE_THEME = "binary_battle_theme";
+        public const string BINARY_BOSS_BATTLE_THEME = "binary_boss_battle_theme";
+        public const string TEAM_SQL_BATTLE_THEME = "team_sql_battle_theme";
+        public const string FINAL_BOSS_BATTLE_THEME = "final_boss_battle_theme";
+        public const string VICTORY_THEME = "victory_theme";
+        public const string DUNGEON_THEME = "dungeon_theme";
+        public const string ROUTE_1 = "route_01";
+        public const string TIRO_TOWN_THEME = "tiro_town_theme";
+        public const string TIRO_TOWN_AUTHORITY_THEME = "tiro_town_authority_theme";
+        public const string TOXIC_TRAILS_THEME = "toxic_trails_theme";
+        public const string LOST_CITY_THEME = "lost_city_theme";
+        public const string ESOIC_CITY_THEME = "esoic_city_theme";
+        public const string LONATURUS_THEME = "lonaturus_theme";
     }
 
     public class SoundEffect

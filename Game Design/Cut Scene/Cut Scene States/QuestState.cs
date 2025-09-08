@@ -131,6 +131,7 @@ public class QuestState : CutSceneState, IDialogue
             TextBoxPrefab.OpenTextBox();
             TextBoxPrefab.StartNarration(_dialogueData);
         } catch(Exception e){
+            Debug.LogWarning(e.Message);
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         }
     }
