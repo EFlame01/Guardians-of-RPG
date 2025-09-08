@@ -97,7 +97,7 @@ public class QuestState : CutSceneState, IDialogue
         else
             Debug.LogWarning("QuestID " + questID + " does not exist or was not assigned to player...");
 
-        StartCoroutine(AudioManager.Instance.PlaySoundEffect2("quest_completed"));
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.QUEST_COMPLETED));
         StartDialogue();
     }
 
@@ -117,7 +117,7 @@ public class QuestState : CutSceneState, IDialogue
         else
             Debug.LogWarning("QuestID " + questID + " does not exist. Could not be assigned to player");
 
-        StartCoroutine(AudioManager.Instance.PlaySoundEffect2("quest_assigned"));
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.RECIEVED));
         StartDialogue(); 
     }
 
@@ -131,7 +131,6 @@ public class QuestState : CutSceneState, IDialogue
             TextBoxPrefab.OpenTextBox();
             TextBoxPrefab.StartNarration(_dialogueData);
         } catch(Exception e){
-            Debug.LogWarning("Error with TextBoxPrefab: " + e.Message);
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         }
     }

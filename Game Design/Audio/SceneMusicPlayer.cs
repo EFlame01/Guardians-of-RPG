@@ -35,11 +35,9 @@ public class SceneMusicPlayer : MonoBehaviour
         {
             _musicStarted = true;
             AudioManager.Instance.PlayMusic(trackName, playTrackImmediately);
-            // AudioManager.Instance.BlendMusic(trackName);
         }
         else
             return;
-            // AudioManager.Instance.StopCurrentMusic(true);
     }
 
     /// <summary>

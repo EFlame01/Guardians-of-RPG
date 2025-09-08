@@ -44,6 +44,7 @@ public class WildGrass : MonoBehaviour
         }
         catch (Exception e)
         {
+            Debug.LogWarning(e.Message);
             return false;
         }
     }

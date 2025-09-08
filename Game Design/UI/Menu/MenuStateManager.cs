@@ -14,7 +14,7 @@ public class MenuStateManager : MonoBehaviour
 
     public void Start()
     {
-        AudioManager.Instance.PlaySoundEffect("open_01");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.OPEN_UI_1);
         MenuState = 0;
         waitForMainMenu = false;
         GameManager.Instance.PlayerState = PlayerState.PAUSED;
@@ -31,7 +31,7 @@ public class MenuStateManager : MonoBehaviour
 
     public void SetMenuState(int nextState)
     {
-        AudioManager.Instance.PlaySoundEffect("click_01");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.CLICK_1);
         MenuState = nextState;
         switch(nextState)
         {
@@ -64,7 +64,7 @@ public class MenuStateManager : MonoBehaviour
 
     public void OnExitMenu()
     {
-        AudioManager.Instance.PlaySoundEffect("close_04");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.CLOSE_UI_4);
         _mainMenuAnimator.Play("close_settings_menu");
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
         Destroy(gameObject, 0.5f);

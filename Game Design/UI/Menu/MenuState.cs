@@ -7,12 +7,12 @@ public class MenuState : MonoBehaviour
 
     public virtual void Start()
     {
-        AudioManager.Instance.PlaySoundEffect("open_01");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.OPEN_UI_1);
     }
     
     public void OnBackButton()
     {
-        AudioManager.Instance.PlaySoundEffect("close_04");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.CLOSE_UI_4);
         _subMenuAnimator.Play(menuName + "_close");
         MenuStateManager.MenuState = 0;
         Destroy(gameObject, 0.5f);
@@ -20,7 +20,7 @@ public class MenuState : MonoBehaviour
 
     public void OnPlayerSettingsBackButtonPressed()
     {
-        AudioManager.Instance.PlaySoundEffect("close_04");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.CLOSE_UI_4);
         _subMenuAnimator.Play(menuName + "_close");
         MenuStateManager.MenuState = 0;
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;

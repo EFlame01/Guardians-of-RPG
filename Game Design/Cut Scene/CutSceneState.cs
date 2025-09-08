@@ -77,7 +77,7 @@ public class CutSceneState : MonoBehaviour
                     break;
                 case "ITEM":
                     Player.Instance().Inventory.AddItem(c.Data, c.Amount);
-                    StartCoroutine(AudioManager.Instance.PlaySoundEffect2("quest_assigned"));
+                    StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.RECIEVED));
                     break;
                 case "BITS":
                     Player.Instance().SetBits(Player.Instance().Bits + c.Amount);

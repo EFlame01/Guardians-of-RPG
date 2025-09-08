@@ -145,7 +145,18 @@ public static class Units
         public const string TOXIC_TRAILS_THEME = "";
         public const string ESOIC_CITY_THEME = "";
         public const string LONATURUS_THEME = "";
-        
+    }
+
+    public class SoundEffect
+    {
+        public const string DOOR_OPEN_1 = "door_open_1";
+        public const string SCROLL_1 = "scroll_05";
+        public const string OPEN_UI_1 = "open_01";
+        public const string CLOSE_UI_4 = "close_04";
+        public const string CLICK_1 = "click_01";
+        public const string RECIEVED = "quest_assigned";
+        public const string QUEST_COMPLETED = "quest_completed";
+        public const string HEALTH_RECHARGE = "health_recharge";
     }
 
     public static string[] DATABASE_PATHS =

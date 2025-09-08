@@ -15,11 +15,6 @@ public class DiscardMenuOption : MonoBehaviour
 
     public int maxAmount;
 
-    public void Start()
-    {
-        // SetUpWindow();
-    }
-
     public void SetUpWindow()
     {
         itemAmountText.text = "1";
@@ -39,7 +34,7 @@ public class DiscardMenuOption : MonoBehaviour
         {
             StartCoroutine(ResetWindow());
         });
-        AudioManager.Instance.PlaySoundEffect("open_01");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.OPEN_UI_1);
         animator.Play("discard_settings_open");
     }
 
@@ -49,7 +44,7 @@ public class DiscardMenuOption : MonoBehaviour
     }
     public IEnumerator ResetWindow()
     {
-        AudioManager.Instance.PlaySoundEffect("close_04");
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.CLOSE_UI_4);
         animator.Play("discard_settings_close");
         yield return new WaitForSeconds(0.25f);
         itemAmountText.text = "1";
