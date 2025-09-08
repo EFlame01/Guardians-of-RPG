@@ -145,12 +145,15 @@ public static class Units
         public const string VICTORY_THEME = "victory_theme";
         public const string DUNGEON_THEME = "dungeon_theme";
         public const string ROUTE_1 = "route_01";
+        public const string ARGUS_BEACH_THEME = "argus_beach_theme";
         public const string TIRO_TOWN_THEME = "tiro_town_theme";
         public const string TIRO_TOWN_AUTHORITY_THEME = "tiro_town_authority_theme";
         public const string TOXIC_TRAILS_THEME = "toxic_trails_theme";
         public const string LOST_CITY_THEME = "lost_city_theme";
         public const string ESOIC_CITY_THEME = "esoic_city_theme";
+        public const string ROUTE_2 = "route_02";
         public const string LONATURUS_THEME = "lonaturus_theme";
+        public const string ROUTE_3 = "route_3";
     }
 
     public class SoundEffect
@@ -160,7 +163,7 @@ public static class Units
         public const string OPEN_UI_1 = "open_01";
         public const string CLOSE_UI_4 = "close_04";
         public const string CLICK_1 = "click_01";
-        public const string RECIEVED = "quest_assigned";
+        public const string RECIEVED = "recieved";
         public const string QUEST_COMPLETED = "quest_completed";
         public const string HEALTH_RECHARGE = "health_recharge";
     }
