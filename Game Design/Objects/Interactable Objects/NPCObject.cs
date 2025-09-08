@@ -28,18 +28,20 @@ public class NPCObject : InteractableObject, IDialogue
 
     public void OnEnable()
     {
-        Debug.Log("NPCObject - OnEnable()...");
-        _npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
-        
-        if(_npcData == null)
-            return;
-        
-        transform.position = _npcData.Position;
+        //_npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
+        _npcData = NpcDataContainer.GetNpcData(npcID);
+        if (_npcData == null)
+            _npcData = new NpcData(npcID, transform.position, flags, flagValues);
+        else
+            transform.position = _npcData.Position;
 
-        if(_npcData.direction != null)
+        // if (_npcData == null)
+        //     return;
+
+        if (_npcData.direction != null)
         {
             Debug.Log(_npcData.direction);
-            switch(_npcData.direction)
+            switch (_npcData.direction)
             {
                 case "UP":
                     _npcSprite.PerformIdleAnimation(PlayerDirection.UP);
@@ -58,8 +60,6 @@ public class NPCObject : InteractableObject, IDialogue
                     break;
             }
         }
-        else
-            Debug.Log(_npcData.direction);
 
         if(flags.Length <= 0 )
             return;

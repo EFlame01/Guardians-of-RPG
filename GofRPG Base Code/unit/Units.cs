@@ -124,7 +124,31 @@ public static class Units
     public const int RIGHT = 2;
     public const int UP = 3;
 
-    public static string[] DATABASE_PATHS = 
+    public class Music
+    {
+        public const string OPENING_THEME = "";
+        public const string ENDING_THEME = "";
+        public const string OUTDOORS_1 = "";
+        public const string INDOORS_1 = "";
+        public const string INDOORS_2 = "";
+        public const string INDOORS_3 = "";
+        public const string REGULAR_BATTLE_THEME = "";
+        public const string WILD_BATTLE_THEME = "";
+        public const string RIVAL_BATTLE_THEME = "";
+        public const string BOSS_BATTLE_THEME = "";
+        public const string BINARY_BATTLE_THEME = "";
+        public const string BINARY_BOSS_BATTLE_THEME = "";
+        public const string VICTORY_THEME = "";
+        public const string ROUTE_1 = "";
+        public const string TIRO_TOWN_THEME = "";
+        public const string TIRO_TOWN_AUTHORITY_THEME = "";
+        public const string TOXIC_TRAILS_THEME = "";
+        public const string ESOIC_CITY_THEME = "";
+        public const string LONATURUS_THEME = "";
+        
+    }
+
+    public static string[] DATABASE_PATHS =
     {
         "/database/abilities.csv",
         "/database/characters.csv",
