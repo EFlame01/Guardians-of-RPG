@@ -15,6 +15,9 @@ using Ink.Runtime;
 /// </summary>
 public class BattleActionEffect : MonoBehaviour
 {
+    //serialize variables
+    [SerializeField] public RollMechanic RollMechanic;
+
     //public variables
     public Queue<Character> TargetQueue = new Queue<Character>();
     public bool StartedDialogue;
@@ -87,6 +90,9 @@ public class BattleActionEffect : MonoBehaviour
             case "STATUS":
                 TargetQueue.Enqueue(_user);
                 break;
+            case "RUN":
+                TargetQueue.Enqueue(_user);
+                break;
             default:
                 break;
         }
@@ -97,19 +103,15 @@ public class BattleActionEffect : MonoBehaviour
         if(_prevState.Equals(Units.CHARACTER_ACTION_STATE))
         {
             if(_user.BattleStatus.ChosenMove != null)
-            {
                 _effect = "MOVE";
-                return;
-            }
             else if(_user.BattleStatus.ChosenItem != null)
-            {
                 _effect = "ITEM";
-                return;
-            }
             else if(_user.BattleStatus.TurnStatus.Equals(TurnStatus.SKIP))
                 _effect = "SKIP";
+            else if(_user.BattleStatus.TurnStatus.Equals(TurnStatus.RUN))
+                _effect = "RUN";
         }
-        if(_prevState.Equals(Units.AFTER_ROUND_STATE))
+        else if(_prevState.Equals(Units.AFTER_ROUND_STATE))
             _effect = "STATUS";
     }
 
@@ -146,6 +148,9 @@ public class BattleActionEffect : MonoBehaviour
                         break;
                     case "STATUS":
                         yield return StatusAnimation();
+                        break;
+                    case "RUN":
+                        yield return RollToRunAnimation();
                         break;
                     default:
                         break;
@@ -209,6 +214,19 @@ public class BattleActionEffect : MonoBehaviour
             yield return new WaitForSeconds(1f);
             _effectText.Add(Target.Name + " was effected by the poison!");
         }
+    }
+
+    private IEnumerator RollToRunAnimation()
+    {
+        yield return RollMechanic.RollRun();
+
+        if(RollMechanic.RollNumber > 10)
+        {
+            _effectText.Add("You got away safely!");
+            BattleSimStatus.RunSuccessful = true;
+        }
+        else
+            _effectText.Add("You were unable to escape!");
     }
 
     private IEnumerator MoveEffect()

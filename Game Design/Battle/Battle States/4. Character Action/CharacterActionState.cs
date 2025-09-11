@@ -45,8 +45,11 @@ public class CharacterActionState : BattleState, IDialogue
             DisplayAction();
         else
         {
+            //TODO: test why RoundStarted is commented out
             // BattleSimStatus.RoundStarted = false;
-            if(BattleOver())
+            if(BattleSimStatus.RunSuccessful)
+                NextState = Units.END_BATTLE;
+            else if(BattleOver())
                 NextState = Units.BATTLE_OVER_STATE;
             else
                 NextState = Units.AFTER_ROUND_STATE;

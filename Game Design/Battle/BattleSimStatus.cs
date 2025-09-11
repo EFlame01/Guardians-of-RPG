@@ -25,6 +25,7 @@ public class BattleSimStatus
     public static int TotalRounds = 0;
     public static bool RoundStarted;
     public static bool AfterRoundStarted;
+    public static bool RunSuccessful;
     public static GameObject BurnSymbol;
     public static GameObject FrozenSymbol;
     public static GameObject PetrifiedSymbol;
@@ -85,6 +86,7 @@ public class BattleSimStatus
         TotalRounds = 0;
         StartAfterRound = false;
         AfterRoundStarted = false;
+        RunSuccessful = false;
     }
 
     /// <summary>

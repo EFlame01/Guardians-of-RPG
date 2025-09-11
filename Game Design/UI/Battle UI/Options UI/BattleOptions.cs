@@ -45,6 +45,9 @@ public class BattleOptions : MonoBehaviour
     public void OnRunButtonPressed()
     {
         //TODO: player's option is to run
+        Debug.Log("Run button pressed...");
+        Player.Instance().BattleStatus.SetTurnStatus(TurnStatus.RUN);
+        BattleSimStatus.EndPlayerOption = true;
     }
 
     /// <summary>
