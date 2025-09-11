@@ -26,6 +26,7 @@ public class ActionEffectState : BattleState
     //Constructor
     public ActionEffectState(BattleCharacter battlePlayer, BattleCharacter[] battleAllies, BattleCharacter[] battleEnemies, Camera camera, DialogueData dialogueData, TextBox textBox, BattleActionEffect battleActionEffect)
     {
+        CurrentState = Units.ACTION_EFFECT_STATE;
         _battlePlayer = battlePlayer;
         _battleAllies = battleAllies;
         _battleEnemies = battleEnemies;
@@ -37,7 +38,7 @@ public class ActionEffectState : BattleState
 
     public override void Enter()
     {
-        _battleActionEffect.SetUpBattleActionEffect(BattleSimStatus.ChosenCharacter, _battlePlayer, _battleAllies, _battleEnemies, _camera, _narrationTextBox, _dialogueData);
+        _battleActionEffect.SetUpBattleActionEffect(BattleSimStatus.ChosenCharacter, _battlePlayer, _battleAllies, _battleEnemies, _camera, _narrationTextBox, _dialogueData, PrevState);
         _battleActionEffect.StartActionEffect();
     }
 
@@ -77,13 +78,13 @@ public class ActionEffectState : BattleState
             if(BattleSimStatus.RoundKnockOuts.Count > 0)
             {
                 //if characters are knocked out, go to knock out state
-                NextState = "KNOCK OUT STATE";
+                NextState = Units.KNOCK_OUT_STATE;
             }
             else
             {
                 BattleSimStatus.ChosenCharacter.BattleStatus.SetTurnStatus(TurnStatus.NOTHING);
-                //go to character action state
-                NextState = "CHARACTER ACTION STATE";
+                //go to previous state
+                NextState = PrevState;
             }
         }
         else

@@ -22,13 +22,14 @@ public class CharacterActionState : BattleState, IDialogue
     //private variables
     private TextBox _narrationTextBox;
     private DialogueData _dialogueData;
-    private bool _roundOver;
+    // private bool _roundOver;
     private string _characterActionText;
     private bool _startedDialogue;
 
     //Constructor
     public CharacterActionState(DialogueData dialogueData, TextBox textBox)
     {
+        CurrentState = Units.CHARACTER_ACTION_STATE;
         _dialogueData = dialogueData;
         _narrationTextBox = textBox;
     }
@@ -46,9 +47,10 @@ public class CharacterActionState : BattleState, IDialogue
         {
             // BattleSimStatus.RoundStarted = false;
             if(BattleOver())
-                NextState = "BATTLE OVER STATE";
+                NextState = Units.BATTLE_OVER_STATE;
             else
-                NextState = "OPTION STATE";
+                NextState = Units.AFTER_ROUND_STATE;
+                // NextState = "AFTER ROUND STATE";
         }
     }
 
@@ -59,9 +61,9 @@ public class CharacterActionState : BattleState, IDialogue
         if(_startedDialogue && DialogueManager.Instance.DialogueEnded)
         {
             if(HasAction(BattleSimStatus.ChosenCharacter))
-                NextState = "ACTION EFFECT STATE";
+                NextState = Units.ACTION_EFFECT_STATE;
             else
-                NextState = "CHARACTER ACTION STATE";
+                NextState = Units.CHARACTER_ACTION_STATE;
         }
     }
 
@@ -82,7 +84,7 @@ public class CharacterActionState : BattleState, IDialogue
         Character character = BattleSimStatus.BattleQueue.Dequeue();
         BattleSimStatus.ChosenCharacter = character;
 
-        if(character.BaseStats.Hp <= 0)
+        if(character.BaseStats.Hp <= 0 && !character.BattleStatus.TurnStatus.Equals(TurnStatus.ITEM))
         {
             character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
             character.BattleStatus.SetTurnStatusTag(character.Name + " is knocked out and cannot move!");
@@ -107,11 +109,11 @@ public class CharacterActionState : BattleState, IDialogue
         StartDialogue();
     }
 
-    private bool RoundOver()
-    {
-        _roundOver = BattleSimStatus.BattleQueue.Count == 0;
-        return _roundOver;
-    }
+    // private bool RoundOver()
+    // {
+    //     _roundOver = BattleSimStatus.BattleQueue.Count == 0;
+    //     return _roundOver;
+    // }
 
     public void StartDialogue()
     {

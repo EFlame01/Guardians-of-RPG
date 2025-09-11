@@ -24,6 +24,7 @@ public class KnockoutState : BattleState
     //Constructor
     public KnockoutState(DialogueData dialogueData, TextBox textBox)
     {
+        CurrentState = Units.KNOCK_OUT_STATE;
         this.dialogueData = dialogueData;
         this.textBox = textBox;
     }
@@ -39,11 +40,15 @@ public class KnockoutState : BattleState
         if(startedDialogue && DialogueManager.Instance.DialogueEnded)
         {
             if(BattleOver())
-                NextState = "BATTLE OVER STATE";
+                NextState = Units.BATTLE_OVER_STATE;
             else
             {
                 //May need to check if prev state was character action or after round
                 NextState = "CHARACTER ACTION STATE";
+                if(PrevState.Equals(Units.CHARACTER_ACTION_STATE))
+                    NextState = Units.CHARACTER_ACTION_STATE;
+                else if(PrevState.Equals(Units.AFTER_ROUND_STATE))
+                    NextState = Units.AFTER_ROUND_STATE;
             }
         }
     }

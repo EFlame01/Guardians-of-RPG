@@ -28,6 +28,7 @@ public class InitializeState : BattleState, IDialogue
     //Constructor
     public InitializeState(BattleCharacter battlePlayer, BattleCharacter[] battleAllies, BattleCharacter[] battleEnemies, EnvironmentDetail[] environmentDetails, Camera camera, DialogueData dialogueData, TextBox textBox)
     {
+        CurrentState = Units.INITIALIZE_STATE;
         BattlePlayer = battlePlayer;
         BattleAllies = battleAllies;
         BattleEnemies = battleEnemies;
@@ -50,7 +51,7 @@ public class InitializeState : BattleState, IDialogue
             StartDialogue();
         }
         if(startedDialogue && DialogueManager.Instance.DialogueEnded)
-            NextState = "OPTION STATE";
+            NextState = Units.OPTION_STATE;
     }
 
     public override void Exit()

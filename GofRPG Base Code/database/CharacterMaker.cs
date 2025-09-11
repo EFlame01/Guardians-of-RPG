@@ -56,6 +56,10 @@ public class CharacterMaker : Singleton<CharacterMaker>
             character.BaseStats.LevelUpStats(character.Archetype.ChooseStatBoostRandomly());
         }
 
+        //TODO: Test. Delete Later
+        character.BattleStatus.StatusConditions["BURN"] = new Burn();
+        character.BattleStatus.StatusConditions["POISON"] = new Poison(1);
+
         return character;
     }
 }

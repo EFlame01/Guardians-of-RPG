@@ -25,6 +25,7 @@ public class OptionState : BattleState
     //Constructor
     public OptionState(GameObject timer, GameObject battleOptions)
     {
+        CurrentState = Units.OPTION_STATE;
         Timer = timer;
         BattleOptions = battleOptions;
     }
@@ -54,7 +55,7 @@ public class OptionState : BattleState
             // else
             //    NextState = "CHARACTER ACTION STATE";
             
-            NextState = "CHARACTER ACTION STATE";
+            NextState = Units.CHARACTER_ACTION_STATE;
         }
     }
 

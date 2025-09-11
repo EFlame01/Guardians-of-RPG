@@ -108,6 +108,16 @@ public static class Units
     
     public const double ELIXIR_REGEN_RATE = 1.0/4.0;
 
+    public const string INITIALIZE_STATE = "INITIALIZE STATE";
+    public const string BEFORE_ROUND_STATE = "BEFORE ROUND STATE";
+    public const string OPTION_STATE = "OPTION STATE";
+    public const string CHARACTER_ACTION_STATE = "CHARACTER ACTION STATE";
+    public const string ACTION_EFFECT_STATE = "ACTION EFFECT STATE";
+    public const string KNOCK_OUT_STATE = "KNOCK OUT STATE";
+    public const string AFTER_ROUND_STATE = "AFTER ROUND STATE";
+    public const string BATTLE_OVER_STATE = "BATTLE OVER STATE";
+    public const string END_BATTLE = "END BATTLE";
+
     public const float TIME_PER_PART = 60;
 
     public const int MORNING = 0;

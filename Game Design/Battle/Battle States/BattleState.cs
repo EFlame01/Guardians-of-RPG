@@ -12,11 +12,19 @@ public abstract class BattleState
     //public variables
     public string PrevState {get; protected set;}
     public string NextState {get; protected set;}
+    public string CurrentState {get; protected set;}
+
+    protected bool _roundOver;
 
     //public abstract variables
     public abstract void Enter();
     public abstract void Update();
     public abstract void Exit();
+
+    public void SetPrevState(string prevState)
+    {
+        PrevState = prevState;
+    }
 
     /// <summary>
     /// Sets the NextState variable to null.
@@ -60,5 +68,11 @@ public abstract class BattleState
             return "ENEMY";
         
         return "NO ONE";
+    }
+
+    protected bool RoundOver()
+    {
+        _roundOver = BattleSimStatus.BattleQueue.Count == 0;
+        return _roundOver;
     }
 }

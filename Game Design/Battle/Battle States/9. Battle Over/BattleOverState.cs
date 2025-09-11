@@ -27,6 +27,7 @@ public class BattleOverState : BattleState
     //Constructor
     public BattleOverState(PlayerHUD playerHUD, DialogueData dialogueData, TextBox textBox)
     {
+        CurrentState = Units.BATTLE_OVER_STATE;
         this.playerHUD = playerHUD;
         this.dialogueData = dialogueData;
         this.textBox = textBox;
@@ -44,7 +45,7 @@ public class BattleOverState : BattleState
     public override void Update()
     {
         if(startedDialogue && DialogueManager.Instance.DialogueEnded)
-            NextState = "END BATTLE";
+            NextState = Units.END_BATTLE;
     }
 
     public override void Exit()

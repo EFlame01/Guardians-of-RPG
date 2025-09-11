@@ -43,6 +43,7 @@ public class BattleSimulator : MonoBehaviour
     private BattleState CharacterActionState;
     private BattleState ActionEffectState;
     private BattleState KnockoutState;
+    private BattleState AfterRoundState;
     private BattleState BattleOverState;
 
     private void Awake()
@@ -53,6 +54,7 @@ public class BattleSimulator : MonoBehaviour
         CharacterActionState = new CharacterActionState(DialogueData, NarrationTextBox);
         ActionEffectState = new ActionEffectState(BattlePlayer, BattleAllies, BattleEnemies, Camera, DialogueData, NarrationTextBox, BattleActionEffect);
         KnockoutState = new KnockoutState(DialogueData, NarrationTextBox);
+        AfterRoundState = new AfterRoundState();
         BattleOverState = new BattleOverState((PlayerHUD)BattlePlayer.CharacterHUD, DialogueData, NarrationTextBox);
     }
 
@@ -98,6 +100,7 @@ public class BattleSimulator : MonoBehaviour
                 BattleStateMachine.ChangeState(KnockoutState);
                 break;
             case "AFTER ROUND STATE":
+                BattleStateMachine.ChangeState(AfterRoundState);
                 break;
             case "BATTLE OVER STATE":
                 // BattleOverState = new BattleOverState((PlayerHUD)BattlePlayer.CharacterHUD, DialogueData, NarrationTextBox);

@@ -24,6 +24,7 @@ public class BattleSimStatus
     public static bool StartAfterRound = false;
     public static int TotalRounds = 0;
     public static bool RoundStarted;
+    public static bool AfterRoundStarted;
     public static GameObject BurnSymbol;
     public static GameObject FrozenSymbol;
     public static GameObject PetrifiedSymbol;
@@ -83,6 +84,7 @@ public class BattleSimStatus
         EndPlayerOption = true;
         TotalRounds = 0;
         StartAfterRound = false;
+        AfterRoundStarted = false;
     }
 
     /// <summary>
@@ -104,5 +106,16 @@ public class BattleSimStatus
         PoisonSymbol = poison;
         SleepSymbol = sleep;
         StunSymbol = stun;
+    }
+
+    public static void OrderQueueForAfterRound()
+    {
+        AfterRoundStarted = true;
+        BattleQueue.Clear();
+        foreach(Character enemy in Enemies)
+            BattleQueue.Enqueue(enemy);
+        foreach(Character ally in Allies)
+            BattleQueue.Enqueue(ally);
+        BattleQueue.Enqueue(Player.Instance());
     }
 }

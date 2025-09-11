@@ -33,6 +33,7 @@ public class BattleActionEffect : MonoBehaviour
     private TextBox _textBox;
     private bool _firstTimeMove;
     private string _effect;
+    private string _prevState;
 
     /// <summary>
     /// Sets the public and private variables to the
@@ -48,7 +49,7 @@ public class BattleActionEffect : MonoBehaviour
     /// <param name="camera">The main camera</param>
     /// <param name="textBox">The textbox used to display the results of action</param>
     /// <param name="dialogueData">The dialogue data used to store the dialogue</param>
-    public void SetUpBattleActionEffect(Character user, BattleCharacter battlePlayer, BattleCharacter[] allies, BattleCharacter[] enemies, Camera camera, TextBox textBox, DialogueData dialogueData)
+    public void SetUpBattleActionEffect(Character user, BattleCharacter battlePlayer, BattleCharacter[] allies, BattleCharacter[] enemies, Camera camera, TextBox textBox, DialogueData dialogueData, string prevState)
     {
         _user = user;
         _battlePlayer = battlePlayer;
@@ -59,8 +60,9 @@ public class BattleActionEffect : MonoBehaviour
         _dialogueData = dialogueData;
         _effectText = new List<string>();
         _firstTimeMove = true;
-        AddTargetsToQueue();
+        _prevState = prevState;
         GetEffect();
+        AddTargetsToQueue();
     }
 
     /// <summary>
@@ -74,25 +76,41 @@ public class BattleActionEffect : MonoBehaviour
 
     private void AddTargetsToQueue()
     {
-        Character[] characters = _user.BattleStatus.ChosenTargets.ToArray();
-        foreach(Character c in characters)
-            TargetQueue.Enqueue(c);
+        switch(_effect)
+        {
+            case "MOVE":
+            case "ITEM":
+                Character[] characters = _user.BattleStatus.ChosenTargets.ToArray();
+                foreach(Character c in characters)
+                    TargetQueue.Enqueue(c);
+                break;
+            case "STATUS":
+                TargetQueue.Enqueue(_user);
+                break;
+            default:
+                break;
+        }
     }
 
     private void GetEffect()
     {
-        if(_user.BattleStatus.ChosenMove != null)
+        if(_prevState.Equals(Units.CHARACTER_ACTION_STATE))
         {
-            _effect = "MOVE";
-            return;
+            if(_user.BattleStatus.ChosenMove != null)
+            {
+                _effect = "MOVE";
+                return;
+            }
+            else if(_user.BattleStatus.ChosenItem != null)
+            {
+                _effect = "ITEM";
+                return;
+            }
+            else if(_user.BattleStatus.TurnStatus.Equals(TurnStatus.SKIP))
+                _effect = "SKIP";
         }
-        else if(_user.BattleStatus.ChosenItem != null)
-        {
-            _effect = "ITEM";
-            return;
-        }
-        else if(_user.BattleStatus.TurnStatus.Equals(TurnStatus.SKIP))
-            _effect = "SKIP";
+        if(_prevState.Equals(Units.AFTER_ROUND_STATE))
+            _effect = "STATUS";
     }
 
     private IEnumerator PerformAction()
@@ -125,6 +143,9 @@ public class BattleActionEffect : MonoBehaviour
                     case "ITEM":
                         yield return EffectAnimation("");
                         yield return ItemEffect();
+                        break;
+                    case "STATUS":
+                        yield return StatusAnimation();
                         break;
                     default:
                         break;
@@ -168,6 +189,26 @@ public class BattleActionEffect : MonoBehaviour
                 break;
         }
         yield return new WaitForSeconds(0.5f);
+    }
+
+    private IEnumerator StatusAnimation()
+    {
+        if(Target.BattleStatus.StatusConditions["BURN"] != null)
+        {
+            yield return EffectAnimation("BURN");
+            Target.BattleStatus.StatusConditions["BURN"].ImplementStatusCondition(Target);
+            UpdateBattleCharacter(Target);
+            yield return new WaitForSeconds(1f);
+            _effectText.Add(Target.Name + " was effected by the burn!");
+        }
+        if(Target.BaseStats.Hp > 0 && Target.BattleStatus.StatusConditions["POISON"] != null)
+        {
+            yield return EffectAnimation("POISON");
+            Target.BattleStatus.StatusConditions["POISON"].ImplementStatusCondition(Target);
+            UpdateBattleCharacter(Target);
+            yield return new WaitForSeconds(1f);
+            _effectText.Add(Target.Name + " was effected by the poison!");
+        }
     }
 
     private IEnumerator MoveEffect()

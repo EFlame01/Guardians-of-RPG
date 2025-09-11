@@ -29,6 +29,7 @@ public class BattleStateMachine
     {
         CurrentState.NullNextState();
         CurrentState.Exit();
+        battleState.SetPrevState(CurrentState.CurrentState);
         StartState(battleState);
     }
 
