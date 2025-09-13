@@ -48,7 +48,7 @@ public class WildEncounter : MonoBehaviour
             //DONE: start battle
             BattleSimStatus.SceneName = SceneManager.GetActiveScene().name;
             BattleInformation.PlayerPosition = playerObject.transform.position;
-            AudioManager.Instance.PlayMusic("track 7", true);
+            AudioManager.Instance.PlayMusic(Units.Music.WILD_BATTLE_THEME, true);
             SceneLoader.Instance.LoadScene("Battle Scene", TransitionType.WILD_BATTLE);
         }
     }

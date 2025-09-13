@@ -40,11 +40,13 @@ public class WildGrass : MonoBehaviour
     {
         try
         {
-            return Physics2D.OverlapCircle(playerTransform.position, 0.2f, grassLayer) != null;
+            if(playerTransform != null)
+                return Physics2D.OverlapCircle(playerTransform.position, 0.2f, grassLayer) != null;
+            return false;
         }
         catch (Exception e)
         {
-            Debug.LogWarning(e.Message);
+            Debug.LogWarning("WARNING: " + e.Message);
             return false;
         }
     }

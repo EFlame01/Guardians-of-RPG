@@ -64,7 +64,7 @@ public class BattleSimulator : MonoBehaviour
         try{
             DayNightCycle.Instance.StopTimer();
         } catch(Exception e){
-            Debug.LogWarning(e.ToString());
+            Debug.LogWarning("WARNING: " + e.ToString());
         }
         BattleStateMachine.StartState(InitializeState);
         BattleSimStatus.AssignStatusGameObjects(BurnSymbol, FrozenSymbol, PetrifiedSymbol, PoisonSymbol, SleepSymbol, StunSymbol);
@@ -133,7 +133,7 @@ public class BattleSimulator : MonoBehaviour
         try{
             DayNightCycle.Instance.ResumeTimer();
         } catch(Exception e){
-            Debug.LogWarning(e.ToString());
+            Debug.LogWarning("WARNING: " + e.ToString());
         }
         //TODO: create method in sceneloader to fade music out
         AudioManager.Instance.StopCurrentMusic(false);

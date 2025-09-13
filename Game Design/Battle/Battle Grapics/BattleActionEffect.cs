@@ -218,6 +218,7 @@ public class BattleActionEffect : MonoBehaviour
 
     private IEnumerator RollToRunAnimation()
     {
+        RollMechanic.gameObject.SetActive(true);
         yield return RollMechanic.RollRun();
 
         if(RollMechanic.RollNumber > 10)
@@ -227,6 +228,9 @@ public class BattleActionEffect : MonoBehaviour
         }
         else
             _effectText.Add("You were unable to escape!");
+        
+        Target.BattleStatus.SetRollRun(false);
+        RollMechanic.gameObject.SetActive(false);
     }
 
     private IEnumerator MoveEffect()

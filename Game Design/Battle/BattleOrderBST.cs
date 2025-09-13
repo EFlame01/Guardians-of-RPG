@@ -73,6 +73,7 @@ public class BattleOrderBST
         foreach(Character c in list)
         {
             DetermineTurn(c);
+            Debug.Log(c.BattleStatus.TurnStatus);
             BST bst = CharacterBST;
             AddBST(ref bst, c);
         }
@@ -97,6 +98,7 @@ public class BattleOrderBST
         if(c.BattleStatus.RollRun)
         {
             c.BattleStatus.SetTurnStatus(TurnStatus.RUN);
+            return;
         }
         if(c.BattleStatus.ChosenItem != null)
         {

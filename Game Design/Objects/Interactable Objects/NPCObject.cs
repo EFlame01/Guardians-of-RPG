@@ -40,7 +40,6 @@ public class NPCObject : InteractableObject, IDialogue
 
         if (_npcData.direction != null)
         {
-            Debug.Log(_npcData.direction);
             switch (_npcData.direction)
             {
                 case "UP":
@@ -107,7 +106,6 @@ public class NPCObject : InteractableObject, IDialogue
         GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
         while(!DialogueManager.Instance.DialogueEnded)
             yield return null;
-        Debug.Log(DialogueManager.Instance.DialogueEnded);
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }
 

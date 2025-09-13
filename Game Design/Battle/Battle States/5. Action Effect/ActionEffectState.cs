@@ -63,7 +63,11 @@ public class ActionEffectState : BattleState
 
     private void CheckStatus()
     {
-        Debug.Log("Target: " + _battleActionEffect.Target);
+        if(BattleSimStatus.RunSuccessful)
+        {
+            NextState = Units.END_BATTLE;
+            return;
+        }
         if (_battleActionEffect.Target.BaseStats.Hp == 0)
         {
             BattleSimStatus.RoundKnockOuts.Add(_battleActionEffect.Target);
