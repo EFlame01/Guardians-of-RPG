@@ -57,8 +57,8 @@ public class CharacterMaker : Singleton<CharacterMaker>
         }
 
         //TODO: Test. Delete Later
-        character.BattleStatus.StatusConditions["BURN"] = new Burn();
-        character.BattleStatus.StatusConditions["POISON"] = new Poison(1);
+        // character.BattleStatus.StatusConditions["BURN"] = new Burn();
+        // character.BattleStatus.StatusConditions["POISON"] = new Poison(1);
 
         return character;
     }

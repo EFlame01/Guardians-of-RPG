@@ -70,7 +70,7 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     public void SetTimeOfDay(int timeOfDay, bool startTimer)
     {
         TimeRemaining = Units.TIME_PER_PART;
-        TimeOfDay = timeOfDay;
+        TimeOfDay = timeOfDay == -1? TimeOfDay: timeOfDay;
         Timer = 0;
         _prevTime = 0;
         _timerStarted = startTimer;
