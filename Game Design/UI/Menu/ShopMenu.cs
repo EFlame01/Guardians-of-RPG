@@ -21,6 +21,7 @@ public class ShopMenu : MenuState
     [SerializeField] public Button lessButton;
     [SerializeField] public Button moreButton;
     [SerializeField] public Button itemButtonPrefab;
+    [SerializeField] public Button itemButtonPrefab2;
     [SerializeField] public TextMeshProUGUI shopNameText;
     [SerializeField] public TextMeshProUGUI itemNameText;
     [SerializeField] public TextMeshProUGUI itemDescriptionText;
@@ -237,7 +238,7 @@ public class ShopMenu : MenuState
             Item item = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
             if(item != null && item.Type.Equals(itemType) && itemInfo.Value > 0)
             {
-                Button button = Instantiate(itemButtonPrefab, sellListLayout);
+                Button button = Instantiate(itemButtonPrefab2, sellListLayout);
                 TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
                 TextMeshProUGUI itemAmountText = button.GetComponentsInChildren<TextMeshProUGUI>()[1];
                 
