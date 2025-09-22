@@ -19,6 +19,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
     [Header("Music")]
     [SerializeField] private Sound[] _musicList;
 
+    //private variables
     private AudioSource _audioSource1;
     private AudioSource _audioSource2;
     private AudioSource _soundSource;
@@ -60,11 +61,18 @@ public class AudioManager : PersistentSingleton<AudioManager>
         }
     }
 
-    public IEnumerator PlaySoundEffect2(string name)
+    /// <summary>
+    /// Plays the name of the sound effect
+    /// while pausing the current music 
+    /// for a specific amount of time.
+    /// </summary>
+    /// <param name="name">Name of sound effect</param>
+    /// <param name="duration">Length of time music is paused</param>
+    public IEnumerator PlaySoundEffect2(string name, float duration)
     {
         yield return PauseMusic();
         PlaySoundEffect(name);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(duration);
         ResumeMusic();
     }
 
@@ -153,6 +161,9 @@ public class AudioManager : PersistentSingleton<AudioManager>
         _currentMusic = null;
     }
 
+    /// <summary>
+    /// Changes the volume in the game.
+    /// </summary>
     public void AdjustVolume()
     {
         if (_currentMusic == null)
@@ -161,9 +172,13 @@ public class AudioManager : PersistentSingleton<AudioManager>
         StartCoroutine(StartFade(0.1f, _audioSource1.volume, music.Volume * GameManager.Instance.GameVolume, _audioSource1));
     }
 
+    /// <summary>
+    /// Creates a cross fade with the current music and
+    /// the new music to be played.
+    /// </summary>
+    /// <param name="trackName">The name of the new music to be played</param>
     public IEnumerator BlendMusic(string trackName)
     {
-        Debug.Log("Blending Music");
         if (trackName != null && trackName.Length > 0 && !trackName.Equals(_currentMusic))
         {
             Sound music = _audioDictionary[trackName];
@@ -188,26 +203,35 @@ public class AudioManager : PersistentSingleton<AudioManager>
         yield return null;
     }
 
+    /// <summary>
+    /// Method used for other classes without
+    /// MonoBehaviour to start the coroutine
+    /// BlendMusic 
+    /// </summary>
     public void BlendMusic2(string trackName)
     {
         StartCoroutine(BlendMusic(trackName));
     }
 
+    /// <summary>
+    /// Pauses the current music in the game.
+    /// </summary>
     public IEnumerator PauseMusic()
     {
         StartCoroutine(StartFade(1f, _audioSource1.volume, 0f, _audioSource1));
         while (_audioSource1.volume != 0)
             yield return null;
         _audioSource1.Pause();
-        Debug.Log("Music Paused");
     }
 
+    /// <summary>
+    /// Resumes the current music in the game.
+    /// </summary>
     public void ResumeMusic()
     {
         Sound music = _audioDictionary[_currentMusic];
         _audioSource1.UnPause();
         StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume, _audioSource1));
-        Debug.Log("Music UnPaused");
     }
 
     /// <summary>
@@ -252,7 +276,6 @@ public class AudioManager : PersistentSingleton<AudioManager>
     /// <param name="duration">Amount of time the fade should last</param>
     /// <param name="startVolume">Start volume</param>
     /// <param name="targetVolume">End volume</param>
-    /// <returns></returns>
     private IEnumerator StartFade(float duration, float startVolume, float targetVolume, AudioSource audioSource)
     {
         float currentTime = 0f;

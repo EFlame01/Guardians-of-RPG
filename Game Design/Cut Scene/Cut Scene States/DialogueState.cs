@@ -24,24 +24,32 @@ public class DialogueState : CutSceneState, IDialogue
         CheckDialogue();
     }
 
-    public void CheckDialogue()
-    {
-        if(IsActive && DialogueManager.Instance.DialogueEnded)
-            Exit();
-    }
-
+    /// <summary>
+    /// Display DialougeData via the DialogueManager.
+    /// </summary>
     public virtual void StartDialogue()
     {
-        if(Transform != null)
-            TextBoxPrefab.gameObject.transform.SetParent(Transform);
+        // if(Transform != null && TextBoxPrefab != null)
+        //     TextBoxPrefab.gameObject.transform.SetParent(Transform);
         
-        try {
+        // try {
+        //     TextBoxPrefab.gameObject.SetActive(true);
+        //     TextBoxPrefab.OpenTextBox();
+        //     TextBoxPrefab.StartNarration(DialogueData);
+        // } catch(Exception e){
+        //     Debug.LogWarning("WARNING: " + e.Message);
+        //     DialogueManager.Instance.DisplayNextDialogue(DialogueData);
+        // }
+
+        //TODO: test if code works before deleting commented code
+        if(Transform != null && TextBoxPrefab != null)
+        {
+            TextBoxPrefab.gameObject.transform.SetParent(Transform);
             TextBoxPrefab.gameObject.SetActive(true);
             TextBoxPrefab.OpenTextBox();
             TextBoxPrefab.StartNarration(DialogueData);
-        } catch(Exception e){
-            Debug.LogWarning("TextBoxPrefab is missing" + e.ToString());
-            DialogueManager.Instance.DisplayNextDialogue(DialogueData);
         }
+        else
+            DialogueManager.Instance.DisplayNextDialogue(DialogueData);
     }
 }

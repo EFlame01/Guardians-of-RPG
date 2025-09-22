@@ -2,13 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// SetChapterState is a class that extends from the 
+/// <c>CutSceneState</c> class. SetChapterState
+/// is responsible for setting the chapter
+/// information and the story flags for the ChapterScene
+/// </summary>
 public class SetChapterState : CutSceneState
 {
+    //Serialized variables
     [SerializeField] public string SceneName;
     [SerializeField] public string PartName;
     [SerializeField] public string ChapterName;
     [SerializeField] public string ChapterStoryFlag;
 
+    //private variables
     private bool start = false;
 
     public override void Enter()
@@ -33,6 +41,10 @@ public class SetChapterState : CutSceneState
         base.Exit();
     }
 
+    /// <summary>
+    /// Adds the chapter information to the
+    /// ChapterScene.
+    /// </summary>
     private void SetUpChapterScene()
     {
         ChapterScene.SceneName = SceneName;

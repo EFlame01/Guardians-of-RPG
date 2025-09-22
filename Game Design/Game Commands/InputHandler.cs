@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// InputHandler is a class that inherits from the Interact
 /// class to handle all of the inputs from the player.
+/// 
+/// TODO: Implement input for pausing the game.
 /// </summary>
 public class InputHandler : MonoBehaviour
 {
@@ -28,7 +30,6 @@ public class InputHandler : MonoBehaviour
         _speed = GameManager.Instance.PlayerSpeed;
         _targetPos = transform.position;
         _playerSprite.PerformIdleAnimation(PlayerSpawn.PlayerDirection);
-        // Move move = 
     }
 
     private void Update()

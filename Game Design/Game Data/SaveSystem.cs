@@ -242,7 +242,7 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <summary>
     /// Loads all well data from the persistentDataPaths.
     /// </summary>
-    /// <returns>the npc data</returns>
+    /// <returns>the well data</returns>
     public static WellDataContainer LoadWellData()
     {
         if(!File.Exists(Application.persistentDataPath + Units.WELL_DATA_PATH))
@@ -257,6 +257,9 @@ public class SaveSystem : Singleton<SaveSystem>
         return data;
     }
 
+    /// <summary>
+    /// Saves all npc data to the persistentDataPaths.
+    /// </summary>
     public static void SaveMedicalCenterData()
     {
         MedicalCenterDataContainer wellDataList = new MedicalCenterDataContainer();
@@ -269,6 +272,10 @@ public class SaveSystem : Singleton<SaveSystem>
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.MEDICAL_CENTER_DATA_PATH);
     }
 
+    /// <summary>
+    /// Loads all medical center data from the persistentDataPaths.
+    /// </summary>
+    /// <returns>the medical center data</returns>
     public static MedicalCenterDataContainer LoadMedicalCenterData()
     {
         if(!File.Exists(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH))
@@ -283,6 +290,9 @@ public class SaveSystem : Singleton<SaveSystem>
         return data;
     }
 
+    /// <summary>
+    /// Saves all settings data to the persistentDataPaths.
+    /// </summary>
     public static void SaveSettingsData()
     {
         SettingsData data = new SettingsData();
@@ -295,6 +305,10 @@ public class SaveSystem : Singleton<SaveSystem>
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.SETTINGS_DATA_PATH);
     }
 
+    /// <summary>
+    /// Loads all settings data from the persistentDataPaths.
+    /// </summary>
+    /// <returns>the settings data</returns>
     public static SettingsData LoadSettingsData()
     {
         if(!File.Exists(Application.persistentDataPath + Units.SETTINGS_DATA_PATH))

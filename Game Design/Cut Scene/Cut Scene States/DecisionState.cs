@@ -27,6 +27,12 @@ public class DecisionState : CutSceneState, IDialogue
         CheckDecision();
     }
 
+    /// <summary>
+    /// If the state is active and an option is selected,
+    /// then this method checks what the decision is,
+    /// determines the next state based on the decision,
+    /// and resets the decision state in the DialogueManager.
+    /// </summary>
     private void CheckDecision()
     {
         if(IsActive && OptionSelected())
@@ -37,11 +43,21 @@ public class DecisionState : CutSceneState, IDialogue
         }
     }
 
+    /// <summary>
+    /// Checks if an option was selected in
+    /// the DialogueManager. If an option was selected,
+    /// it will return TRUE. Otherwise, it will
+    /// return false.
+    /// </summary>
+    /// <returns>TRUE if decision is greater than -1; FALSE otherwise </return>
     private bool OptionSelected()
     {
         return DialogueManager.Instance.GetDecision() > -1;
     }
 
+    /// <summary>
+    /// Displays the decision options.
+    /// </summary>
     public void StartDialogue()
     {
         if(TextBoxDecision != null)

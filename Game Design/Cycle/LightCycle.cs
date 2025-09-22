@@ -11,8 +11,11 @@ using UnityEngine.Experimental.Rendering.Universal;
 /// </summary>
 public class LightCycle : MonoBehaviour
 {
+    //Serialized variables
     [SerializeField] public Light2D Light;
     [SerializeField] public bool SetTimer;
+
+    //private variables
     private Color MORNING_COLOR = new Color((float)(251f/255f), (float)(222f/255f), (float)(188f/255f));
     private Color EVENING_COLOR = new Color((float)(207f/255f), (float)(134f/255f), (float)(83f/255f));
     private Color NIGHT_COLOR = new Color((float)(59f/255f), (float)(99f/255f), (float)(113f/255f));

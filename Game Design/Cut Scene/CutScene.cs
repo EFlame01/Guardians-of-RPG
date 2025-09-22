@@ -12,11 +12,13 @@ using TMPro.Examples;
 /// </summary>
 public class CutScene : MonoBehaviour
 {
+    //Serialized variables
     [Header("Director")]
     [SerializeField] public float StartTime;
     [SerializeField] public CutSceneState CurrentState;
     [SerializeField] public PlayableDirector director;
     [SerializeField] public Animator[] animators;
+    
     [Header("Cut Scene State")]
     [SerializeField] public PlayerState TransitionOrCutScene;
     [SerializeField] public bool PlayOnStart;
@@ -24,19 +26,21 @@ public class CutScene : MonoBehaviour
     [SerializeField] public PlayerDirection EndDirection;
     [SerializeField] public ActivateObject ActivateObject;
     [SerializeField] private bool _refreshCutScene;
+    
     [Header("Day/Night Cycle")]
     [SerializeField] public bool SetDayOnStart;
     [SerializeField] public int TimeOfDay;
     [SerializeField] public bool StartTimer;
+    
     [Header("Music")]
     [SerializeField] public string TrackName;
     [SerializeField] public bool PlayMusicOnStart;
 
+    //private variables
     private int _trackIndex;
     private RuntimeAnimatorController[] _tempControllers;
     private bool _cutSceneStarted;
     private CutSceneState _head;
-    // private bool _musicStarted;
 
     public void Awake()
     {
@@ -218,14 +222,12 @@ public class CutScene : MonoBehaviour
     private void ResetCamera()
     {
         FindTrack("camera animation track");
-        Debug.Log("camera animation track found: " + (_trackIndex != -1));
         if(_trackIndex == -1)
             return;
         
         TimelineAsset asset = director.playableAsset as TimelineAsset;
         AnimationTrack cameraAnimationTrack = (AnimationTrack) asset.GetOutputTrack(_trackIndex);
         cameraAnimationTrack.position = new Vector3(0,0,0);
-        Debug.Log(cameraAnimationTrack.position);
     }
 
     /// <summary>
@@ -254,6 +256,11 @@ public class CutScene : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines if <c>CutScene</c> should be
+    /// active or not. If it should not be, the
+    /// gameObject will be set to false.
+    /// </summary>
     private void ActivateCutScene()
     {
         if(ActivateObject != null)
@@ -268,27 +275,31 @@ public class CutScene : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the time of day for the <c>DayNightCycle</c>.
+    /// This method will also increment timer
+    /// if startTimer is set to TRUE.
+    /// </summary>
+    /// <param name="startTimer">boolean value that determines if time should increment during Day/Night cycle</param>
     private void SetDay(bool startTimer)
     {
         try{
             DayNightCycle.Instance.SetTimeOfDay(TimeOfDay, startTimer);
         } catch(Exception e)
         {
-            Debug.LogWarning(e.Message);
+            Debug.LogWarning("WARNING: " + e.Message);
         }
     }
 
+    /// <summary>
+    /// Calls AudioMaanger to crossfade music with
+    /// the TrackName. If there is no TrackName, this
+    /// does nothing.
+    /// </summary>
     private void SetMusic()
     {
-        // if(_musicStarted)
-        //     return;
-        
         if (TrackName != null && TrackName.Length > 0)
-        {
-            Debug.Log(TrackName);
             StartCoroutine(AudioManager.Instance.BlendMusic(TrackName));
-            // _musicStarted = true;
-        }
     }
 
     public void OnTriggerEnter2D(Collider2D collider2D)
@@ -299,5 +310,4 @@ public class CutScene : MonoBehaviour
             _cutSceneStarted = true;
         }
     }
-
 }

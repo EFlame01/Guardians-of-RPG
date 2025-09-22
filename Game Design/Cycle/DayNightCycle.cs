@@ -10,10 +10,12 @@ using UnityEngine;
 /// </summary>
 public class DayNightCycle : PersistentSingleton<DayNightCycle>
 {
-
+    //public static variables
     public static int TimeOfDay {get; private set;}
     public static float Timer {get; private set;}
     public static float TimeRemaining {get; private set;}
+
+    //private variables
     private bool _timerStarted = false;
     private float _prevTime;
 
@@ -56,6 +58,9 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
         _timerStarted = false;
     }
 
+    /// <summary>
+    /// Resumes the timer for the Day/Night cycle.
+    /// </summary>
     public void ResumeTimer()
     {
         _timerStarted = true;

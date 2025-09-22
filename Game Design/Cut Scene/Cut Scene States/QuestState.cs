@@ -4,9 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 
+/// <summary>
+/// QuestState is a class that extends from the 
+/// <c>CutSceneState</c> class. QuestState
+/// is responsible for assigning a state and
+/// letting the Player know that a quest has 
+/// been completed.
+/// </summary>
 public class QuestState : CutSceneState, IDialogue
 {
-
+    //Serialized variables
     [SerializeField] public string questID;
     [SerializeField] public bool assigned;
     [SerializeField] public bool completed;
@@ -15,6 +22,7 @@ public class QuestState : CutSceneState, IDialogue
     [SerializeField] protected DialogueData QuestAssignDialogueData;
     [SerializeField] protected DialogueData QuestCompleteDialogueData;
 
+    //private variable
     private DialogueData _dialogueData;
 
     public override void Enter()
@@ -36,12 +44,10 @@ public class QuestState : CutSceneState, IDialogue
         base.Exit();
     }
 
-    private void CheckDialogue()
-    {
-        if(IsActive && DialogueManager.Instance.DialogueEnded)
-            Exit();
-    }
-
+    /// <summary>
+    /// Rewards the Player for completing a quest
+    /// and displays the details via DialogueManager.
+    /// </summary>
     private void CompletedQuest()
     {
         Player player = Player.Instance();
@@ -81,7 +87,6 @@ public class QuestState : CutSceneState, IDialogue
 
                         if (i + 1 >= moves.Length)
                             movesLearned += "and " + moves[i].Name;
-
                         else
                             movesLearned += moves[i] + ", ";
                     }
@@ -95,12 +100,16 @@ public class QuestState : CutSceneState, IDialogue
                 DialogueManager.Instance.CurrentStory.variablesState["levelUp"] = false;
         }
         else
-            Debug.LogWarning("QuestID " + questID + " does not exist or was not assigned to player...");
+            Debug.LogWarning("WARNING: QuestID " + questID + " does not exist or was not assigned to player...");
 
-        StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.QUEST_COMPLETED));
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.QUEST_COMPLETED, 2f));
         StartDialogue();
     }
 
+    /// <summary>
+    /// Assigns and Inform the Player for completing a quest
+    /// and displays the details via DialogueManager.
+    /// </summary>
     private void AssignQuest()
     {
         Player player = Player.Instance();
@@ -115,24 +124,38 @@ public class QuestState : CutSceneState, IDialogue
 
         }
         else
-            Debug.LogWarning("QuestID " + questID + " does not exist. Could not be assigned to player");
+            Debug.LogWarning("WARNING: QuestID " + questID + " does not exist. Could not be assigned to player");
 
-        StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.RECIEVED));
+        StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.RECIEVED, 1f));
         StartDialogue(); 
     }
 
+    /// <summary>
+    /// Display DialougeData via the DialogueManager.
+    /// </summary>
     public virtual void StartDialogue()
     {
-        try {
-            if(Transform != null)
-                TextBoxPrefab.gameObject.transform.SetParent(Transform);
+        // try {
+        //     if(Transform != null)
+        //         TextBoxPrefab.gameObject.transform.SetParent(Transform);
             
+        //     TextBoxPrefab.gameObject.SetActive(true);
+        //     TextBoxPrefab.OpenTextBox();
+        //     TextBoxPrefab.StartNarration(_dialogueData);
+        // } catch(Exception e){
+        //     Debug.LogWarning("WARNING: " + e.Message);
+        //     DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        // }
+
+        //TODO: test if code works before deleting commented code
+        if(Transform != null && TextBoxPrefab != null)
+        {
+            TextBoxPrefab.gameObject.transform.SetParent(Transform);
             TextBoxPrefab.gameObject.SetActive(true);
             TextBoxPrefab.OpenTextBox();
             TextBoxPrefab.StartNarration(_dialogueData);
-        } catch(Exception e){
-            Debug.LogWarning(e.Message);
-            DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         }
+        else
+            DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
     }
 }

@@ -63,6 +63,16 @@ public class CutSceneState : MonoBehaviour
             Player.Instance().StoryFlagManager.UpdateFlag(StoryFlag, StoryFlagValue);
     }
 
+    /// <summary>
+    /// If the state is active and the dialogue
+    /// has ended, it will exit the state.
+    /// </summary>
+    protected void CheckDialogue()
+    {
+        if(IsActive && DialogueManager.Instance.DialogueEnded)
+            Exit();
+    }
+
     private void GiveCutSceneObject()
     {
         foreach(CutSceneObjectData c in CutSceneObjects)

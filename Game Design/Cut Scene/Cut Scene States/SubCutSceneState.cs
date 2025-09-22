@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// SubCutSceneState is a class that extends from the 
+/// <c>CutSceneState</c> class. SubCutSceneState
+/// nests another <c>CutScene</c> with it's own <c>CutSceneStates</c> inside 
+/// of an existing <c>CutScene</c>. This allows for multiple
+/// branching endings to a specific <c>CutScene</c>.
+/// </summary>
 public class SubCutSceneState : CutSceneState
 {
     [SerializeField] public CutScene CutScene;

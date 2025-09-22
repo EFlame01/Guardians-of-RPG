@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// PlayerData is a class that holds
-/// the player information needed to 
-/// be saved and loaded back into the 
-/// player/game.
+/// the meta data for the <c>Player</c>
+/// that needs to  be saved and loaded
+/// back into the player/game.
 /// </summary>
 [System.Serializable]
 public class PlayerData

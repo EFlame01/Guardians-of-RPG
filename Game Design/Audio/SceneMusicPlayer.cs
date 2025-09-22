@@ -7,9 +7,11 @@ using UnityEngine;
 /// </summary>
 public class SceneMusicPlayer : MonoBehaviour
 {
+    //serialzied variables
     [SerializeField] public string trackName;
     [SerializeField] public bool playTrackImmediately;
 
+    //private variable
     private bool _musicStarted;
 
     public void Start()
@@ -46,11 +48,6 @@ public class SceneMusicPlayer : MonoBehaviour
     /// <returns><c>TRUE</c> if we can play music. <c>FALSE</c> if otherwise.</returns>
     private bool CanStartMusicPlayer()
     {
-        // if (GameManager.Instance.PlayerState.Equals(PlayerState.CUT_SCENE))
-        //     return false;
-
-        // return true;
-
         return (GameManager.Instance.PlayerState) switch
         {
             PlayerState.CUT_SCENE => false,

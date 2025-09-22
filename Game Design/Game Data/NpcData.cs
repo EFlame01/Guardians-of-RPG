@@ -1,12 +1,20 @@
 using System;
 using UnityEngine;
 
+///<summary>
+/// NpcData is the class that
+/// compresses the meta data
+/// for <c>NPCObject</c> based
+/// on the id, position, if the
+/// npc fought the player, and
+/// what direction they're facing.
+/// </summary>
 [Serializable]
 public class NpcData
 {
+    //public variables
     public string ID;
     public Vector3 Position;
-
     public bool foughtPlayer;
     public string direction;
 
@@ -14,6 +22,7 @@ public class NpcData
     public string[] Flags;
     public bool[] FlagValues;
 
+    //Constructor
     public NpcData(string id, Vector3 position, string[] flags, bool[] flagValues)
     {
         ID = id;
