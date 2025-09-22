@@ -57,7 +57,8 @@ public class WellDataContainer
     }
 
     /// <summary>
-    /// Increment variable days without water
+    /// Resets all of the <c>WellData</c> variable
+    /// DaysWithoutWater to 0.
     /// </summary>
     public static void IncrementWellDay()
     {
