@@ -1,14 +1,17 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class CutSceneObject : InteractableObject
 {
     [SerializeField] public CutScene CutScene;
     private bool _startedCutScene = false;
 
     /// <summary>
-    /// If can interact, calls the method
-    /// TalkToPlayer().
+    /// If can interact, it activates
+    /// the CutScene variable.
     /// </summary>
     public override void InteractWithObject()
     {

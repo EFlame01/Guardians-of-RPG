@@ -1,15 +1,26 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// ShopObject is a class that extends
+/// the <c>InteractableObject</c> class. ShopObject
+/// allow the player to buy and sell items. 
+/// </summary>
 public class ShopObject : InteractableObject
 {
+    //Serialized variables
     [SerializeField] private PlayerDirection _directionToUseShop;
     [SerializeField] private string shopName;
     [SerializeField] private ShopList shopList;
     [SerializeField] private ShopMenu shopMenu;
 
+    //private variable
     private bool _useShop;
 
+    /// <summary>
+    /// If player can interact, calls the
+    /// OpenShop() method.
+    /// </summary>
     public override void InteractWithObject()
     {
         if(CanInteract && !_useShop)
@@ -20,10 +31,12 @@ public class ShopObject : InteractableObject
         }
     }
 
+    /// <summary>
+    /// Opens the shop menu and sets
+    /// the PlayerState to PAUSED.
+    /// </summary>
     private void OpenShop()
     {
-        //TODO: open shop menu
-        //TODO: pause game
         shopMenu.shopList = shopList;
         shopMenu.shopName = shopName;
         Instantiate(shopMenu, null);
