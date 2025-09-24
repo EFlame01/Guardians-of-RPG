@@ -13,43 +13,63 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class FightObject : NPCObject
 {
+    //Serialized variables
     [Header("FightObject Properties")]
     [SerializeField] public PlayerDirection NPCDirection;
     [SerializeField] public PlayerDirection PlayerViewDirection;
     [SerializeField] public Animator exclamationEmote;
     [SerializeField] public PlayerSprite NPCSprite;
     [SerializeField] public DialogueData DialogueDataAfterBattle;
+
     [Header("FightObject Properties")]
     [SerializeField] public string Environment;
     [SerializeField] public BattleCharacterData BattlePlayerData;
     [SerializeField] public BattleCharacterData[] BattleAlliesData;
     [SerializeField] public BattleCharacterData[] BattleEnemiesData;
+
     [Header("Transition")]
     [SerializeField] public TransitionType TransitionType;
+
     [Header("Story Flags")]
     [SerializeField] public bool startedBattle;
     [SerializeField] public string[] StoryFlagsIfWon;
+
     [Header("Music")]
     [SerializeField] public string TrackName;
 
+    //private variables
     private bool _bumpIntoPlayer;
     private bool _confrontedPlayer;
 
+    /// <summary>
+    /// If Player can interact with
+    /// object, it will check if the Player
+    /// has fought the object before. If it
+    /// has, it will talk to Player.
+    /// Otherwise, it will fight Player.
+    /// </summary>
     public override void InteractWithObject()
     {
         if (CanInteract)
         {
             CanInteract = false;
-            if(_npcData.foughtPlayer)
+            if (_npcData.foughtPlayer)
                 ConfrontPlayer3();
             else
                 StartCoroutine(ConfrontPlayer1());
         }
     }
 
+    /// <summary>
+    /// Confronts the <c>Player</c> only if they
+    /// have chose to interact with the object.
+    /// The object will turn to player, talk to
+    /// them, and initiate combat.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ConfrontPlayer1()
     {
-        if(!_confrontedPlayer)
+        if (!_confrontedPlayer)
         {
             _confrontedPlayer = true;
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
@@ -59,9 +79,16 @@ public class FightObject : NPCObject
         }
     }
 
+    /// <summary>
+    /// Confronts the <c>Player</c> when the 
+    /// object has spotted the <c>Player</c>.
+    /// The object will walk to the player,
+    /// talk to them, and initiate combat.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator ConfrontPlayer2()
     {
-        if(!_npcData.foughtPlayer)
+        if (!_npcData.foughtPlayer)
         {
             _confrontedPlayer = true;
             CanInteract = false;
@@ -75,9 +102,17 @@ public class FightObject : NPCObject
         }
     }
 
+    /// <summary>
+    /// Talks to the <c>Player</c>.
+    /// This method is typically called
+    /// after the object has finished fighting
+    /// and is confronted by the player a 
+    /// second time.
+    /// </summary>
+    /// <returns></returns>
     private void ConfrontPlayer3()
     {
-        if(!_talkedToPlayer)
+        if (!_talkedToPlayer)
         {
             _talkedToPlayer = true;
             _dialogueData = DialogueDataAfterBattle;
@@ -86,6 +121,12 @@ public class FightObject : NPCObject
         }
     }
 
+    /// <summary>
+    /// Uses the exclamationEmote to 
+    /// play the surprised emote for 1
+    /// second.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator PerformExclamation()
     {
         exclamationEmote.Play("surprised");
@@ -93,6 +134,12 @@ public class FightObject : NPCObject
         exclamationEmote.Play("no_emote");
     }
 
+    /// <summary>
+    /// Determines the player's direction
+    /// and walks to them. Once the object
+    /// has bumped into the player, it stops.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator WalkToPlayer()
     {
         Vector2 direction = Vector2.zero;
@@ -118,7 +165,7 @@ public class FightObject : NPCObject
             default:
                 break;
         }
-        while(!_bumpIntoPlayer)
+        while (!_bumpIntoPlayer)
         {
             //move to player position
             transform.Translate(direction.normalized * 3 * Time.fixedDeltaTime);
@@ -126,12 +173,16 @@ public class FightObject : NPCObject
         }
     }
 
+    /// <summary>
+    /// This method sets up everything needed
+    /// for battle and starts the fight.
+    /// </summary>
     private void StartFight()
     {
         startedBattle = true;
         _npcData.foughtPlayer = true;
         _npcData.Position = transform.position;
-        if(PlayerViewDirection.Equals(PlayerDirection.NONE))
+        if (PlayerViewDirection.Equals(PlayerDirection.NONE))
             _npcData.direction = GetCollisionSide().ToString();
         else
             _npcData.direction = PlayerViewDirection.ToString();
@@ -139,29 +190,36 @@ public class FightObject : NPCObject
         SetUpForBattle();
     }
 
+    /// <summary>
+    /// Sets up the battle music.
+    /// </summary>
     private void SetUpBattleMusic()
     {
         AudioManager.Instance.PlayMusic(TrackName, true);
     }
 
+    /// <summary>
+    /// Sets up the environment, character data,
+    /// and story flags for battle.
+    /// </summary>
     private void SetUpForBattle()
     {
         BattleInformation.Environment = Environment;
         BattleInformation.BattlePlayerData = BattlePlayerData;
         BattleInformation.PlayerPosition = PlayerSpawn.PlayerPosition;
         BattleInformation.StoryFlagsIfWon = StoryFlagsIfWon;
-        
+
         Debug.Log(PlayerSpawn.PlayerPosition);
 
-        for(int i = 0; i < BattleAlliesData.Length; i++)
+        for (int i = 0; i < BattleAlliesData.Length; i++)
         {
-            if(BattleAlliesData[i] != null)
+            if (BattleAlliesData[i] != null)
                 BattleInformation.BattleAlliesData[i] = BattleAlliesData[i];
         }
 
-        for(int i = 0; i < BattleEnemiesData.Length; i++)
+        for (int i = 0; i < BattleEnemiesData.Length; i++)
         {
-            if(BattleEnemiesData[i] != null)
+            if (BattleEnemiesData[i] != null)
                 BattleInformation.BattleEnemiesData[i] = BattleEnemiesData[i];
         }
 
@@ -171,9 +229,9 @@ public class FightObject : NPCObject
 
     public override void OnCollisionEnter2D(Collision2D collision2D)
     {
-        if(GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
+        if (GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
         {
-            if(collision2D.gameObject.tag.Equals("Player"))
+            if (collision2D.gameObject.tag.Equals("Player"))
                 _bumpIntoPlayer = true;
             else
                 _bumpIntoPlayer = false;
