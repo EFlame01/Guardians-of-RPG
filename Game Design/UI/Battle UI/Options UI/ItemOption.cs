@@ -13,11 +13,11 @@ using TMPro;
 public class ItemOption : MonoBehaviour
 {
     //serialized variables
-    [SerializeField] public Transform ItemListLayout;
-    [SerializeField] public GameObject ItemButtonPrefab;
-    [SerializeField] public TextMeshProUGUI ItemTypeText;
-    [SerializeField] public TextMeshProUGUI DescriptionText;
-    [SerializeField] public Button NextButton;
+    public Transform ItemListLayout;
+    public GameObject ItemButtonPrefab;
+    public TextMeshProUGUI ItemTypeText;
+    public TextMeshProUGUI DescriptionText;
+    public Button NextButton;
 
     //private variables
     private ItemType _itemType = ItemType.FOOD;
@@ -56,10 +56,10 @@ public class ItemOption : MonoBehaviour
     {
         ItemTypeText.text = _itemType.ToString();
         ClearItemList();
-        foreach(KeyValuePair<string, int> itemInfo in Player.Instance().Inventory.ItemList)
+        foreach (KeyValuePair<string, int> itemInfo in Player.Instance().Inventory.ItemList)
         {
             Item item = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
-            if(item.Type.Equals(_itemType))
+            if (item.Type.Equals(_itemType))
             {
                 Button itemButton = Instantiate(ItemButtonPrefab, ItemListLayout).GetComponent<Button>();
                 TextMeshProUGUI itemNameText = itemButton.GetComponentsInChildren<TextMeshProUGUI>()[0];
@@ -70,8 +70,8 @@ public class ItemOption : MonoBehaviour
 
                 itemButton.onClick.AddListener(() =>
                 {
-                   _itemName = itemInfo.Key;
-                   SetItemDescription();
+                    _itemName = itemInfo.Key;
+                    SetItemDescription();
                 });
             }
         }
@@ -81,7 +81,7 @@ public class ItemOption : MonoBehaviour
     {
         _itemName = null;
         DescriptionText.text = "";
-        foreach(Transform child in ItemListLayout)
+        foreach (Transform child in ItemListLayout)
             Destroy(child.gameObject);
     }
 

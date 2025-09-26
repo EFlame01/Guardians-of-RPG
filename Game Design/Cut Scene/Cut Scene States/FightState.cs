@@ -13,19 +13,19 @@ using UnityEngine.SceneManagement;
 public class FightState : CutSceneState
 {
     [Header("Battle System Data")]
-    [SerializeField] public string Environment;
-    [SerializeField] public BattleCharacterData BattlePlayerData;
-    [SerializeField] public BattleCharacterData[] BattleAlliesData;
-    [SerializeField] public BattleCharacterData[] BattleEnemiesData;
-    
+    public string Environment;
+    public BattleCharacterData BattlePlayerData;
+    public BattleCharacterData[] BattleAlliesData;
+    public BattleCharacterData[] BattleEnemiesData;
+
     [Header("Transition")]
-    [SerializeField] public TransitionType TransitionType;
-    
+    public TransitionType TransitionType;
+
     [Header("Story Flags")]
-    [SerializeField] public string[] StoryFlagsIfWon;
-    
+    public string[] StoryFlagsIfWon;
+
     [Header("Music")]
-    [SerializeField] public string TrackName;
+    public string TrackName;
 
     public override void Enter()
     {
@@ -68,15 +68,15 @@ public class FightState : CutSceneState
         BattleInformation.PlayerPosition = transform.position;
         BattleInformation.StoryFlagsIfWon = StoryFlagsIfWon;
 
-        for(int i = 0; i < BattleAlliesData.Length; i++)
+        for (int i = 0; i < BattleAlliesData.Length; i++)
         {
-            if(BattleAlliesData[i] != null)
+            if (BattleAlliesData[i] != null)
                 BattleInformation.BattleAlliesData[i] = BattleAlliesData[i];
         }
 
-        for(int i = 0; i < BattleEnemiesData.Length; i++)
+        for (int i = 0; i < BattleEnemiesData.Length; i++)
         {
-            if(BattleEnemiesData[i] != null)
+            if (BattleEnemiesData[i] != null)
                 BattleInformation.BattleEnemiesData[i] = BattleEnemiesData[i];
         }
 

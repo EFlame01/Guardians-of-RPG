@@ -6,22 +6,22 @@ using TMPro.Examples;
 
 public class SliderBar : MonoBehaviour
 {
-    [SerializeField] public TextMeshProUGUI valueText;
-    [SerializeField] public TextMeshProUGUI maxValueText;
-    [SerializeField] public Slider slider;
-    [SerializeField] protected  Gradient gradient;
-    [SerializeField] protected  Image fill;
+    public TextMeshProUGUI valueText;
+    public TextMeshProUGUI maxValueText;
+    public Slider slider;
+    [SerializeField] protected Gradient gradient;
+    [SerializeField] protected Image fill;
 
     public void SetValue(int value, int maxValue)
     {
         slider.maxValue = maxValue;
         slider.value = value;
 
-        if(valueText != null)
+        if (valueText != null)
             valueText.text = value.ToString();
-        if(maxValueText != null)
+        if (maxValueText != null)
             maxValueText.text = maxValue.ToString();
-        if(fill != null) 
+        if (fill != null)
             fill.color = gradient.Evaluate(slider.value / slider.maxValue);
     }
 
@@ -29,18 +29,18 @@ public class SliderBar : MonoBehaviour
     {
         valueText.text = slider.value.ToString();
         maxValueText.text = slider.maxValue.ToString();
-        float duration =  1f;
+        float duration = 1f;
         float startTime = 0f;
-        while(startTime < duration)
+        while (startTime < duration)
         {
-            float t = startTime/duration;
+            float t = startTime / duration;
             slider.value = Mathf.Lerp(slider.value, newValue, t);
             slider.maxValue = Mathf.Lerp(slider.maxValue, newMaxValue, t);
 
             valueText.text = ((int)slider.value).ToString();
             maxValueText.text = ((int)slider.maxValue).ToString();
 
-            fill.color = gradient.Evaluate(slider.value/ slider.maxValue);
+            fill.color = gradient.Evaluate(slider.value / slider.maxValue);
 
             startTime += Time.fixedDeltaTime;
             yield return null;
@@ -52,9 +52,9 @@ public class SliderBar : MonoBehaviour
         valueText.text = ((int)slider.value).ToString();
         maxValueText.text = ((int)slider.maxValue).ToString();
 
-        fill.color = gradient.Evaluate(slider.value/ slider.maxValue);
+        fill.color = gradient.Evaluate(slider.value / slider.maxValue);
 
-        if(updateCharacterHUD)
+        if (updateCharacterHUD)
             BattleSimStatus.UpdatedCharacterHUD = true;
     }
 }

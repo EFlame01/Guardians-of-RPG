@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class StartScene : MonoBehaviour
 {
-    [SerializeField] public string nextSceneName;
-    [SerializeField] public Button continueButton;
-    [SerializeField] public GameObject windowsSettingsPrefab;
+    public string nextSceneName;
+    public Button continueButton;
+    public GameObject windowsSettingsPrefab;
 
     public void Start()
     {
-        if(SaveSystem.LoadPlayerData() == null)
+        if (SaveSystem.LoadPlayerData() == null)
             continueButton.interactable = false;
     }
 

@@ -15,27 +15,27 @@ public class FightObject : NPCObject
 {
     //Serialized variables
     [Header("FightObject Properties")]
-    [SerializeField] public PlayerDirection NPCDirection;
-    [SerializeField] public PlayerDirection PlayerViewDirection;
-    [SerializeField] public Animator exclamationEmote;
-    [SerializeField] public PlayerSprite NPCSprite;
-    [SerializeField] public DialogueData DialogueDataAfterBattle;
+    public PlayerDirection NPCDirection;
+    public PlayerDirection PlayerViewDirection;
+    public Animator exclamationEmote;
+    public PlayerSprite NPCSprite;
+    public DialogueData DialogueDataAfterBattle;
 
     [Header("FightObject Properties")]
-    [SerializeField] public string Environment;
-    [SerializeField] public BattleCharacterData BattlePlayerData;
-    [SerializeField] public BattleCharacterData[] BattleAlliesData;
-    [SerializeField] public BattleCharacterData[] BattleEnemiesData;
+    public string Environment;
+    public BattleCharacterData BattlePlayerData;
+    public BattleCharacterData[] BattleAlliesData;
+    public BattleCharacterData[] BattleEnemiesData;
 
     [Header("Transition")]
-    [SerializeField] public TransitionType TransitionType;
+    public TransitionType TransitionType;
 
     [Header("Story Flags")]
-    [SerializeField] public bool startedBattle;
-    [SerializeField] public string[] StoryFlagsIfWon;
+    public bool startedBattle;
+    public string[] StoryFlagsIfWon;
 
     [Header("Music")]
-    [SerializeField] public string TrackName;
+    public string TrackName;
 
     //private variables
     private bool _bumpIntoPlayer;
@@ -231,7 +231,7 @@ public class FightObject : NPCObject
     {
         if (GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
         {
-            if (collision2D.gameObject.tag.Equals("Player"))
+            if (collision2D.gameObject.CompareTag("Player"))
                 _bumpIntoPlayer = true;
             else
                 _bumpIntoPlayer = false;

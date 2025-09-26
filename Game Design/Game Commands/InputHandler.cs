@@ -2,7 +2,7 @@ using System.Collections;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// InputHandler is a class that inherits from the Interact
@@ -14,7 +14,7 @@ public class InputHandler : MonoBehaviour
 {
     [SerializeField] private GameObject _menuOption;
     [SerializeField] private PlayerSprite _playerSprite;
-    [SerializeField] public CharacterPos charPos;
+    public CharacterPos charPos;
 
     public InputActionReference Move;
     // public InputAction Pause;
@@ -35,7 +35,7 @@ public class InputHandler : MonoBehaviour
     private void Update()
     {
         _velocity = Move.action.ReadValue<Vector2>();
-        if(_velocity.y != 0)
+        if (_velocity.y != 0)
             _velocity.x = 0;
 
         _targetPos = transform.position + (Vector3)_velocity;
@@ -43,7 +43,7 @@ public class InputHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(CanMove())
+        if (CanMove())
             ControlMovement();
         else
             _playerSprite.PerformIdleAnimation(PlayerSpawn.PlayerDirection);
@@ -69,7 +69,7 @@ public class InputHandler : MonoBehaviour
     {
         return GameManager.Instance.PlayerState == PlayerState.NOT_MOVING || GameManager.Instance.PlayerState == PlayerState.MOVING;
     }
-    
+
     /// <summary>
     /// Moves and animates the player based on the 
     /// _velocity, _speed, and _targetPos, after which
@@ -77,30 +77,30 @@ public class InputHandler : MonoBehaviour
     /// </summary>
     public void ControlMovement()
     {
-        if(Vector3.Distance(transform.position, _targetPos) > Mathf.Epsilon)
+        if (Vector3.Distance(transform.position, _targetPos) > Mathf.Epsilon)
         {
-            if(_velocity.y > 0)
+            if (_velocity.y > 0)
             {
                 _velocity.y = 1;
                 _playerSprite.PerformWalkAnimation("walk_up");
                 PlayerSpawn.PlayerDirection = PlayerDirection.UP;
                 GameManager.Instance.PlayerState = PlayerState.MOVING;
             }
-            else if(_velocity.y < 0)
+            else if (_velocity.y < 0)
             {
                 _velocity.y = -1;
                 _playerSprite.PerformWalkAnimation("walk_down");
                 PlayerSpawn.PlayerDirection = PlayerDirection.DOWN;
                 GameManager.Instance.PlayerState = PlayerState.MOVING;
             }
-            else if(_velocity.x < 0)
+            else if (_velocity.x < 0)
             {
                 _velocity.x = -1;
                 _playerSprite.PerformWalkAnimation("walk_left");
                 PlayerSpawn.PlayerDirection = PlayerDirection.LEFT;
                 GameManager.Instance.PlayerState = PlayerState.MOVING;
             }
-            else if(_velocity.x > 0)
+            else if (_velocity.x > 0)
             {
                 _velocity.x = 1;
                 _playerSprite.PerformWalkAnimation("walk_right");

@@ -11,13 +11,13 @@ using UnityEngine.UI;
 /// </summary>
 public class TextBoxCharacter : TextBox
 {
-    [SerializeField] public Canvas canvas;
-    [SerializeField] public string CharacterName;
-    [SerializeField] public Sprite Sprite;
+    public Canvas canvas;
+    public string CharacterName;
+    public Sprite Sprite;
     [SerializeField] private TextMeshProUGUI _nameTag;
     [SerializeField] private Image _characterImage;
-    [SerializeField] public Sprite male_sprite;
-    [SerializeField] public Sprite female_sprite;
+    public Sprite male_sprite;
+    public Sprite female_sprite;
 
     public override void Start()
     {
@@ -32,19 +32,19 @@ public class TextBoxCharacter : TextBox
     /// </summary>
     public void SetUpCharacterTextBox()
     {
-        if(_nameTag != null)
+        if (_nameTag != null)
         {
-            if(CharacterName.Length > 0)
+            if (CharacterName.Length > 0)
                 _nameTag.text = CharacterName;
             else
                 _nameTag.text = Player.Instance().Name;
         }
-        if(Sprite != null)
+        if (Sprite != null)
             _characterImage.sprite = Sprite;
         else
             _characterImage.sprite = (Player.Instance().Sex != null && (Player.Instance().Sex.Equals("MALE") || (Player.Instance().Sex.Equals("MALEFE") && GameManager.Instance.Leaning.Equals("MALE")))) ? male_sprite : female_sprite;
-        
-        if(canvas != null)
+
+        if (canvas != null)
         {
             canvas.worldCamera = Camera.main;
             canvas.sortingOrder = 100;
@@ -67,14 +67,14 @@ public class TextBoxCharacter : TextBox
 
     public override IEnumerator StartTextBoxAnimation()
     {
-        if(canvas != null)
+        if (canvas != null)
             canvas.sortingOrder = 100;
         return base.StartTextBoxAnimation();
     }
 
     public override IEnumerator EndTextBoxAnimation()
     {
-        if(canvas != null)
+        if (canvas != null)
             canvas.sortingOrder = 0;
         return base.EndTextBoxAnimation();
     }

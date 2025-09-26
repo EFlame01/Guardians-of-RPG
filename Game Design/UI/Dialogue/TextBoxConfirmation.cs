@@ -6,6 +6,6 @@ using UnityEngine.UI;
 /// </summary>
 public class TextBoxConfirmation : TextBox
 {
-    [SerializeField] public Button ConfirmButton;
-    [SerializeField] public Button CancelButton;
+    public Button ConfirmButton;
+    public Button CancelButton;
 }

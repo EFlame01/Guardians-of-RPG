@@ -10,9 +10,12 @@ using UnityEngine.Experimental.Rendering.Universal;
 /// </summary>
 public abstract class InteractableObject : MonoBehaviour
 {
+    //Serialized variables
     [SerializeField] protected Light2D _myLight2D;
     [SerializeField] protected InputActionReference Select;
     [SerializeField] private SpriteRenderer _sprite;
+
+    //protected variables
     protected bool CanInteract;
     protected bool CheckForInteraction;
     protected bool IsThisObjectDetected;
@@ -43,7 +46,7 @@ public abstract class InteractableObject : MonoBehaviour
     /// </summary>
     public virtual void DisplayInputSymbol()
     {
-        if(_myLight2D != null)
+        if (_myLight2D != null)
             _myLight2D.intensity = 1f;
     }
 
@@ -55,8 +58,8 @@ public abstract class InteractableObject : MonoBehaviour
     public void HideInputSymbol()
     {
         ObjectDetected = false;
-        if(_myLight2D != null)
-            _myLight2D.intensity = 0f; 
+        if (_myLight2D != null)
+            _myLight2D.intensity = 0f;
     }
 
     /// <summary>
@@ -66,7 +69,7 @@ public abstract class InteractableObject : MonoBehaviour
     /// </summary>
     protected void HandleInput()
     {
-        if(Select.action.ReadValue<float>() > 0f && CanInteract)
+        if (Select.action.ReadValue<float>() > 0f && CanInteract)
             InteractWithObject();
     }
 
@@ -77,7 +80,7 @@ public abstract class InteractableObject : MonoBehaviour
     /// <param name="isObjectInteractable"></param>
     protected void RevealObjectIsInteractable(bool isObjectInteractable)
     {
-        if(isObjectInteractable)
+        if (isObjectInteractable)
         {
             CanInteract = true;
             ObjectDetected = true;
@@ -103,18 +106,18 @@ public abstract class InteractableObject : MonoBehaviour
         float xDiff = Mathf.Abs(PlayerSpawn.PlayerPosition.x - transform.position.x);
         float yDiff = Mathf.Abs(PlayerSpawn.PlayerPosition.y - transform.position.y);
 
-        if(yDiff > xDiff)
+        if (yDiff > xDiff)
         {
             //either up or down
-            if(PlayerSpawn.PlayerPosition.y > transform.position.y)
+            if (PlayerSpawn.PlayerPosition.y > transform.position.y)
                 return PlayerDirection.UP;
             else
                 return PlayerDirection.DOWN;
         }
-        if(xDiff > yDiff)
+        if (xDiff > yDiff)
         {
             //either left or right
-            if(PlayerSpawn.PlayerPosition.x > transform.position.x)
+            if (PlayerSpawn.PlayerPosition.x > transform.position.x)
                 return PlayerDirection.RIGHT;
             else
                 return PlayerDirection.LEFT;
@@ -148,11 +151,11 @@ public abstract class InteractableObject : MonoBehaviour
     /// </summary>
     private void CheckPlayerInteraction()
     {
-        if(!CheckForInteraction)
+        if (!CheckForInteraction)
             return;
-        if(!GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
+        if (!GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
             return;
-        if(DialogueManager.Instance.DialogueEnded)
+        if (DialogueManager.Instance.DialogueEnded)
         {
             GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
             CheckForInteraction = false;
@@ -161,7 +164,7 @@ public abstract class InteractableObject : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if (collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
         {
             //either up or down
             if (PlayerSpawn.PlayerPosition.y > transform.position.y)
@@ -181,10 +184,10 @@ public abstract class InteractableObject : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
         {
             //either up or down
-            if(PlayerSpawn.PlayerPosition.y > transform.position.y)
+            if (PlayerSpawn.PlayerPosition.y > transform.position.y)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, -5);
                 if (_sprite != null)

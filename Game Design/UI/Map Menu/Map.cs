@@ -19,14 +19,14 @@ using UnityEngine.SceneManagement;
 public class Map : ButtonUI
 {
     //Serialized varialbes
-    [SerializeField] public Button mapButton;
-    [SerializeField] public Camera mapCamera;
-    [SerializeField] public CanvasGroup buttonGroup;
-    [SerializeField] public CanvasGroup informationWidget;
-    [SerializeField] public TextMeshProUGUI nameText;
-    [SerializeField] public TextMeshProUGUI countryText;
-    [SerializeField] public TextMeshProUGUI continentText;
-    [SerializeField] public TextMeshProUGUI descriptionText;
+    public Button mapButton;
+    public Camera mapCamera;
+    public CanvasGroup buttonGroup;
+    public CanvasGroup informationWidget;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI countryText;
+    public TextMeshProUGUI continentText;
+    public TextMeshProUGUI descriptionText;
 
     //private variables
     private bool mapReset;
@@ -93,7 +93,7 @@ public class Map : ButtonUI
     /// </summary>
     public void OnBackButtonPressed()
     {
-        if(!mapReset)
+        if (!mapReset)
             ResetMap();
         else
             ExitMap();
@@ -102,11 +102,11 @@ public class Map : ButtonUI
     private void ResetMapAtStart()
     {
         mapReset = true;
-        if(mapCamera == null)
+        if (mapCamera == null)
             return;
-        if(buttonGroup == null)
+        if (buttonGroup == null)
             return;
-        if(informationWidget == null)
+        if (informationWidget == null)
             return;
 
         informationWidget.alpha = 0f;
@@ -120,11 +120,11 @@ public class Map : ButtonUI
     private void ResetMap()
     {
         mapReset = true;
-        if(mapCamera == null)
+        if (mapCamera == null)
             return;
-        if(buttonGroup == null)
+        if (buttonGroup == null)
             return;
-        if(informationWidget == null)
+        if (informationWidget == null)
             return;
         StartCoroutine(FadeCanvasGroup(informationWidget, 0f));
         StartCoroutine(FadeCanvasGroup(buttonGroup, 1f));
@@ -137,9 +137,9 @@ public class Map : ButtonUI
         float increment = value == 0f ? 0.1f : -0.1f;
 
         cg.alpha = currValue;
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
-            cg.alpha = Mathf.Lerp(cg.alpha, value, (float)(i+1)/10f);
+            cg.alpha = Mathf.Lerp(cg.alpha, value, (float)(i + 1) / 10f);
             yield return new WaitForSeconds(0.05f);
         }
         cg.alpha = value;
@@ -151,17 +151,17 @@ public class Map : ButtonUI
     {
         Vector3 coordinates = new Vector3(0, 0, -10);
         int size = 5;
-        
-        if(locationInformation != null)
+
+        if (locationInformation != null)
         {
             coordinates = new Vector3(locationInformation.Coordinates.x, locationInformation.Coordinates.y, -10);
             size = 1;
         }
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
-            mapCamera.orthographicSize = Mathf.Lerp(mapCamera.orthographicSize, size, (float)(i+1)/10f);
-            mapCamera.transform.position = Vector3.Lerp(mapCamera.transform.position, coordinates, (float)(i+1)/10f);
+            mapCamera.orthographicSize = Mathf.Lerp(mapCamera.orthographicSize, size, (float)(i + 1) / 10f);
+            mapCamera.transform.position = Vector3.Lerp(mapCamera.transform.position, coordinates, (float)(i + 1) / 10f);
             yield return new WaitForSeconds(0.05f);
         }
 

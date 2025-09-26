@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class NPCPathFinder : MonoBehaviour
 {
-    [SerializeField] public WayPoint[] _wayPoints;
+    public WayPoint[] _wayPoints;
     [SerializeField] protected float _speed;
     [SerializeField] protected float _waitTime;
-    [SerializeField] public PlayerSprite _npcSprite;
+    public PlayerSprite _npcSprite;
 
     protected Vector3 _startPosition;
     protected int _wayPointIndex;
@@ -24,11 +24,11 @@ public class NPCPathFinder : MonoBehaviour
     {
         _startPosition = transform.position;
 
-        switch(_walkCycleState)
+        switch (_walkCycleState)
         {
             case WalkCycleState.WALKING:
                 TravelToWayPoint();
-                if(MadeItToWayPoint())
+                if (MadeItToWayPoint())
                 {
                     GetNextWayPoint();
                     _walkCycleState = WalkCycleState.WAITING;
@@ -45,9 +45,9 @@ public class NPCPathFinder : MonoBehaviour
 
     private void TravelToWayPoint()
     {
-        if(_walkCycleState.Equals(WalkCycleState.CANNOT_MOVE) || _walkCycleState.Equals(WalkCycleState.WAITING))
+        if (_walkCycleState.Equals(WalkCycleState.CANNOT_MOVE) || _walkCycleState.Equals(WalkCycleState.WAITING))
             return;
-        
+
         _npcSprite.PerformWalkAnimation(GetDirectionString());
         transform.position = Vector2.MoveTowards(_startPosition, _wayPoints[_wayPointIndex].Position, Time.fixedDeltaTime * _speed);
     }
@@ -60,12 +60,12 @@ public class NPCPathFinder : MonoBehaviour
 
     private IEnumerator WaitToTravel()
     {
-        if(_waiting)
+        if (_waiting)
         {
             _waiting = false;
             float waitTime = (int)Random.Range(_waitTime * 0.5f, _waitTime);
             yield return new WaitForSeconds(waitTime);
-            if(!_walkCycleState.Equals(WalkCycleState.CANNOT_MOVE))
+            if (!_walkCycleState.Equals(WalkCycleState.CANNOT_MOVE))
                 _walkCycleState = WalkCycleState.WALKING;
         }
     }
@@ -73,7 +73,7 @@ public class NPCPathFinder : MonoBehaviour
     private void GetNextWayPoint()
     {
         _npcSprite.PerformIdleAnimation(_wayPoints[_wayPointIndex++].Direction);
-        if(_wayPointIndex >= _wayPoints.Length)
+        if (_wayPointIndex >= _wayPoints.Length)
             _wayPointIndex = 0;
     }
 
@@ -93,53 +93,53 @@ public class NPCPathFinder : MonoBehaviour
     //Collision Methods
     public virtual void OnCollisionEnter2D(Collision2D collider2D)
     {
-        if(!collider2D.gameObject.tag.Equals("Player"))
+        if (!collider2D.gameObject.CompareTag("Player"))
             return;
         _npcSprite.PerformIdleAnimation(_wayPoints[_wayPointIndex].Direction);
-        _walkCycleState  =  WalkCycleState.CANNOT_MOVE;
+        _walkCycleState = WalkCycleState.CANNOT_MOVE;
         _waiting = false;
     }
 
     public virtual void OnCollisionExit2D(Collision2D collider2D)
     {
-        if(!collider2D.gameObject.tag.Equals("Player"))
+        if (!collider2D.gameObject.CompareTag("Player"))
             return;
         _npcSprite.PerformIdleAnimation(_wayPoints[_wayPointIndex].Direction);
-        _walkCycleState  =  WalkCycleState.WAITING;
+        _walkCycleState = WalkCycleState.WAITING;
         _waiting = true;
     }
 
     public virtual void OnCollisionStay2D(Collision2D collider2D)
     {
-        if(!collider2D.gameObject.tag.Equals("Player"))
+        if (!collider2D.gameObject.CompareTag("Player"))
             return;
-        _walkCycleState  =  WalkCycleState.CANNOT_MOVE;
+        _walkCycleState = WalkCycleState.CANNOT_MOVE;
         _waiting = false;
     }
 
     public virtual void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(!collider2D.gameObject.tag.Equals("Player"))
+        if (!collider2D.gameObject.CompareTag("Player"))
             return;
         _npcSprite.PerformIdleAnimation(_wayPoints[_wayPointIndex].Direction);
-        _walkCycleState  =  WalkCycleState.CANNOT_MOVE;
+        _walkCycleState = WalkCycleState.CANNOT_MOVE;
         _waiting = false;
     }
 
     public virtual void OnTriggerExit2D(Collider2D collider2D)
     {
-        if(!collider2D.gameObject.tag.Equals("Player"))
+        if (!collider2D.gameObject.CompareTag("Player"))
             return;
         _npcSprite.PerformIdleAnimation(_wayPoints[_wayPointIndex].Direction);
-        _walkCycleState  =  WalkCycleState.WAITING;
+        _walkCycleState = WalkCycleState.WAITING;
         _waiting = true;
     }
 
     public virtual void OnTriggerStay2D(Collider2D collider2D)
     {
-        if(!collider2D.gameObject.tag.Equals("Player"))
+        if (!collider2D.gameObject.CompareTag("Player"))
             return;
-        _walkCycleState  =  WalkCycleState.CANNOT_MOVE;
+        _walkCycleState = WalkCycleState.CANNOT_MOVE;
         _waiting = false;
     }
 }

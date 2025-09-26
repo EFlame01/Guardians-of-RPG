@@ -7,42 +7,42 @@ using UnityEngine.UI;
 public class Intro : MonoBehaviour, IDialogue
 {
     [Header("Dialogue")]
-    [SerializeField] public DialogueData DialogueData;
-    
+    public DialogueData DialogueData;
+
     [Header("Class Field")]
-    [SerializeField] public TextMeshProUGUI descriptionText;
+    public TextMeshProUGUI descriptionText;
 
     [Header("Archetype Field")]
-    [SerializeField] public TextMeshProUGUI archetypeButton1Text;
-    [SerializeField] public TextMeshProUGUI archetypeButton2Text;
-    [SerializeField] public TextMeshProUGUI atkStatText1;
-    [SerializeField] public TextMeshProUGUI defStatText1;
-    [SerializeField] public TextMeshProUGUI hpStatText1;
-    [SerializeField] public TextMeshProUGUI spdStatText1;
-    [SerializeField] public TextMeshProUGUI evaStatText1;
+    public TextMeshProUGUI archetypeButton1Text;
+    public TextMeshProUGUI archetypeButton2Text;
+    public TextMeshProUGUI atkStatText1;
+    public TextMeshProUGUI defStatText1;
+    public TextMeshProUGUI hpStatText1;
+    public TextMeshProUGUI spdStatText1;
+    public TextMeshProUGUI evaStatText1;
 
     [Header("Name Field")]
-    [SerializeField] public TextMeshProUGUI nameTextField;
-    [SerializeField] public TextMeshProUGUI[] keyboard;
+    public TextMeshProUGUI nameTextField;
+    public TextMeshProUGUI[] keyboard;
 
     [Header("Verification Field")]
-    [SerializeField] public TextMeshProUGUI nameText;
-    [SerializeField] public TextMeshProUGUI archetypeText;
-    [SerializeField] public TextMeshProUGUI bitsText;
-    [SerializeField] public TextMeshProUGUI levelText;
-    [SerializeField] public TextMeshProUGUI limText;
-    [SerializeField] public TextMeshProUGUI currText;
-    [SerializeField] public TextMeshProUGUI atkStatText2;
-    [SerializeField] public TextMeshProUGUI defStatText2;
-    [SerializeField] public TextMeshProUGUI evaStatText2;
-    [SerializeField] public TextMeshProUGUI hpStatText2;
-    [SerializeField] public TextMeshProUGUI spdStatText2;
-    [SerializeField] public Image playerImage;
-    [SerializeField] public Sprite maleSprite;
-    [SerializeField] public Sprite femaleSprite;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI archetypeText;
+    public TextMeshProUGUI bitsText;
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI limText;
+    public TextMeshProUGUI currText;
+    public TextMeshProUGUI atkStatText2;
+    public TextMeshProUGUI defStatText2;
+    public TextMeshProUGUI evaStatText2;
+    public TextMeshProUGUI hpStatText2;
+    public TextMeshProUGUI spdStatText2;
+    public Image playerImage;
+    public Sprite maleSprite;
+    public Sprite femaleSprite;
 
     [Header("Intros")]
-    [SerializeField] public IntroObject[] IntroObjects;
+    public IntroObject[] IntroObjects;
 
     private bool generatedMove = false;
 
@@ -115,7 +115,7 @@ public class Intro : MonoBehaviour, IDialogue
 
     private void Init()
     {
-        ActivateState(0);    
+        ActivateState(0);
         StartDialogue();
         player = Player.Instance();
         story = DialogueManager.Instance.CurrentStory;
@@ -136,23 +136,23 @@ public class Intro : MonoBehaviour, IDialogue
 
     private void Intro2()
     {
-        ActivateState(2); 
-        if(story!= null && sex.Length >= 0)
-            story.variablesState["sex"] = sex;   
+        ActivateState(2);
+        if (story != null && sex.Length >= 0)
+            story.variablesState["sex"] = sex;
     }
 
     private void Intro3()
     {
-        ActivateState(3); 
+        ActivateState(3);
         player.SetSex(sex);
-        
-        if(story!= null && playerClass.Length >= 0)
-            story.variablesState["class"] = playerClass; 
+
+        if (story != null && playerClass.Length >= 0)
+            story.variablesState["class"] = playerClass;
     }
 
     private void Intro4()
     {
-        switch(playerClass)
+        switch (playerClass)
         {
             case "SWORDSMAN":
                 archetypeButton1Text.text = "REGULAR SWORDSMAN";
@@ -177,10 +177,10 @@ public class Intro : MonoBehaviour, IDialogue
             default:
                 break;
         }
-        
-        ActivateState(4); 
-        
-        if(story != null && archetype.Length >= 0)
+
+        ActivateState(4);
+
+        if (story != null && archetype.Length >= 0)
             story.variablesState["archetype"] = true;
     }
 
@@ -200,17 +200,17 @@ public class Intro : MonoBehaviour, IDialogue
             Units.BASE_ACC,
             Units.BASE_CRT
         );
-        if(!generatedMove)
+        if (!generatedMove)
         {
             generatedMove = true;
             string moveName = null;
             moveName ??= MoveMaker.Instance.GetLevelUpMoves(1, player.Archetype.ArchetypeName, player.Archetype.ClassName)[0].Name;
             player.MoveManager.AddMove(moveName);
         }
-        
+
         string newName = nameTextField.text.Replace("_", "").Trim();
-        
-        if(newName.Length > 0)
+
+        if (newName.Length > 0)
             story.variablesState["name"] = true;
         else
             story.variablesState["name"] = false;
@@ -235,12 +235,12 @@ public class Intro : MonoBehaviour, IDialogue
         spdStatText2.text = player.BaseStats.Spd.ToString();
         playerImage.sprite = (player.Sex.Equals("MALE") || (player.Sex.Equals("MALEFE") && GameManager.Instance.Leaning.Equals("MALE"))) ? maleSprite : femaleSprite;
 
-        ActivateState(6); 
+        ActivateState(6);
     }
 
     private void StartGame()
     {
-        ActivateState(0); 
+        ActivateState(0);
         ChapterScene.PartName = "Part 1: Grace Land";
         ChapterScene.ChapterName = "Chapter 1 - The Person and the Bear";
         ChapterScene.SceneName = "Forest 1";
@@ -249,9 +249,9 @@ public class Intro : MonoBehaviour, IDialogue
 
     private void ActivateState(int state)
     {
-        foreach(IntroObject io in IntroObjects)
+        foreach (IntroObject io in IntroObjects)
         {
-            if(io.state == state)
+            if (io.state == state)
                 io.o.SetActive(true);
             else
                 io.o.SetActive(false);
@@ -266,8 +266,8 @@ public class Intro : MonoBehaviour, IDialogue
     public void SelectClass(string c)
     {
         playerClass = c;
-        
-        switch(c)
+
+        switch (c)
         {
             case "SWORDSMAN":
                 descriptionText.text = "<b>SWORDSMEN</b> typically channel BINARY energy into their blades. They are known for their strong ATTACK stats.";
@@ -305,18 +305,18 @@ public class Intro : MonoBehaviour, IDialogue
     {
         char[] newName = nameTextField.text.ToCharArray();
 
-        if(letterIndex >= nameTextField.text.Length)
+        if (letterIndex >= nameTextField.text.Length)
             return;
-        if(letter == "SHIFT")
+        if (letter == "SHIFT")
         {
             shiftOn = !shiftOn;
             Shift();
             return;
         }
-        
-        if(letter == "SPACE")
+
+        if (letter == "SPACE")
             letter = " ";
-        else if(letter == "BACKSPACE")
+        else if (letter == "BACKSPACE")
         {
             letterIndex--;
             letter = "_";
@@ -332,7 +332,7 @@ public class Intro : MonoBehaviour, IDialogue
 
     private void Shift()
     {
-        foreach(TextMeshProUGUI key in keyboard)
+        foreach (TextMeshProUGUI key in keyboard)
             key.text = shiftOn ? key.text.ToUpper() : key.text.ToLower();
     }
 }

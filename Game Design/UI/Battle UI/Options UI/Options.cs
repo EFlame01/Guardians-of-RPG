@@ -10,12 +10,12 @@ using UnityEngine;
 public class Options : MonoBehaviour
 {
     //serialize variables
-    [SerializeField] public GameObject MoveOption;
-    [SerializeField] public GameObject ItemOption;
-    [SerializeField] public GameObject TargetOption;
-    [SerializeField] public GameObject InitiativeOption;
-    [SerializeField] public BattleOptions BattleOptions;
-    [SerializeField] public Animator Animator;
+    public GameObject MoveOption;
+    public GameObject ItemOption;
+    public GameObject TargetOption;
+    public GameObject InitiativeOption;
+    public BattleOptions BattleOptions;
+    public Animator Animator;
 
     //public variable
     public string Option;
@@ -36,14 +36,14 @@ public class Options : MonoBehaviour
     /// </summary>
     public void OnBackButtonPressed()
     {
-        if(Option == null)
+        if (Option == null)
         {
             //TODO: close option tab and return to Battle Options
             StartCoroutine(CloseOptions());
             BattleOptions.gameObject.SetActive(true);
         }
 
-        switch(Option)
+        switch (Option)
         {
             case "MOVE":
             case "ITEM":
@@ -53,9 +53,9 @@ public class Options : MonoBehaviour
                 BattleOptions.gameObject.SetActive(true);
                 break;
             case "TARGET":
-                if(Player.Instance().BattleStatus.ChosenMove != null)
+                if (Player.Instance().BattleStatus.ChosenMove != null)
                     SetOption("MOVE");
-                else if(Player.Instance().BattleStatus.ChosenItem != null)
+                else if (Player.Instance().BattleStatus.ChosenItem != null)
                     SetOption("ITEM");
                 break;
             case "INITIATIVE":
@@ -86,19 +86,19 @@ public class Options : MonoBehaviour
     public void OnNextButtonPressed()
     {
         Player player = Player.Instance();
-        if(Option == null)
+        if (Option == null)
             return;
 
-        switch(Option)
+        switch (Option)
         {
             case "MOVE":
                 //if target is enemy and there is one enemy, skip target.
                 //if skipping target and out of initiatives, end turn
-                if(BattleSimStatus.Enemies.Count == 1 && (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ENEMY) || player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALL_ENEMIES)))
+                if (BattleSimStatus.Enemies.Count == 1 && (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ENEMY) || player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALL_ENEMIES)))
                 {
-                    foreach(Character enemy in BattleSimStatus.Enemies)
+                    foreach (Character enemy in BattleSimStatus.Enemies)
                     {
-                        if(enemy != null)
+                        if (enemy != null)
                         {
                             player.BattleStatus.ChosenTargets.Clear();
                             player.BattleStatus.ChosenTargets.Add(enemy);
@@ -116,7 +116,7 @@ public class Options : MonoBehaviour
                 break;
             case "ITEM":
                 //if player is the only one present, skip target and end turn
-                if(BattleSimStatus.CharacterTypePresent("ALLY"))
+                if (BattleSimStatus.CharacterTypePresent("ALLY"))
                     SetOption("TARGET");
                 else
                 {
@@ -157,7 +157,7 @@ public class Options : MonoBehaviour
 
         Option = option;
 
-        switch(option)
+        switch (option)
         {
             case "MOVE":
                 MoveOption.SetActive(true);
@@ -185,7 +185,7 @@ public class Options : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         this.gameObject.SetActive(false);
     }
-    
+
     private void EndTurn()
     {
         StartCoroutine(CloseOptions());

@@ -16,12 +16,12 @@ public class CutSceneState : MonoBehaviour
     }
 
     //serialized variables
-    [SerializeField] public float TimeStamp;
-    [SerializeField] public bool IsDone;
-    [SerializeField] public CutSceneState NextState;
-    [SerializeField] public string StoryFlag;
-    [SerializeField] public bool StoryFlagValue;
-    [SerializeField] public CutSceneObjectData[] CutSceneObjects;
+    public float TimeStamp;
+    public bool IsDone;
+    public CutSceneState NextState;
+    public string StoryFlag;
+    public bool StoryFlagValue;
+    public CutSceneObjectData[] CutSceneObjects;
 
     //protected variables
     protected bool IsActive;
@@ -59,7 +59,7 @@ public class CutSceneState : MonoBehaviour
 
     protected void SetStoryFlagsInCutScene()
     {
-        if(StoryFlag != null && StoryFlag.Length > 0)
+        if (StoryFlag != null && StoryFlag.Length > 0)
             Player.Instance().StoryFlagManager.UpdateFlag(StoryFlag, StoryFlagValue);
     }
 
@@ -69,15 +69,15 @@ public class CutSceneState : MonoBehaviour
     /// </summary>
     protected void CheckDialogue()
     {
-        if(IsActive && DialogueManager.Instance.DialogueEnded)
+        if (IsActive && DialogueManager.Instance.DialogueEnded)
             Exit();
     }
 
     private void GiveCutSceneObject()
     {
-        foreach(CutSceneObjectData c in CutSceneObjects)
+        foreach (CutSceneObjectData c in CutSceneObjects)
         {
-            switch(c.Type)
+            switch (c.Type)
             {
                 case "QUEST":
                     Player.Instance().QuestManager.AddQuest(c.Data);

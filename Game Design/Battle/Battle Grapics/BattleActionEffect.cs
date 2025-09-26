@@ -16,13 +16,13 @@ using Ink.Runtime;
 public class BattleActionEffect : MonoBehaviour
 {
     //serialize variables
-    [SerializeField] public RollMechanic RollMechanic;
+    public RollMechanic RollMechanic;
 
     //public variables
     public Queue<Character> TargetQueue = new Queue<Character>();
     public bool StartedDialogue;
     public bool FinishedAction;
-    public Character Target {get; private set;}
+    public Character Target { get; private set; }
 
     //private variables
     private BattleCharacter _battlePlayer;
@@ -79,12 +79,12 @@ public class BattleActionEffect : MonoBehaviour
 
     private void AddTargetsToQueue()
     {
-        switch(_effect)
+        switch (_effect)
         {
             case "MOVE":
             case "ITEM":
                 Character[] characters = _user.BattleStatus.ChosenTargets.ToArray();
-                foreach(Character c in characters)
+                foreach (Character c in characters)
                     TargetQueue.Enqueue(c);
                 break;
             case "STATUS":
@@ -100,24 +100,24 @@ public class BattleActionEffect : MonoBehaviour
 
     private void GetEffect()
     {
-        if(_prevState.Equals(Units.CHARACTER_ACTION_STATE))
+        if (_prevState.Equals(Units.CHARACTER_ACTION_STATE))
         {
-            if(_user.BattleStatus.ChosenMove != null)
+            if (_user.BattleStatus.ChosenMove != null)
                 _effect = "MOVE";
-            else if(_user.BattleStatus.ChosenItem != null)
+            else if (_user.BattleStatus.ChosenItem != null)
                 _effect = "ITEM";
-            else if(_user.BattleStatus.TurnStatus.Equals(TurnStatus.SKIP))
+            else if (_user.BattleStatus.TurnStatus.Equals(TurnStatus.SKIP))
                 _effect = "SKIP";
-            else if(_user.BattleStatus.TurnStatus.Equals(TurnStatus.RUN))
+            else if (_user.BattleStatus.TurnStatus.Equals(TurnStatus.RUN))
                 _effect = "RUN";
         }
-        else if(_prevState.Equals(Units.AFTER_ROUND_STATE))
+        else if (_prevState.Equals(Units.AFTER_ROUND_STATE))
             _effect = "STATUS";
     }
 
     private IEnumerator PerformAction()
     {
-        if(TargetQueue.Count == 0)
+        if (TargetQueue.Count == 0)
         {
             Target = null;
             FinishedAction = true;
@@ -129,12 +129,12 @@ public class BattleActionEffect : MonoBehaviour
             FinishedAction = false;
             Target = TargetQueue.Dequeue();
             moveEffects = GetMoveEffects(Target);
-            if(ActionSuccessful())
+            if (ActionSuccessful())
             {
-                switch(_effect)
+                switch (_effect)
                 {
                     case "MOVE":
-                        if(_firstTimeMove)
+                        if (_firstTimeMove)
                         {
                             yield return ActionAnimation();
                             _firstTimeMove = false;
@@ -178,7 +178,7 @@ public class BattleActionEffect : MonoBehaviour
     {
         //TODO: Create animation for effect
         yield return new WaitForSeconds(0.25f);
-        switch(afterEffect)
+        switch (afterEffect)
         {
             case "FLASH":
                 yield return moveEffects.FlashRoutine();
@@ -198,7 +198,7 @@ public class BattleActionEffect : MonoBehaviour
 
     private IEnumerator StatusAnimation()
     {
-        if(Target.BattleStatus.StatusConditions["BURN"] != null)
+        if (Target.BattleStatus.StatusConditions["BURN"] != null)
         {
             yield return EffectAnimation("BURN");
             Target.BattleStatus.StatusConditions["BURN"].ImplementStatusCondition(Target);
@@ -206,7 +206,7 @@ public class BattleActionEffect : MonoBehaviour
             yield return new WaitForSeconds(1f);
             _effectText.Add(Target.Name + " was effected by the burn!");
         }
-        if(Target.BaseStats.Hp > 0 && Target.BattleStatus.StatusConditions["POISON"] != null)
+        if (Target.BaseStats.Hp > 0 && Target.BattleStatus.StatusConditions["POISON"] != null)
         {
             yield return EffectAnimation("POISON");
             Target.BattleStatus.StatusConditions["POISON"].ImplementStatusCondition(Target);
@@ -221,14 +221,14 @@ public class BattleActionEffect : MonoBehaviour
         RollMechanic.gameObject.SetActive(true);
         yield return RollMechanic.RollRun();
 
-        if(RollMechanic.RollNumber > 10)
+        if (RollMechanic.RollNumber > 10)
         {
             _effectText.Add("You got away safely!");
             BattleSimStatus.RunSuccessful = true;
         }
         else
             _effectText.Add("You were unable to escape!");
-        
+
         Target.BattleStatus.SetRollRun(false);
         RollMechanic.gameObject.SetActive(false);
     }
@@ -256,10 +256,10 @@ public class BattleActionEffect : MonoBehaviour
 
     private void UpdateInventory(Item item)
     {
-        if(!_user.Equals(Player.Instance()))
+        if (!_user.Equals(Player.Instance()))
             return;
         Player player = Player.Instance();
-        switch(item.Type)
+        switch (item.Type)
         {
             case ItemType.FOOD:
             case ItemType.MEDICAL:
@@ -276,8 +276,8 @@ public class BattleActionEffect : MonoBehaviour
     private void DisplayText()
     {
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
-        
-        for(int i = 0; i < _effectText.Count; i++)
+
+        for (int i = 0; i < _effectText.Count; i++)
         {
             int val = i + 1;
             string variable = val >= 2 ? "text" + val.ToString() : "text";
@@ -291,24 +291,24 @@ public class BattleActionEffect : MonoBehaviour
 
     private void UpdateBattleCharacter(Character character)
     {
-        if(_battlePlayer.Character.Id.Equals(character.Id))
+        if (_battlePlayer.Character.Id.Equals(character.Id))
         {
             _battlePlayer.UpdateHUD();
             return;
         }
 
-        foreach(BattleCharacter ally in _battleAllies)
+        foreach (BattleCharacter ally in _battleAllies)
         {
-            if(ally.Character != null && ally.Character.Id.Equals(character.Id))
+            if (ally.Character != null && ally.Character.Id.Equals(character.Id))
             {
                 ally.UpdateHUD();
                 return;
             }
         }
 
-        foreach(BattleCharacter enemy in _battleEnemies)
+        foreach (BattleCharacter enemy in _battleEnemies)
         {
-            if(enemy.Character != null && enemy.Character.Id.Equals(character.Id))
+            if (enemy.Character != null && enemy.Character.Id.Equals(character.Id))
             {
                 enemy.UpdateHUD();
                 return;
@@ -318,11 +318,11 @@ public class BattleActionEffect : MonoBehaviour
 
     private void SetMoveEffectString()
     {
-        if(_effect.Equals("MOVE"))
+        if (_effect.Equals("MOVE"))
         {
             Move move = _user.BattleStatus.ChosenMove;
             _effectText.Clear();
-            switch(move.Type)
+            switch (move.Type)
             {
                 case MoveType.REGULAR:
                 case MoveType.PRIORITY:
@@ -332,8 +332,8 @@ public class BattleActionEffect : MonoBehaviour
                     _effectText.Add(_user.Name + " healed " + Target.Name + "!");
                     break;
                 case MoveType.STAT_CHANGING:
-                    StatChangingMove statChangingMove = (StatChangingMove) move;
-                    for(int i = 0; i < statChangingMove._stats.Length; i++)
+                    StatChangingMove statChangingMove = (StatChangingMove)move;
+                    for (int i = 0; i < statChangingMove._stats.Length; i++)
                     {
                         string changed = statChangingMove._stages[i] > 0 ? " increased " : " decreased ";
                         int stageLevel = Mathf.Abs(statChangingMove._stages[i]);
@@ -341,17 +341,17 @@ public class BattleActionEffect : MonoBehaviour
                     }
                     break;
                 case MoveType.STATUS_CHANGING:
-                    StatusChangingMove statusChangingMove = (StatusChangingMove) move;
-                    if(Target.BattleStatus.StatusConditions[statusChangingMove._statusCondition.Name].Equals(statusChangingMove._statusCondition))
+                    StatusChangingMove statusChangingMove = (StatusChangingMove)move;
+                    if (Target.BattleStatus.StatusConditions[statusChangingMove._statusCondition.Name].Equals(statusChangingMove._statusCondition))
                         _effectText.Add(Target.Name + " is " + statusChangingMove._statusCondition.AfflictionText + "!");
                     else
                         _effectText.Add("The move failed!");
                     break;
                 case MoveType.COUNTER:
                     string targetSex = "themselves";
-                    if(Target.Sex.Equals("MALE"))
+                    if (Target.Sex.Equals("MALE"))
                         targetSex = "himself";
-                    else if(Target.Sex.Equals("FEMALE"))
+                    else if (Target.Sex.Equals("FEMALE"))
                         targetSex = "herslef";
                     _effectText.Add(Target.Name + " prepared " + targetSex + " for an attack!");
                     break;
@@ -362,18 +362,18 @@ public class BattleActionEffect : MonoBehaviour
                     _effectText.Add("It's a one hit knock out!");
                     break;
                 default:
-                    break; 
+                    break;
             }
         }
     }
 
     private void SetItemEffectString()
     {
-        if(!_effect.Equals("ITEM"))
+        if (!_effect.Equals("ITEM"))
             return;
 
         Item item = Player.Instance().BattleStatus.ChosenItem;
-        switch(item.Type)
+        switch (item.Type)
         {
             case ItemType.FOOD:
             case ItemType.MEDICAL:
@@ -389,25 +389,25 @@ public class BattleActionEffect : MonoBehaviour
 
     private bool ActionSuccessful()
     {
-        if(_effect == "ITEM")
+        if (_effect == "ITEM")
         {
             Item item = _user.BattleStatus.ChosenItem;
-            switch(item.Type)
+            switch (item.Type)
             {
                 case ItemType.FOOD:
-                    if(Target.BaseStats.Hp == Target.BaseStats.FullHp)
+                    if (Target.BaseStats.Hp == Target.BaseStats.FullHp)
                     {
                         _effectText.Add("It had no effect!");
                         return false;
                     }
                     return true;
                 case ItemType.MEDICAL:
-                    MedicalItem medicalItem = (MedicalItem) item;
-                    if(medicalItem._healAmount == 0)
+                    MedicalItem medicalItem = (MedicalItem)item;
+                    if (medicalItem._healAmount == 0)
                     {
-                        foreach(string status in medicalItem._statusConditions)
+                        foreach (string status in medicalItem._statusConditions)
                         {
-                            if(status.Equals("ALL") || Target.BattleStatus.StatusConditions.ContainsKey(status))
+                            if (status.Equals("ALL") || Target.BattleStatus.StatusConditions.ContainsKey(status))
                                 return true;
                         }
                         _effectText.Add("It had no effect!");
@@ -415,7 +415,7 @@ public class BattleActionEffect : MonoBehaviour
                     }
                     else
                     {
-                        if(Target.BaseStats.Hp == Target.BaseStats.FullHp)
+                        if (Target.BaseStats.Hp == Target.BaseStats.FullHp)
                         {
                             _effectText.Add("It had no effect!");
                             return false;
@@ -429,20 +429,20 @@ public class BattleActionEffect : MonoBehaviour
                     return false;
             }
         }
-        else if(_effect == "MOVE")
+        else if (_effect == "MOVE")
         {
             Debug.Log("effect is: " + _effect);
             Move move = _user.BattleStatus.ChosenMove;
-            if(move.DidMoveHit(_user, Target))
+            if (move.DidMoveHit(_user, Target))
             {
                 Debug.Log("move hit");
-                if(Target.BaseStats.Hp == 0)
+                if (Target.BaseStats.Hp == 0)
                 {
                     _effectText.Add(Target.Name + " is already knocked out!");
                     Debug.Log(Target.Name + " is already knocked out!");
                     return false;
                 }
-                if(Target.BattleStatus.ProtectionStatus != "NONE")
+                if (Target.BattleStatus.ProtectionStatus != "NONE")
                 {
                     _effectText.Add(Target.Name + " protected themselves!");
                     Debug.Log(Target.Name + " protected themselves!");
@@ -451,9 +451,9 @@ public class BattleActionEffect : MonoBehaviour
             }
             else
             {
-               _effectText.Add("But the move missed!");
+                _effectText.Add("But the move missed!");
                 Debug.Log("But the move missed!");
-                return false; 
+                return false;
             }
         }
         Debug.Log(_effect + " was successful...");
@@ -462,18 +462,18 @@ public class BattleActionEffect : MonoBehaviour
 
     private MoveEffects GetMoveEffects(Character character)
     {
-        if(_battlePlayer.Character.Equals(character))
+        if (_battlePlayer.Character.Equals(character))
             return _battlePlayer.MoveEffects;
 
-        foreach(BattleCharacter ally in _battleAllies)
+        foreach (BattleCharacter ally in _battleAllies)
         {
-            if(ally.Character != null && ally.Character.Equals(character))
+            if (ally.Character != null && ally.Character.Equals(character))
                 return ally.MoveEffects;
         }
 
-        foreach(BattleCharacter enemy in _battleEnemies)
+        foreach (BattleCharacter enemy in _battleEnemies)
         {
-            if(enemy.Character != null && enemy.Character.Equals(character))
+            if (enemy.Character != null && enemy.Character.Equals(character))
                 return enemy.MoveEffects;
         }
 
@@ -483,9 +483,9 @@ public class BattleActionEffect : MonoBehaviour
     private void EnableAllCharacterHUD(bool enable)
     {
         _battlePlayer.EnableHUD(enable);
-        foreach(BattleCharacter ally in _battleAllies)
+        foreach (BattleCharacter ally in _battleAllies)
             ally.EnableHUD(enable);
-        foreach(BattleCharacter enemy in _battleEnemies)
+        foreach (BattleCharacter enemy in _battleEnemies)
             enemy.EnableHUD(enable);
     }
 

@@ -13,10 +13,10 @@ using TMPro;
 public class TargetOption : MonoBehaviour
 {
     //serialized variables
-    [SerializeField] public Transform TargetLayout;
-    [SerializeField] public GameObject TargetButton;
-    [SerializeField] public Options Options;
-    [SerializeField] public Button NextButton;
+    public Transform TargetLayout;
+    public GameObject TargetButton;
+    public Options Options;
+    public Button NextButton;
 
     public void Start()
     {
@@ -32,9 +32,9 @@ public class TargetOption : MonoBehaviour
     {
         Player player = Player.Instance();
 
-        if(player.BattleStatus.ChosenMove != null)
+        if (player.BattleStatus.ChosenMove != null)
             DetermineTargetForMove();
-        else if(player.BattleStatus.ChosenItem != null)
+        else if (player.BattleStatus.ChosenItem != null)
             DetermineTargetForItem();
         // else
         //     Options.OnNextButtonPressed();
@@ -43,33 +43,33 @@ public class TargetOption : MonoBehaviour
     private void DetermineTargetForItem()
     {
         Item item = Player.Instance().BattleStatus.ChosenItem;
-        switch(item.Type)
+        switch (item.Type)
         {
             case ItemType.FOOD:
             case ItemType.MEDICAL:
                 List<Character> allySide = new List<Character>();
                 allySide.Add(Player.Instance());
                 allySide.AddRange(BattleSimStatus.Allies.ToArray());
-                foreach(Character c in BattleSimStatus.Graveyard)
+                foreach (Character c in BattleSimStatus.Graveyard)
                 {
-                    if(c.Type.Equals("ALLY"))
+                    if (c.Type.Equals("ALLY"))
                         allySide.Add(c);
                 }
-                foreach(Character character in allySide)
+                foreach (Character character in allySide)
                 {
-                    foreach(BattleCharacterData data in BattleInformation.BattleAlliesData)
+                    foreach (BattleCharacterData data in BattleInformation.BattleAlliesData)
                     {
-                        if(data.IsPlayer)
+                        if (data.IsPlayer)
                             MakeOneButton(Player.Instance(), data);
-                        else if(data.CharacterData.Equals(character.Id))
+                        else if (data.CharacterData.Equals(character.Id))
                             MakeOneButton(character, data);
                     }
                 }
                 break;
             default:
-                foreach(BattleCharacterData data in BattleInformation.BattleAlliesData)
+                foreach (BattleCharacterData data in BattleInformation.BattleAlliesData)
                 {
-                    if(data.IsPlayer)
+                    if (data.IsPlayer)
                         MakeOneButton(Player.Instance(), data);
                 }
                 break;
@@ -79,14 +79,14 @@ public class TargetOption : MonoBehaviour
     private void DetermineTargetForMove()
     {
         Move move = Player.Instance().BattleStatus.ChosenMove;
-        switch(move.Target)
+        switch (move.Target)
         {
             case MoveTarget.ENEMY:
-                foreach(Character enemy in BattleSimStatus.Enemies)
+                foreach (Character enemy in BattleSimStatus.Enemies)
                 {
-                    foreach(BattleCharacterData data in BattleInformation.BattleEnemiesData)
+                    foreach (BattleCharacterData data in BattleInformation.BattleEnemiesData)
                     {
-                        if(data != null && data.CharacterData.Equals(enemy.Id))
+                        if (data != null && data.CharacterData.Equals(enemy.Id))
                             MakeOneButton(enemy, data);
                     }
                 }
@@ -95,12 +95,12 @@ public class TargetOption : MonoBehaviour
                 MakeAllButton(BattleSimStatus.Enemies.ToArray(), null);
                 break;
             case MoveTarget.ALLY:
-                foreach(Character ally in BattleSimStatus.Allies)
+                foreach (Character ally in BattleSimStatus.Allies)
                 {
                     //TODO: create button with their avatar on it
-                    foreach(BattleCharacterData data in BattleInformation.BattleAlliesData)
+                    foreach (BattleCharacterData data in BattleInformation.BattleAlliesData)
                     {
-                        if(data.CharacterData.Equals(ally.Id))
+                        if (data.CharacterData.Equals(ally.Id))
                             MakeOneButton(ally, data);
                     }
                 }
@@ -127,11 +127,11 @@ public class TargetOption : MonoBehaviour
     {
         TargetButton targetButton = Instantiate(TargetButton, TargetLayout).GetComponent<TargetButton>();
         targetButton.textComponent.text = character.Name;
-        targetButton.image.sprite = battleCharacterData.IsPlayer? battleCharacterData.GetPlayerSprite() : battleCharacterData.CharacterSprite;
+        targetButton.image.sprite = battleCharacterData.IsPlayer ? battleCharacterData.GetPlayerSprite() : battleCharacterData.CharacterSprite;
         targetButton.button.onClick.AddListener(() =>
         {
             //TODO: add target
-            Character[] targets = {character};
+            Character[] targets = { character };
             AddTargets(targets);
         });
     }
@@ -141,7 +141,7 @@ public class TargetOption : MonoBehaviour
         TargetButton targetButton = Instantiate(TargetButton, TargetLayout).GetComponent<TargetButton>();
         targetButton.textComponent.text = MoveTarget.ALL_ALLIES.ToString();
         targetButton.image.sprite = image;
-        
+
         targetButton.button.onClick.AddListener(() =>
         {
             //TODO: add target

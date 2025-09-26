@@ -11,5 +11,5 @@ using UnityEngine;
 public class DialogueData : ScriptableObject
 {
     // [SerializeField] public string[] Actors;
-    [SerializeField] public TextAsset InkJSON;
+    public TextAsset InkJSON;
 }

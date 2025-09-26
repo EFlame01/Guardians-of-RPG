@@ -6,8 +6,8 @@ using UnityEngine.UI;
 /// </summary>
 public class TextBoxDecision : TextBox
 {
-    [SerializeField] public Button DecisionOptionPrefab;
-    [SerializeField] public Transform ListLayout;
+    public Button DecisionOptionPrefab;
+    public Transform ListLayout;
     public int OptionSelected = -1;
 
     public void UpdateOptionButton(Button button, string optionString)

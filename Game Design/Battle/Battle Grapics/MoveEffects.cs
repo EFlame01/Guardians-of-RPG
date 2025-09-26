@@ -11,12 +11,15 @@ using UnityEngine;
 /// </summary>
 public class MoveEffects : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);
+    private static WaitForSeconds _waitForSeconds0_05 = new WaitForSeconds(0.05f);
+
     //serialized variables
     [SerializeField] private SpriteRenderer SpriteRenderer;
     [SerializeField] private Shader FlashShader;
     [SerializeField] private Animator ActionAnimator;
     [SerializeField] private Animator cameraAnimator;
-    [SerializeField] private Camera MainCamera; 
+    [SerializeField] private Camera MainCamera;
 
     /// <summary>
     /// This coroutine starts the animation for both
@@ -31,46 +34,46 @@ public class MoveEffects : MonoBehaviour
     public IEnumerator ActionAnimationRoutine(string nameOfAnimation, string offset)
     {
         string animationName = nameOfAnimation.ToLower().Replace(" ", "_");
-        int oldSize = (int)MainCamera.orthographicSize;
-        int newSize = (int)((float)oldSize * 0.667f);
+        // int oldSize = (int)MainCamera.orthographicSize;
+        // int newSize = (int)((float)oldSize * 0.667f);
         float t = 0f;
-        bool animationPerformed = false;
-        
-        if(ActionAnimator.HasState(0, Animator.StringToHash(animationName)) && cameraAnimator.HasState(0, Animator.StringToHash(animationName + "_" + offset)))
+        bool animationPerformed;
+
+        if (ActionAnimator.HasState(0, Animator.StringToHash(animationName)) && cameraAnimator.HasState(0, Animator.StringToHash(animationName + "_" + offset)))
         {
             ActionAnimator.Play(animationName);
             cameraAnimator.Play(animationName + "_" + offset);
-            animationPerformed  = true;
+            animationPerformed = true;
         }
         else
         {
-            Debug.LogWarning("Animation could not be played...");
-            switch(MoveMaker.Instance.GetMoveBasedOnName(nameOfAnimation).Type)
+            Debug.LogWarning("WARNING: Animation " + animationName + " could not be played...");
+            switch (MoveMaker.Instance.GetMoveBasedOnName(nameOfAnimation).Type)
             {
                 case MoveType.KNOCK_OUT:
                 case MoveType.PRIORITY:
                 case MoveType.REGULAR:
                     ActionAnimator.Play("base_attack");
                     cameraAnimator.Play("base_attack_" + offset);
-                    animationPerformed  = true;
+                    animationPerformed = true;
                     break;
                 default:
-                    animationPerformed  = false;
+                    animationPerformed = false;
                     break;
             }
         }
 
-        if(animationPerformed)
+        if (animationPerformed)
         {
-            while(t < ActionAnimator.GetCurrentAnimatorStateInfo(0).length)
+            while (t < ActionAnimator.GetCurrentAnimatorStateInfo(0).length)
             {
                 t += Time.fixedDeltaTime;
                 yield return null;
             }
-            
+
             // actionAnimator.Play("none");
 
-            while(t < cameraAnimator.GetCurrentAnimatorStateInfo(0).length)
+            while (t < cameraAnimator.GetCurrentAnimatorStateInfo(0).length)
             {
                 t += Time.fixedDeltaTime;
                 yield return null;
@@ -90,21 +93,21 @@ public class MoveEffects : MonoBehaviour
     {
         Shader originalShader = SpriteRenderer.material.shader;
         SpriteRenderer.material.shader = FlashShader;
-        
-        SpriteRenderer.material.SetInt("_Flash", 1);
-        yield return new WaitForSeconds(0.05f);
-        SpriteRenderer.material.SetInt("_Flash", 0);
-        yield return new WaitForSeconds(0.1f);
 
         SpriteRenderer.material.SetInt("_Flash", 1);
-        yield return new WaitForSeconds(0.05f);
+        yield return _waitForSeconds0_05;
         SpriteRenderer.material.SetInt("_Flash", 0);
-        yield return new WaitForSeconds(0.05f);
+        yield return _waitForSeconds0_1;
 
         SpriteRenderer.material.SetInt("_Flash", 1);
-        yield return new WaitForSeconds(0.05f);
+        yield return _waitForSeconds0_05;
         SpriteRenderer.material.SetInt("_Flash", 0);
-        yield return new WaitForSeconds(0.05f);
+        yield return _waitForSeconds0_05;
+
+        SpriteRenderer.material.SetInt("_Flash", 1);
+        yield return _waitForSeconds0_05;
+        SpriteRenderer.material.SetInt("_Flash", 0);
+        yield return _waitForSeconds0_05;
 
         SpriteRenderer.material.shader = originalShader;
     }
@@ -133,9 +136,9 @@ public class MoveEffects : MonoBehaviour
     {
         float duration = 1f;
         float time = 0f;
-        while(time < duration)
+        while (time < duration)
         {
-            float t = time/duration;
+            float t = time / duration;
             MainCamera.orthographicSize = Mathf.Lerp(MainCamera.orthographicSize, newSize, t);
             time += Time.fixedDeltaTime;
             yield return null;

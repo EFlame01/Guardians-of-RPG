@@ -11,9 +11,9 @@ using UnityEngine;
 public class DecisionState : CutSceneState, IDialogue
 {
     //serialized variables
-    [SerializeField] public TextBoxDecision TextBoxDecision;
-    [SerializeField] public DialogueData DialogueData;
-    [SerializeField] public CutSceneState[] StateOptions;
+    public TextBoxDecision TextBoxDecision;
+    public DialogueData DialogueData;
+    public CutSceneState[] StateOptions;
 
     public override void Enter()
     {
@@ -35,7 +35,7 @@ public class DecisionState : CutSceneState, IDialogue
     /// </summary>
     private void CheckDecision()
     {
-        if(IsActive && OptionSelected())
+        if (IsActive && OptionSelected())
         {
             NextState = StateOptions[DialogueManager.Instance.GetDecision()];
             DialogueManager.Instance.ResetDecision();
@@ -60,7 +60,7 @@ public class DecisionState : CutSceneState, IDialogue
     /// </summary>
     public void StartDialogue()
     {
-        if(TextBoxDecision != null)
+        if (TextBoxDecision != null)
             TextBoxDecision.StartNarration(DialogueData);
         else
             DialogueManager.Instance.DisplayNextDialogue(DialogueData);

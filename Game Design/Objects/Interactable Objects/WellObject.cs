@@ -6,13 +6,13 @@ using UnityEngine;
 
 public class WellObject : InteractableObject, IDialogue
 {
-    [SerializeField] public string WellID;
-    [SerializeField] public int NumberOfWater;
-    [SerializeField] public DialogueData GetWaterDialogueData;
-    [SerializeField] public DialogueData DontGetWaterDialogueData;
+    public string WellID;
+    public int NumberOfWater;
+    public DialogueData GetWaterDialogueData;
+    public DialogueData DontGetWaterDialogueData;
     [SerializeField] private GameObject _textBoxObject;
     private bool usingWell;
-    
+
     private Item _water;
     private DialogueData _dialogueData;
     private Story _story;
@@ -38,7 +38,7 @@ public class WellObject : InteractableObject, IDialogue
     public override void InteractWithObject()
     {
         GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-        if(CanInteract && _wellData.DaysWithoutWater > 0 && !usingWell)
+        if (CanInteract && _wellData.DaysWithoutWater > 0 && !usingWell)
         {
             usingWell = true;
             GetWater();
@@ -58,7 +58,7 @@ public class WellObject : InteractableObject, IDialogue
 
         _story = DialogueManager.Instance.CurrentStory;
 
-        if(_story != null)
+        if (_story != null)
             UpdateStory();
     }
 
@@ -86,9 +86,9 @@ public class WellObject : InteractableObject, IDialogue
 
     public void UpdateStory()
     {
-        if(_story.variablesState["takesWater"] != null && (bool)_story.variablesState["takesWater"])
+        if (_story.variablesState["takesWater"] != null && (bool)_story.variablesState["takesWater"])
         {
-            if(_wellData.DaysWithoutWater > 0)
+            if (_wellData.DaysWithoutWater > 0)
                 Player.Instance().Inventory.AddItem(_water.Name, _wellData.NumberOfWater);
             _wellData.DaysWithoutWater = 0;
         }
@@ -96,28 +96,28 @@ public class WellObject : InteractableObject, IDialogue
 
     private void OnCollisionEnter2D(Collision2D collider2D)
     {
-        if(ObjectDetected)
+        if (ObjectDetected)
             return;
 
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
             RevealObjectIsInteractable(true);
     }
 
     private void OnCollisionStay2D(Collision2D collider2D)
     {
-        if(!ObjectDetected)
+        if (!ObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
         }
 
-        if(IsThisObjectDetected)
+        if (IsThisObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
@@ -126,7 +126,7 @@ public class WellObject : InteractableObject, IDialogue
 
     private void OnCollisionExit2D(Collision2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
         {
             usingWell = false;
             CanInteract = false;

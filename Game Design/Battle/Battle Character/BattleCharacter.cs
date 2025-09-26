@@ -11,14 +11,14 @@ using UnityEngine;
 public class BattleCharacter : MonoBehaviour
 {
     //serialized variables
-    [SerializeField] public Character Character;
-    [SerializeField] public RuntimeAnimatorController RuntimeAnimatorController;
-    [SerializeField] public string AnimationPosition;
-    [SerializeField] public MoveEffects MoveEffects;
+    public Character Character;
+    public RuntimeAnimatorController RuntimeAnimatorController;
+    public string AnimationPosition;
+    public MoveEffects MoveEffects;
     [SerializeField] protected Animator Animator;
     [SerializeField] protected SpriteRenderer CharacterSprite;
     [SerializeField] protected SpriteRenderer PlatformSprite;
-    [SerializeField] public CharacterHUD CharacterHUD;
+    public CharacterHUD CharacterHUD;
 
     /// <summary>
     /// Sets up the <c>CharacterHUD</c> and the position
@@ -53,10 +53,13 @@ public class BattleCharacter : MonoBehaviour
 
     private void SetAnimation()
     {
-        try{
+        try
+        {
             Animator.runtimeAnimatorController = RuntimeAnimatorController;
             Animator.Play(AnimationPosition);
-        }catch(Exception e){
+        }
+        catch (Exception e)
+        {
             Debug.LogWarning("Error in playing animation " + e.Message);
         }
     }

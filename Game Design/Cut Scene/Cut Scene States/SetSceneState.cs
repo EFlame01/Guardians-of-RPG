@@ -12,8 +12,8 @@ using UnityEngine.SceneManagement;
 public class SetSceneState : CutSceneState
 {
     //Serialized variables
-    [SerializeField] public string sceneName;
-    [SerializeField] public TransitionType transitionType;
+    public string sceneName;
+    public TransitionType transitionType;
 
     public override void Enter()
     {

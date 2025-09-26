@@ -18,10 +18,10 @@ public class NPCObject : InteractableObject, IDialogue
     [SerializeField] private Sprite _characterSprite;
     [SerializeField] private GameObject _textBoxCharacterObject;
     [SerializeField] protected DialogueData _dialogueData;
-    [SerializeField] public string npcID;
-    [SerializeField] public string[] flags;
-    [SerializeField] public bool[] flagValues;
-    [SerializeField] public bool isSitting = false;
+    public string npcID;
+    public string[] flags;
+    public bool[] flagValues;
+    public bool isSitting = false;
 
     protected bool _talkedToPlayer;
     protected NpcData _npcData;
@@ -60,17 +60,17 @@ public class NPCObject : InteractableObject, IDialogue
             }
         }
 
-        if(flags.Length <= 0 )
+        if (flags.Length <= 0)
             return;
 
-        for(int i = 0; i < flags.Length; i++)
-            if(!StoryFlagManager.FlagDictionary[flags[i]].Value == flagValues[i])
+        for (int i = 0; i < flags.Length; i++)
+            if (!StoryFlagManager.FlagDictionary[flags[i]].Value == flagValues[i])
                 Destroy(gameObject);
     }
 
     public override void DisplayInputSymbol()
     {
-        if(_myLight2D != null)
+        if (_myLight2D != null)
             _myLight2D.intensity = 0.5f;
     }
 
@@ -80,11 +80,11 @@ public class NPCObject : InteractableObject, IDialogue
     /// </summary>
     public override void InteractWithObject()
     {
-        if(CanInteract && !_talkedToPlayer)
+        if (CanInteract && !_talkedToPlayer)
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _talkedToPlayer = true;
-            if(isSitting)
+            if (isSitting)
                 StartDialogue();
             else
                 StartCoroutine(TalkToPlayer());
@@ -104,7 +104,7 @@ public class NPCObject : InteractableObject, IDialogue
         //      Find out where PlayerState is changing to NOT_MOVING
         //      Before the NPC talks to the player
         GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-        while(!DialogueManager.Instance.DialogueEnded)
+        while (!DialogueManager.Instance.DialogueEnded)
             yield return null;
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }
@@ -136,28 +136,28 @@ public class NPCObject : InteractableObject, IDialogue
 
     public virtual void OnCollisionEnter2D(Collision2D collider2D)
     {
-        if(ObjectDetected)
+        if (ObjectDetected)
             return;
 
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
             RevealObjectIsInteractable(true);
     }
 
     public virtual void OnCollisionStay2D(Collision2D collider2D)
     {
-        if(!ObjectDetected)
+        if (!ObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
-                RevealObjectIsInteractable(false);  
+                RevealObjectIsInteractable(false);
         }
 
-        if(IsThisObjectDetected)
+        if (IsThisObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
@@ -166,7 +166,7 @@ public class NPCObject : InteractableObject, IDialogue
 
     public virtual void OnCollisionExit2D(Collision2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
         {
             _talkedToPlayer = false;
             CanInteract = false;

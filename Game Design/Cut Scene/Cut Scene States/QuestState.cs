@@ -14,9 +14,9 @@ using Ink.Runtime;
 public class QuestState : CutSceneState, IDialogue
 {
     //Serialized variables
-    [SerializeField] public string questID;
-    [SerializeField] public bool assigned;
-    [SerializeField] public bool completed;
+    public string questID;
+    public bool assigned;
+    public bool completed;
     [SerializeField] protected TextBox TextBoxPrefab;
     [SerializeField] protected Transform Transform;
     [SerializeField] protected DialogueData QuestAssignDialogueData;
@@ -28,9 +28,9 @@ public class QuestState : CutSceneState, IDialogue
     public override void Enter()
     {
         base.Enter();
-        if(completed)
+        if (completed)
             CompletedQuest();
-        else if(assigned)
+        else if (assigned)
             AssignQuest();
     }
 
@@ -114,7 +114,7 @@ public class QuestState : CutSceneState, IDialogue
     {
         Player player = Player.Instance();
         bool questAssigned = player.QuestManager.AddQuest(questID);
-        if(questAssigned)
+        if (questAssigned)
         {
             Quest quest = QuestManager.QuestDictionary[questID];
             _dialogueData = QuestAssignDialogueData;
@@ -127,7 +127,7 @@ public class QuestState : CutSceneState, IDialogue
             Debug.LogWarning("WARNING: QuestID " + questID + " does not exist. Could not be assigned to player");
 
         StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.RECIEVED, 1f));
-        StartDialogue(); 
+        StartDialogue();
     }
 
     /// <summary>
@@ -138,7 +138,7 @@ public class QuestState : CutSceneState, IDialogue
         // try {
         //     if(Transform != null)
         //         TextBoxPrefab.gameObject.transform.SetParent(Transform);
-            
+
         //     TextBoxPrefab.gameObject.SetActive(true);
         //     TextBoxPrefab.OpenTextBox();
         //     TextBoxPrefab.StartNarration(_dialogueData);
@@ -148,7 +148,7 @@ public class QuestState : CutSceneState, IDialogue
         // }
 
         //TODO: test if code works before deleting commented code
-        if(Transform != null && TextBoxPrefab != null)
+        if (Transform != null && TextBoxPrefab != null)
         {
             TextBoxPrefab.gameObject.transform.SetParent(Transform);
             TextBoxPrefab.gameObject.SetActive(true);

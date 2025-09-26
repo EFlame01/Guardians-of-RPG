@@ -13,9 +13,9 @@ using TMPro;
 public class BattleOptions : MonoBehaviour
 {
     //serialized variables
-    [SerializeField] public Button RunButton;
-    [SerializeField] public Options Options;
-    [SerializeField] public Animator Animator;
+    public Button RunButton;
+    public Options Options;
+    public Animator Animator;
 
     /// <summary>
     /// Closes the BattleOptions UI and

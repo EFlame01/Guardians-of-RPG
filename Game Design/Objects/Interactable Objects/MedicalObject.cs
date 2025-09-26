@@ -2,40 +2,49 @@ using System.Collections;
 using UnityEngine;
 using Ink.Runtime;
 
+/// <summary>
+/// MedicalObject is a class that extends the
+/// InteractableObject class. MedicalObject
+/// provides the logic for and the ability to
+/// use the Medical Center
+/// in their inventory.
+/// </summary>
 public class MedicalObject : InteractableObject
 {
-    [SerializeField] public string _medicalCenterID;
-    [SerializeField] public PlayerDirection _directionToUseMC;
-    [SerializeField] public int _numOfUses;
-    [SerializeField] public int _maxUses;
-    [SerializeField] public DialogueData _useMCDialogue;
-    [SerializeField] public DialogueData _cannotUseMCDialogue;
-    [SerializeField] public DialogueData _usedMCDialogue;
-    [SerializeField] public Animator animator;
+    private static WaitForSeconds _waitForSeconds1_5 = new WaitForSeconds(1.5f);
+    private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
+
+    //public 
+    public string _medicalCenterID;
+    public PlayerDirection _directionToUseMC;
+    public int _numOfUses;
+    public int _maxUses;
+    public DialogueData _useMCDialogue;
+    public DialogueData _cannotUseMCDialogue;
+    public DialogueData _usedMCDialogue;
+    public Animator animator;
 
     private bool _useMedicalCenter;
     private Story _story;
     private bool _stopCheckingStoryUpdate;
     private DialogueData _dialogueData;
     private MedicalCenterData _medicalCenterData;
-    private int _numHeals;
 
     public void OnEnable()
     {
         _medicalCenterData = MedicalCenterDataContainer.GetMedicalCenterData(_medicalCenterID);
-        if(_medicalCenterData == null)
+        if (_medicalCenterData == null)
         {
             _medicalCenterData = new MedicalCenterData(_medicalCenterID, _numOfUses, _maxUses);
             MedicalCenterDataContainer.MedicalCenterDataList.Add(_medicalCenterData);
         }
-        _numHeals = _medicalCenterData == null ? _maxUses : _medicalCenterData.Limit;
     }
 
     public override void Update()
     {
         base.Update();
 
-        if(CheckToUpdateStory())
+        if (CheckToUpdateStory())
         {
             _stopCheckingStoryUpdate = true;
             StartCoroutine(UpdateStory());
@@ -44,12 +53,12 @@ public class MedicalObject : InteractableObject
 
     public override void InteractWithObject()
     {
-        if(CanInteract && !_useMedicalCenter)
+        if (CanInteract && !_useMedicalCenter)
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _useMedicalCenter = true;
 
-            if(_medicalCenterData.NumOfTimesUsed < _medicalCenterData.Limit)
+            if (_medicalCenterData.NumOfTimesUsed < _medicalCenterData.Limit)
                 StartCoroutine(UseMedicalCenter());
             else
                 StartCoroutine(DontUseMedicalCenter());
@@ -59,41 +68,41 @@ public class MedicalObject : InteractableObject
     private IEnumerator UseMedicalCenter()
     {
         PlayDialogue(_useMCDialogue);
-        
+
         yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
 
-        if(!_stopCheckingStoryUpdate)
+        if (!_stopCheckingStoryUpdate)
             EndMedicalCare();
     }
 
     private IEnumerator DontUseMedicalCenter()
     {
         PlayDialogue(_cannotUseMCDialogue);
-        
+
         yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
-        
+
         EndMedicalCare();
     }
 
     private IEnumerator UpdateStory()
     {
         yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
-            
+
         yield return HealPlayer();
     }
 
     private IEnumerator HealPlayer()
     {
         RestorePlayerHealth();
-        yield return new WaitForSeconds(0.5f);
+        yield return _waitForSeconds0_5;
 
         animator.Play("heal");
-        yield return new WaitForSeconds(1.5f);
+        yield return _waitForSeconds1_5;
 
         PlayDialogue(_usedMCDialogue);
 
         yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
-        
+
         yield return new WaitForSeconds(0.5f);
 
         EndMedicalCare();
@@ -116,9 +125,9 @@ public class MedicalObject : InteractableObject
         _story = DialogueManager.Instance.CurrentStory;
 
         return (
-            _story != null && 
-            _story.variablesState["acceptsMedicalHelp"] != null && 
-            (bool)_story.variablesState["acceptsMedicalHelp"] && 
+            _story != null &&
+            _story.variablesState["acceptsMedicalHelp"] != null &&
+            (bool)_story.variablesState["acceptsMedicalHelp"] &&
             !_stopCheckingStoryUpdate
         );
     }
@@ -133,29 +142,29 @@ public class MedicalObject : InteractableObject
 
     private void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(ObjectDetected)
+        if (ObjectDetected)
             return;
 
-        if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseMC) && GetObjectFacingSide().Equals(_directionToUseMC))
+        if (collider2D.gameObject.CompareTag("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseMC) && GetObjectFacingSide().Equals(_directionToUseMC))
             RevealObjectIsInteractable(true);
     }
-    
+
     private void OnTriggerStay2D(Collider2D collider2D)
     {
-        if(!ObjectDetected)
+        if (!ObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseMC) && GetObjectFacingSide().Equals(_directionToUseMC))
+            if (collider2D.gameObject.CompareTag("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseMC) && GetObjectFacingSide().Equals(_directionToUseMC))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
         }
 
-        if(IsThisObjectDetected)
+        if (IsThisObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseMC) && GetObjectFacingSide().Equals(_directionToUseMC))
-                RevealObjectIsInteractable(true);  
+            if (collider2D.gameObject.CompareTag("Player") && PlayerSpawn.PlayerDirection.Equals(_directionToUseMC) && GetObjectFacingSide().Equals(_directionToUseMC))
+                RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
         }
@@ -163,7 +172,7 @@ public class MedicalObject : InteractableObject
 
     private void OnTriggerExit2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
         {
             _useMedicalCenter = false;
             CanInteract = false;

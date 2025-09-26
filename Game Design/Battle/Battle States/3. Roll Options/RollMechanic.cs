@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class RollMechanic : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds1_25 = new WaitForSeconds(1.25f);
     public Animator RollAnimator;
-    public int RollNumber {get; private set;}
+    public int RollNumber { get; private set; }
 
     public IEnumerator RollRun()
     {
@@ -28,18 +29,18 @@ public class RollMechanic : MonoBehaviour
     public IEnumerator PlayRollAnimation()
     {
         RollAnimator.Play(RollNumber.ToString());
-        yield return new WaitForSeconds(1.25f);
+        yield return _waitForSeconds1_25;
     }
 
     private int GetRunRollNumber()
     {
         //TODO: configure a better roll mechanic 
-        return Random.Range(0, 20) + 1;   
+        return Random.Range(0, 20) + 1;
     }
 
     private int GetInitiativeRollNumber()
     {
-    //TODO: configure a better roll mechanic 
+        //TODO: configure a better roll mechanic 
         return Random.Range(0, 20) + 1;
     }
 

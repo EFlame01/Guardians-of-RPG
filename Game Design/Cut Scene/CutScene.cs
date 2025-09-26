@@ -14,27 +14,27 @@ public class CutScene : MonoBehaviour
 {
     //Serialized variables
     [Header("Director")]
-    [SerializeField] public float StartTime;
-    [SerializeField] public CutSceneState CurrentState;
-    [SerializeField] public PlayableDirector director;
-    [SerializeField] public Animator[] animators;
-    
+    public float StartTime;
+    public CutSceneState CurrentState;
+    public PlayableDirector director;
+    public Animator[] animators;
+
     [Header("Cut Scene State")]
-    [SerializeField] public PlayerState TransitionOrCutScene;
-    [SerializeField] public bool PlayOnStart;
-    [SerializeField] public bool ResumeOnEnd;
-    [SerializeField] public PlayerDirection EndDirection;
-    [SerializeField] public ActivateObject ActivateObject;
+    public PlayerState TransitionOrCutScene;
+    public bool PlayOnStart;
+    public bool ResumeOnEnd;
+    public PlayerDirection EndDirection;
+    public ActivateObject ActivateObject;
     [SerializeField] private bool _refreshCutScene;
-    
+
     [Header("Day/Night Cycle")]
-    [SerializeField] public bool SetDayOnStart;
-    [SerializeField] public int TimeOfDay;
-    [SerializeField] public bool StartTimer;
-    
+    public bool SetDayOnStart;
+    public int TimeOfDay;
+    public bool StartTimer;
+
     [Header("Music")]
-    [SerializeField] public string TrackName;
-    [SerializeField] public bool PlayMusicOnStart;
+    public string TrackName;
+    public bool PlayMusicOnStart;
 
     //private variables
     private int _trackIndex;
@@ -55,42 +55,42 @@ public class CutScene : MonoBehaviour
     {
         //Set time of day and determine if timer should start
         //  or day should be paused for cut scene
-        if(SetDayOnStart)
+        if (SetDayOnStart)
             SetDay(false);
 
         //Set Music
-        if(PlayMusicOnStart)
+        if (PlayMusicOnStart)
             SetMusic();
 
         //If this cut scene should be played
         //  immediately, then start the cut scene
-        if(PlayOnStart)
+        if (PlayOnStart)
             StartCutScene();
     }
 
     // Update is called once per frame
     public void Update()
     {
-        if(!_cutSceneStarted)
+        if (!_cutSceneStarted)
             return;
 
-        if(director.time >= director.duration - 0.10)
+        if (director.time >= director.duration - 0.10)
             EndCutScene();
 
-        if(CurrentState == null)
+        if (CurrentState == null)
             return;
-        
-        switch(director.state)
+
+        switch (director.state)
         {
             case PlayState.Playing:
-                if(director.time >= CurrentState.TimeStamp)
+                if (director.time >= CurrentState.TimeStamp)
                 {
                     director.Pause();
                     CurrentState.Enter();
                 }
                 break;
             case PlayState.Paused:
-                if(CurrentState.IsDone)
+                if (CurrentState.IsDone)
                 {
                     CurrentState = CurrentState.NextState;
                     director.Resume();
@@ -107,7 +107,7 @@ public class CutScene : MonoBehaviour
     public void Init()
     {
 
-        if(Player.Instance().MaleOrFemale().Equals("MALE"))
+        if (Player.Instance().MaleOrFemale().Equals("MALE"))
             Mute(true);
         else
             Mute(false);
@@ -121,10 +121,10 @@ public class CutScene : MonoBehaviour
     public void StartCutScene()
     {
         _tempControllers = new RuntimeAnimatorController[animators.Length];
-        
-        for(int i = 0; i < animators.Length; i++)
+
+        for (int i = 0; i < animators.Length; i++)
         {
-            if(animators[i] != null)
+            if (animators[i] != null)
             {
                 _tempControllers[i] = animators[i].runtimeAnimatorController;
                 animators[i].runtimeAnimatorController = null;
@@ -134,11 +134,11 @@ public class CutScene : MonoBehaviour
         Init();
         GameManager.Instance.PlayerState = TransitionOrCutScene;
         director.time = StartTime;
-        
-        if(CurrentState != null)
+
+        if (CurrentState != null)
             _head = CurrentState;
 
-        if(director.time > 0)
+        if (director.time > 0)
             director.Resume();
         else
             director.Play();
@@ -222,12 +222,12 @@ public class CutScene : MonoBehaviour
     private void ResetCamera()
     {
         FindTrack("camera animation track");
-        if(_trackIndex == -1)
+        if (_trackIndex == -1)
             return;
-        
+
         TimelineAsset asset = director.playableAsset as TimelineAsset;
-        AnimationTrack cameraAnimationTrack = (AnimationTrack) asset.GetOutputTrack(_trackIndex);
-        cameraAnimationTrack.position = new Vector3(0,0,0);
+        AnimationTrack cameraAnimationTrack = (AnimationTrack)asset.GetOutputTrack(_trackIndex);
+        cameraAnimationTrack.position = new Vector3(0, 0, 0);
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ public class CutScene : MonoBehaviour
     private void RefreshCutScene(CutSceneState cutSceneState)
     {
         //if cutscene state is null
-        if(cutSceneState == null)
+        if (cutSceneState == null)
             return;
         //if cutscene state is decision state
         else if (cutSceneState is DecisionState decisionState)
@@ -263,11 +263,11 @@ public class CutScene : MonoBehaviour
     /// </summary>
     private void ActivateCutScene()
     {
-        if(ActivateObject != null)
+        if (ActivateObject != null)
         {
             bool activate = ActivateObject.DetermineActivateCriteria();
             bool deactivate = ActivateObject.DetermineDeactivateCriteria();
-            if(!activate || deactivate)
+            if (!activate || deactivate)
             {
                 gameObject.SetActive(false);
                 return;
@@ -283,9 +283,11 @@ public class CutScene : MonoBehaviour
     /// <param name="startTimer">boolean value that determines if time should increment during Day/Night cycle</param>
     private void SetDay(bool startTimer)
     {
-        try{
+        try
+        {
             DayNightCycle.Instance.SetTimeOfDay(TimeOfDay, startTimer);
-        } catch(Exception e)
+        }
+        catch (Exception e)
         {
             Debug.LogWarning("WARNING: " + e.Message);
         }
@@ -304,7 +306,7 @@ public class CutScene : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(collider2D.tag.Equals("Player") && !_cutSceneStarted)
+        if (collider2D.CompareTag("Player") && !_cutSceneStarted)
         {
             StartCutScene();
             _cutSceneStarted = true;

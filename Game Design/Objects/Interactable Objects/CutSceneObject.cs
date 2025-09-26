@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class CutSceneObject : InteractableObject
 {
-    [SerializeField] public CutScene CutScene;
+    public CutScene CutScene;
     private bool _startedCutScene = false;
 
     /// <summary>
@@ -15,7 +15,7 @@ public class CutSceneObject : InteractableObject
     /// </summary>
     public override void InteractWithObject()
     {
-        if(CanInteract && !_startedCutScene)
+        if (CanInteract && !_startedCutScene)
         {
             _startedCutScene = true;
             CutScene.StartCutScene();
@@ -24,28 +24,28 @@ public class CutSceneObject : InteractableObject
 
     public virtual void OnCollisionEnter2D(Collision2D collider2D)
     {
-        if(ObjectDetected)
+        if (ObjectDetected)
             return;
 
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
             RevealObjectIsInteractable(true);
     }
 
     public virtual void OnCollisionStay2D(Collision2D collider2D)
     {
-        if(!ObjectDetected)
+        if (!ObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
-                RevealObjectIsInteractable(false);  
+                RevealObjectIsInteractable(false);
         }
 
-        if(IsThisObjectDetected)
+        if (IsThisObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
@@ -54,7 +54,7 @@ public class CutSceneObject : InteractableObject
 
     public virtual void OnCollisionExit2D(Collision2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
         {
             _startedCutScene = false;
             CanInteract = false;

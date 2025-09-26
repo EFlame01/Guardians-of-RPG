@@ -8,8 +8,8 @@ using UnityEngine;
 public class SceneMusicPlayer : MonoBehaviour
 {
     //serialzied variables
-    [SerializeField] public string trackName;
-    [SerializeField] public bool playTrackImmediately;
+    public string trackName;
+    public bool playTrackImmediately;
 
     //private variable
     private bool _musicStarted;
@@ -21,7 +21,7 @@ public class SceneMusicPlayer : MonoBehaviour
 
     public void Update()
     {
-        if(_musicStarted)
+        if (_musicStarted)
             return;
 
         PlayMusic();

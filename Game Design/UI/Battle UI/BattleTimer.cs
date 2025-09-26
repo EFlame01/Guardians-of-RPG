@@ -13,10 +13,12 @@ using TMPro;
 /// </summary>
 public class BattleTimer : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
+
     //public variables
     public TextMeshProUGUI TimerText;
     public Animator animator;
-    public double TimeLeft {get; private set;}
+    public double TimeLeft { get; private set; }
     public Options options;
     public BattleOptions battleOptions;
 
@@ -26,21 +28,21 @@ public class BattleTimer : MonoBehaviour
 
     public void Update()
     {
-        if(EndTime() && _timeToStart)
+        if (EndTime() && _timeToStart)
         {
             StopTimer(); //this sets _timeToStart to falses
             Player.Instance().BattleStatus.SetTurnStatus(TurnStatus.SKIP);
-            if(options.gameObject.activeSelf)
+            if (options.gameObject.activeSelf)
                 StartCoroutine(options.CloseOptions());
-            if(battleOptions.gameObject.activeSelf)
+            if (battleOptions.gameObject.activeSelf)
                 StartCoroutine(battleOptions.CloseBattleOptions());
             BattleSimStatus.EndPlayerOption = true;
         }
-        
-        if(_timeToStart)
+
+        if (_timeToStart)
         {
-            TimeLeft -= Time.fixedDeltaTime;
-            int tempTime = (int) Mathf.Ceil((float)TimeLeft);
+            TimeLeft -= Time.deltaTime;
+            int tempTime = (int)Mathf.Ceil((float)TimeLeft);
             TimerText.text = tempTime.ToString();
         }
     }
@@ -75,6 +77,6 @@ public class BattleTimer : MonoBehaviour
     private IEnumerator PlayTimerAnimation(string name)
     {
         animator.Play(name);
-        yield return new WaitForSeconds(0.5f);
+        yield return _waitForSeconds0_5;
     }
 }

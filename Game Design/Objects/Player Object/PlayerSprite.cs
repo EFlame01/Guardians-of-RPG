@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class PlayerSprite : MonoBehaviour
 {
-    [SerializeField] public string CharacterName;
-    [SerializeField] public SpriteRenderer image;
-    [SerializeField] public Sprite maleSprite;
-    [SerializeField] public Sprite femaleSprite;
-    [SerializeField] public Animator Animator;
+    public string CharacterName;
+    public SpriteRenderer image;
+    public Sprite maleSprite;
+    public Sprite femaleSprite;
+    public Animator Animator;
 
     public void Start()
     {
-        if(CharacterName.Equals("player"))
+        if (CharacterName.Equals("player"))
             CharacterName = Player.Instance().MaleOrFemale().Equals("MALE") ? "adam" : "eve";
-        if(gameObject.tag.Equals("Player"))
+        if (gameObject.CompareTag("Player"))
         {
             PerformIdleAnimation(PlayerDirection.UP);
             image.sprite = Player.Instance().MaleOrFemale().Equals("MALE") ? maleSprite : femaleSprite;
@@ -24,21 +24,21 @@ public class PlayerSprite : MonoBehaviour
 
     public void PerformWalkAnimation(string walkDirection)
     {
-        if(Animator.runtimeAnimatorController == null)
+        if (Animator.runtimeAnimatorController == null)
             return;
-        
-        if(walkDirection.Equals("none"))
+
+        if (walkDirection.Equals("none"))
             return;
-        
+
         Animator.Play(CharacterName + "_" + walkDirection);
     }
 
     public void PerformIdleAnimation(PlayerDirection playerDirection)
     {
-        if(Animator.runtimeAnimatorController == null)
+        if (Animator.runtimeAnimatorController == null)
             return;
-        
-        switch(playerDirection)
+
+        switch (playerDirection)
         {
             case PlayerDirection.UP:
                 Animator.Play(CharacterName + "_idle_up");

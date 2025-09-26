@@ -7,14 +7,14 @@ using UnityEngine;
 /// </summary>
 public class NPCCompanion : MonoBehaviour
 {
-    [SerializeField] public PlayerSprite npcSprite;
-    [SerializeField] public CharacterPos targetPos;
-    [SerializeField] public CharacterPos charPos;
-    [SerializeField] public int zOffset;
-    [SerializeField] public string npcID;
-    [SerializeField] public string[] flags;
-    [SerializeField] public bool[] flagValues;
-    [SerializeField] public string cutSceneFlag;
+    public PlayerSprite npcSprite;
+    public CharacterPos targetPos;
+    public CharacterPos charPos;
+    public int zOffset;
+    public string npcID;
+    public string[] flags;
+    public bool[] flagValues;
+    public string cutSceneFlag;
     private float _speed;
     private int lastIndex = 0;
     private NpcData _npcData;
@@ -28,17 +28,17 @@ public class NPCCompanion : MonoBehaviour
     public void OnEnable()
     {
         _npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
-        
-        if(_npcData == null)
-            return;
-        
-        transform.position = _npcData.Position;
-        
-        if(flags.Length <= 0 )
+
+        if (_npcData == null)
             return;
 
-        for(int i = 0; i < flags.Length; i++)
-            if(!StoryFlagManager.FlagDictionary[flags[i]].Value == flagValues[i])
+        transform.position = _npcData.Position;
+
+        if (flags.Length <= 0)
+            return;
+
+        for (int i = 0; i < flags.Length; i++)
+            if (!StoryFlagManager.FlagDictionary[flags[i]].Value == flagValues[i])
                 Destroy(gameObject);
     }
 
@@ -70,15 +70,15 @@ public class NPCCompanion : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        if(CanMove())
+        if (CanMove())
         {
             Vector3 startPosition = transform.position;
             WayPoint wayPoint = targetPos.WayPoints[lastIndex++];
 
             charPos.AddWayPoint(transform.position, charPos.Direction);
             charPos.Direction = wayPoint.Direction;
-            
-            switch(wayPoint.Direction)
+
+            switch (wayPoint.Direction)
             {
                 case PlayerDirection.DOWN:
                     npcSprite.PerformWalkAnimation("walk_down");
@@ -115,13 +115,13 @@ public class NPCCompanion : MonoBehaviour
     private void InitPosition()
     {
         //CHECK IF CHARACTER SHOULD MOVE
-        if(CheckToClearWayPoints())
+        if (CheckToClearWayPoints())
             return;
-        
+
         Vector3 position = targetPos.Position;
         PlayerDirection direction = targetPos.Direction;
 
-        switch(direction)
+        switch (direction)
         {
             case PlayerDirection.UP:
                 position += Vector3.down;
@@ -169,7 +169,7 @@ public class NPCCompanion : MonoBehaviour
     /// <returns><c>TRUE</c> if InCutScene() is true, <c>FALSE</c> if otherwise</returns>
     private bool CheckToClearWayPoints()
     {
-        if(InCutScene())
+        if (InCutScene())
         {
             charPos.ClearWayPoints();
             targetPos.ClearWayPoints();
@@ -187,14 +187,14 @@ public class NPCCompanion : MonoBehaviour
     /// <returns><c>TRUE</c> if in or attached to a cutscene. <c>FALSE</c> if otherwise.</returns>
     private bool InCutScene()
     {
-        if(cutSceneFlag == null || cutSceneFlag.Length == 0)
+        if (cutSceneFlag == null || cutSceneFlag.Length == 0)
             return false;
-        if(StoryFlagManager.FlagDictionary[cutSceneFlag] == null)
+        if (StoryFlagManager.FlagDictionary[cutSceneFlag] == null)
             return false;
-        if(StoryFlagManager.FlagDictionary[cutSceneFlag].Value == false)
+        if (StoryFlagManager.FlagDictionary[cutSceneFlag].Value == false)
             return true;
-            
-        switch(GameManager.Instance.PlayerState)
+
+        switch (GameManager.Instance.PlayerState)
         {
             case PlayerState.MOVING:
             case PlayerState.NOT_MOVING:

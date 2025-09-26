@@ -14,14 +14,14 @@ using Ink.Runtime;
 public class DialogueManager : PersistentSingleton<DialogueManager>
 {
     //Serialized variables
-    [SerializeField] public TextBox TextBox; //{get; private set;}
-    [SerializeField] public TextBoxConfirmation ConfirmationTextBox;
-    [SerializeField] public TextBoxDecision DecisionTextBox;
-    [SerializeField] public TextBox NarrationTextBox;
+    public TextBox TextBox; //{get; private set;}
+    public TextBoxConfirmation ConfirmationTextBox;
+    public TextBoxDecision DecisionTextBox;
+    public TextBox NarrationTextBox;
 
     //public variables
-    public bool DialogueEnded {get; private set;}
-    public bool DialogueContinued {get; private set;}
+    public bool DialogueEnded { get; private set; }
+    public bool DialogueContinued { get; private set; }
     public Story CurrentStory;
 
     //private variables
@@ -90,19 +90,19 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
         //assigns global _dialogueData variable to use for further methods
         _dialogueData = dialogueData;
-        
+
         //if current story does not exist or cannot continue
-        if(CurrentStory == null || !CurrentStory.canContinue)
+        if (CurrentStory == null || !CurrentStory.canContinue)
         {
             //this means we have not started dialogue yet
-            if(!_dialogueEnded)
+            if (!_dialogueEnded)
             {
                 CurrentStory = new Story(_dialogueData.InkJSON.text);
                 SetUpDialogueVariables();
             }
 
             //this means we have started dialogue and it has ended
-            else if(_dialogueEnded && !_dialogueIsPlaying)
+            else if (_dialogueEnded && !_dialogueIsPlaying)
             {
                 EndDialogue();
                 return;
@@ -110,38 +110,41 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         }
 
         //this means we should play the dialogue
-        if(!_dialogueIsPlaying)
-        {   
-            try{
+        if (!_dialogueIsPlaying)
+        {
+            try
+            {
                 _displayTextBoxCoroutine = StartCoroutine(DisplayTextBox());
-            } catch(Exception e) {
+            }
+            catch (Exception e)
+            {
                 Debug.LogWarning("Error in DisplayNextDialogue(): " + e.Message);
             }
         }
 
         //if story can no longer continue, set _dialogueEnded to true
-        if(!DialogueEnded && (CurrentStory == null || !CurrentStory.canContinue))
+        if (!DialogueEnded && (CurrentStory == null || !CurrentStory.canContinue))
             _dialogueEnded = true;
     }
 
     private IEnumerator DisplayTextBox()
     {
-        if(CurrentStory.canContinue)
+        if (CurrentStory.canContinue)
             _originalText = CurrentStory.Continue();
 
         _textBoxType = (int)CurrentStory.variablesState["textBoxType"];
-        
-        if(_originalText == null || _originalText.Length <= 0)
+
+        if (_originalText == null || _originalText.Length <= 0)
         {
             Debug.Log(_originalText);
             EndDialogue();
         }
         else
         {
-            switch(_textBoxType)
+            switch (_textBoxType)
             {
                 case Units.ORIGINAL:
-                    if(!TextBox.gameObject.activeSelf || TextBox.IsClosed)
+                    if (!TextBox.gameObject.activeSelf || TextBox.IsClosed)
                     {
                         CloseRightTextBox(TextBox);
                         TextBox.gameObject.SetActive(true);
@@ -152,7 +155,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = TextBox;
                     break;
                 case Units.NARRATION:
-                    if(NarrationTextBox.IsClosed)
+                    if (NarrationTextBox.IsClosed)
                     {
                         CloseRightTextBox(NarrationTextBox);
                         yield return new WaitForSeconds(0.4f);
@@ -162,7 +165,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = NarrationTextBox;
                     break;
                 case Units.CONFIRMATION:
-                    if(ConfirmationTextBox.IsClosed)
+                    if (ConfirmationTextBox.IsClosed)
                     {
                         CloseRightTextBox(ConfirmationTextBox);
                         yield return new WaitForSeconds(0.4f);
@@ -173,15 +176,15 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = ConfirmationTextBox;
                     break;
                 case Units.DECISION:
-                    if(DecisionTextBox.IsClosed)
-                        {
-                            CloseRightTextBox(DecisionTextBox);
-                            yield return new WaitForSeconds(0.4f);
-                            DecisionTextBox.OpenTextBox();
-                            yield return new WaitForSeconds(0.25f);
-                        }
-                        SetUpDecision();
-                        _currentTextBox = DecisionTextBox;
+                    if (DecisionTextBox.IsClosed)
+                    {
+                        CloseRightTextBox(DecisionTextBox);
+                        yield return new WaitForSeconds(0.4f);
+                        DecisionTextBox.OpenTextBox();
+                        yield return new WaitForSeconds(0.25f);
+                    }
+                    SetUpDecision();
+                    _currentTextBox = DecisionTextBox;
                     break;
                 default:
                     CloseRightTextBox(null);
@@ -189,7 +192,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     break;
             }
 
-            if(_textBoxType != Units.DECISION)
+            if (_textBoxType != Units.DECISION)
                 _typeDialogueCoroutine = StartCoroutine(TypeDialogue(CurrentStory));
         }//end of else...
     }
@@ -203,7 +206,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         int alphaIndex = 0;
         GameManager.Instance.EnableNarrationInputs = false;
 
-        for(int i = 0; i < _originalText.Length; i++)
+        for (int i = 0; i < _originalText.Length; i++)
         {
             alphaIndex++;
             _currentTextBox.TextMeshComponent.text = _originalText;
@@ -212,7 +215,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             AudioManager.Instance.PlaySoundEffect("scroll_05");
             yield return new WaitForSeconds(0.02f);
         }
-        
+
         AudioManager.Instance.StopSoundEffect("scroll_05");
 
         _dialogueIsPlaying = false;
@@ -233,12 +236,15 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void FinishEarly()
     {
-        try{
+        try
+        {
             StopCoroutine(_typeDialogueCoroutine);
             AudioManager.Instance.StopSoundEffect("scroll_05");
             _currentTextBox.TextMeshComponent.text = CurrentStory.currentText;
             _dialogueIsPlaying = false;
-        } catch(Exception e) {
+        }
+        catch (Exception e)
+        {
             Debug.LogWarning("Error in FinishEarly(): " + e.Message);
         }
     }
@@ -260,16 +266,18 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void ClickedOption(int index)
     {
-        if(_clickedAlready)
+        if (_clickedAlready)
             return;
-        
+
         _clickedAlready = true;
         try
         {
             CurrentStory.ChooseChoiceIndex(index);
             Story tempStory = CurrentStory;
             DisplayNextDialogue(_dialogueData);
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             Debug.LogWarning("Error at choice index" + index + ": " + e.Message);
         }
     }
@@ -278,17 +286,17 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     {
         List<Choice> choices = CurrentStory.currentChoices;
         _clickedAlready = false;
-        if(choices.Count <= 0 || _originalText.Length <= 0)
+        if (choices.Count <= 0 || _originalText.Length <= 0)
         {
             EndDialogue();
             return;
         }
 
         //Destroy previous options
-        foreach(Transform child in DecisionTextBox.ListLayout)
+        foreach (Transform child in DecisionTextBox.ListLayout)
             Destroy(child.gameObject);
-        
-        foreach(Choice choice in choices)
+
+        foreach (Choice choice in choices)
         {
             Button choiceBtn = Instantiate(DecisionTextBox.DecisionOptionPrefab, DecisionTextBox.ListLayout);
             DecisionTextBox.UpdateOptionButton(choiceBtn, choice.text);
@@ -298,22 +306,22 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void MakeDecision(Choice choice, List<Choice> currentChoices)
     {
-        if(_clickedAlready)
+        if (_clickedAlready)
             return;
-        
+
         _clickedAlready = true;
-        
+
         //Finds the index of the choice based on how many options are in the list
-        for(int i = 0; i < currentChoices.Count; i++)
+        for (int i = 0; i < currentChoices.Count; i++)
         {
-            if(currentChoices[i].text.Equals(choice.text))
+            if (currentChoices[i].text.Equals(choice.text))
             {
                 _dialogueIsPlaying = false;
                 CurrentStory.ChooseChoiceIndex(i);
                 DecisionTextBox.SelectOption(i);
                 _decision = i;
                 _dialogueIsPlaying = false;
-                if(CurrentStory.variablesState["endDialogue"] != null && (string)CurrentStory.variablesState["endDialogue"] == "Yes")
+                if (CurrentStory.variablesState["endDialogue"] != null && (string)CurrentStory.variablesState["endDialogue"] == "Yes")
                     CurrentStory.Continue();
                 DisplayNextDialogue(_dialogueData);
                 break;
@@ -323,47 +331,47 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void CloseRightTextBox(TextBox textBox)
     {
-        if(!NarrationTextBox.Equals(textBox) && !NarrationTextBox.IsClosed)
+        if (!NarrationTextBox.Equals(textBox) && !NarrationTextBox.IsClosed)
             NarrationTextBox.EndNarration();
-        if(!ConfirmationTextBox.Equals(textBox) && !ConfirmationTextBox.IsClosed)
+        if (!ConfirmationTextBox.Equals(textBox) && !ConfirmationTextBox.IsClosed)
             ConfirmationTextBox.EndNarration();
-        if(!DecisionTextBox.Equals(textBox) && !DecisionTextBox.IsClosed)
+        if (!DecisionTextBox.Equals(textBox) && !DecisionTextBox.IsClosed)
             DecisionTextBox.EndNarration();
-        if(TextBox != null && !TextBox.Equals(textBox) && !TextBox.IsClosed)
+        if (TextBox != null && !TextBox.Equals(textBox) && !TextBox.IsClosed)
             TextBox.EndNarration();
     }
 
     public IEnumerator WaitUntilDialogueIsOver()
     {
-        while(!DialogueEnded)
+        while (!DialogueEnded)
             yield return null;
     }
 
     private void SetUpDialogueVariables()
     {
-        if(CurrentStory.variablesState["playerName"] != null)
+        if (CurrentStory.variablesState["playerName"] != null)
             CurrentStory.variablesState["playerName"] = Player.Instance().Name;
 
-        if(CurrentStory.variablesState["itemName"] != null)
+        if (CurrentStory.variablesState["itemName"] != null)
             CurrentStory.variablesState["itemName"] = _itemName;
 
-        if(CurrentStory.variablesState["pluralName"] != null)
+        if (CurrentStory.variablesState["pluralName"] != null)
             CurrentStory.variablesState["pluralName"] = _pluralName;
 
-        if(CurrentStory.variablesState["itemType"] != null)
+        if (CurrentStory.variablesState["itemType"] != null)
             CurrentStory.variablesState["itemType"] = _itemType;
 
-        if(CurrentStory.variablesState["numberOfWater"] != null && (int)CurrentStory.variablesState["numberOfWater"] == 0)
+        if (CurrentStory.variablesState["numberOfWater"] != null && (int)CurrentStory.variablesState["numberOfWater"] == 0)
             CurrentStory.variablesState["numberOfWater"] = _number;
 
-        if(CurrentStory.variablesState["pronouns"] != null)
+        if (CurrentStory.variablesState["pronouns"] != null)
             SetUpPronouns();
     }
 
     private void SetUpPronouns()
     {
         string sex = Player.Instance().Sex;
-        switch(sex)
+        switch (sex)
         {
             case "MALE":
                 CurrentStory.variablesState["subject"] = "he";

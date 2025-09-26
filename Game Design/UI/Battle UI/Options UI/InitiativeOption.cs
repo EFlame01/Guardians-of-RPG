@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class InitiativeOption : MonoBehaviour
 {
     //serialized variable
-    [SerializeField] public Button NextButton;
+    public Button NextButton;
 
     //private variable
     private int _rollInitiative;
@@ -35,7 +35,7 @@ public class InitiativeOption : MonoBehaviour
     {
         _rollInitiative = value;
 
-        switch(value)
+        switch (value)
         {
             case 1:
                 Player.Instance().BattleStatus.SetRollInitiativeTrue();

@@ -11,7 +11,7 @@ using UnityEngine;
 /// </summary>
 public class SubCutSceneState : CutSceneState
 {
-    [SerializeField] public CutScene CutScene;
+    public CutScene CutScene;
 
     public override void Enter()
     {

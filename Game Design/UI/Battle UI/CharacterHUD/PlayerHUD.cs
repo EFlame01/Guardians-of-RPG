@@ -12,7 +12,7 @@ using UnityEngine;
 public class PlayerHUD : CharacterHUD
 {
     //serialized variable
-    [SerializeField] public SliderBar XpBar;
+    public SliderBar XpBar;
 
     public override void InitializeCharacterHUD(Character character)
     {

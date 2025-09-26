@@ -11,12 +11,12 @@ using TMPro;
 public class CharacterHUD : MonoBehaviour
 {
     //serialized variables
-    [SerializeField] public TextMeshProUGUI CharacterNameText;
-    [SerializeField] public TextMeshProUGUI CharacterLevelText;
-    [SerializeField] public SliderBar HpBar;
-    [SerializeField] public SliderBar EpBar;
-    [SerializeField] public Transform StatusConditionLayout;
-  
+    public TextMeshProUGUI CharacterNameText;
+    public TextMeshProUGUI CharacterLevelText;
+    public SliderBar HpBar;
+    public SliderBar EpBar;
+    public Transform StatusConditionLayout;
+
     /// <summary>
     /// Takes the <paramref name="character"/> and 
     /// sets up the <c>CharacterHUD</c> UI based on 

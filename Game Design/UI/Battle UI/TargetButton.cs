@@ -6,7 +6,7 @@ using TMPro;
 
 public class TargetButton : MonoBehaviour
 {
-    [SerializeField] public Button button;
-    [SerializeField] public Image image;
-    [SerializeField] public TextMeshProUGUI textComponent;
+    public Button button;
+    public Image image;
+    public TextMeshProUGUI textComponent;
 }

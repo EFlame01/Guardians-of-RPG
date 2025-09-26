@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class WildEncounter : MonoBehaviour
 {
-    [SerializeField] public GameObject playerObject;
-    [SerializeField] public string Environment;
-    [SerializeField] public int[] EncounterRate;
-    [SerializeField] public BattleCharacterData BattlePlayerData;
-    [SerializeField] public BattleCharacterData[] BattleCharacterDatas;
+    public GameObject playerObject;
+    public string Environment;
+    public int[] EncounterRate;
+    public BattleCharacterData BattlePlayerData;
+    public BattleCharacterData[] BattleCharacterDatas;
 
     private bool inSpawn;
 
@@ -18,7 +18,7 @@ public class WildEncounter : MonoBehaviour
 
     public void Update()
     {
-        if(time < 2f)
+        if (time < 2f)
         {
             time += Time.fixedDeltaTime;
             return;
@@ -30,11 +30,11 @@ public class WildEncounter : MonoBehaviour
 
     public void CheckForEncounter()
     {
-        if(encounterFound)
+        if (encounterFound)
             return;
-        
+
         int encounterIndex = EncounterEnemy();
-        if(inSpawn && encounterIndex != -1 && GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
+        if (inSpawn && encounterIndex != -1 && GameManager.Instance.PlayerState.Equals(PlayerState.MOVING))
         {
             encounterFound = true;
             BattleCharacterData wildEncounter = BattleCharacterDatas[encounterIndex];
@@ -56,24 +56,24 @@ public class WildEncounter : MonoBehaviour
     public int EncounterEnemy()
     {
         int encounterRate = (int)(UnityEngine.Random.Range(0f, 100f));
-        for(int i = 0; i < EncounterRate.Length; i++)
+        for (int i = 0; i < EncounterRate.Length; i++)
         {
-            if(EncounterRate[i] > encounterRate)
+            if (EncounterRate[i] > encounterRate)
                 return i;
-        }   
+        }
 
         return -1;
     }
 
     public void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
             inSpawn = true;
     }
 
     public void OnTriggerExit2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
             inSpawn = false;
     }
 }

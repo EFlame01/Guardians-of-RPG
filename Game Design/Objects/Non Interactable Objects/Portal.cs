@@ -21,7 +21,7 @@ public class Portal : MonoBehaviour
     public void SendToNewLocation()
     {
         //stop current music
-        if(_fadeSongOut)
+        if (_fadeSongOut)
             AudioManager.Instance.StopCurrentMusic(false);
 
         //add player _direction and position
@@ -36,13 +36,13 @@ public class Portal : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(!collider2D.gameObject.tag.Equals("Player"))
+        if (!collider2D.gameObject.CompareTag("Player"))
             return;
-        
-        if(GameManager.Instance.PlayerState.Equals(PlayerState.TRANSITION))
+
+        if (GameManager.Instance.PlayerState.Equals(PlayerState.TRANSITION))
             return;
-        
-        if(!traveled)
+
+        if (!traveled)
         {
             traveled = true;
             SendToNewLocation();

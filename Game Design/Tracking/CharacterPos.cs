@@ -12,10 +12,10 @@ using UnityEngine;
 public class CharacterPos : MonoBehaviour
 {
     [SerializeField] Transform PlayerIndex;
-    [SerializeField] public Vector2 Position;
-    [SerializeField] public PlayerDirection Direction;
+    public Vector2 Position;
+    public PlayerDirection Direction;
 
-    public List<WayPoint> WayPoints {get; private set;}
+    public List<WayPoint> WayPoints { get; private set; }
 
     public void Awake()
     {
@@ -35,7 +35,7 @@ public class CharacterPos : MonoBehaviour
     /// <param name="direction">The direction the player will be facing</param>
     public void AddWayPoint(Vector2 position, PlayerDirection direction)
     {
-        if(WayPoints.Count == 0)
+        if (WayPoints.Count == 0)
         {
             WayPoints.Add(new WayPoint(position, direction));
             return;
@@ -44,7 +44,7 @@ public class CharacterPos : MonoBehaviour
         int lastIndex = WayPoints.Count - 1;
         Vector2 lastPosition = WayPoints[lastIndex].Position;
 
-        if(Vector2.Distance(lastPosition, position) > Mathf.Epsilon)
+        if (Vector2.Distance(lastPosition, position) > Mathf.Epsilon)
         {
             Position = position;
             Direction = direction;
@@ -55,10 +55,10 @@ public class CharacterPos : MonoBehaviour
     private void InitStartingPoint()
     {
         WayPoints = new List<WayPoint>();
-        if(gameObject.tag.Equals("Player"))
+        if (gameObject.CompareTag("Player"))
         {
-            if(PlayerSpawn.PlayerPosition.Equals(Vector3.zero) && PlayerIndex != null)
-                PlayerSpawn.PlayerPosition = PlayerIndex.position; 
+            if (PlayerSpawn.PlayerPosition.Equals(Vector3.zero) && PlayerIndex != null)
+                PlayerSpawn.PlayerPosition = PlayerIndex.position;
             Position = PlayerSpawn.PlayerPosition;
             Direction = PlayerSpawn.PlayerDirection;
         }

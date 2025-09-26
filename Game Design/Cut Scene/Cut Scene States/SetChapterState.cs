@@ -11,10 +11,10 @@ using UnityEngine;
 public class SetChapterState : CutSceneState
 {
     //Serialized variables
-    [SerializeField] public string SceneName;
-    [SerializeField] public string PartName;
-    [SerializeField] public string ChapterName;
-    [SerializeField] public string ChapterStoryFlag;
+    public string SceneName;
+    public string PartName;
+    public string ChapterName;
+    public string ChapterStoryFlag;
 
     //private variables
     private bool start = false;
@@ -27,7 +27,7 @@ public class SetChapterState : CutSceneState
 
     public override void Update()
     {
-        if(start)
+        if (start)
         {
             start = false;
             SetUpChapterScene();

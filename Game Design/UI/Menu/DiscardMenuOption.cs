@@ -5,12 +5,12 @@ using System.Collections;
 
 public class DiscardMenuOption : MonoBehaviour
 {
-    [SerializeField] public Animator animator;
+    public Animator animator;
     [SerializeField] TextMeshProUGUI itemAmountText;
     [SerializeField] Button incrementButton;
     [SerializeField] Button decrementButton;
 
-    [SerializeField] public Button confirmButton;
+    public Button confirmButton;
     [SerializeField] Button cancelButton;
 
     public int maxAmount;
@@ -18,13 +18,13 @@ public class DiscardMenuOption : MonoBehaviour
     public void SetUpWindow()
     {
         itemAmountText.text = "1";
-        incrementButton.onClick.AddListener(() => 
+        incrementButton.onClick.AddListener(() =>
         {
             int amount = int.Parse(itemAmountText.text) + 1;
             amount = amount > maxAmount ? maxAmount : amount;
             itemAmountText.text = amount.ToString();
         });
-        decrementButton.onClick.AddListener(() => 
+        decrementButton.onClick.AddListener(() =>
         {
             int amount = int.Parse(itemAmountText.text) - 1;
             amount = amount < 1 ? 1 : amount;

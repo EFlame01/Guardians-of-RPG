@@ -37,19 +37,16 @@ public class AudioManager : PersistentSingleton<AudioManager>
     /// <param name="name">The name of the sound effect</param>
     public void PlaySoundEffect(string name)
     {
-        if(!GameManager.Instance.GameSFX)
+        if (!GameManager.Instance.GameSFX)
             return;
-        
-        if(name == null || name.Length <= 0)
+
+        if (name == null || name.Length <= 0)
             return;
-        
+
         Sound sound = _audioDictionary[name];
 
         if (sound != null)
         {
-            Vector3 cameraPos = Camera.main.transform.position;
-            float volume = GameManager.Instance.GameVolume * sound.Volume;
-
             _soundSource.clip = sound.Clip;
             _soundSource.pitch = sound.Pitch;
             _soundSource.loop = sound.Loop;
@@ -183,20 +180,20 @@ public class AudioManager : PersistentSingleton<AudioManager>
         {
             Sound music = _audioDictionary[trackName];
             _currentMusic = music.Name;
-            
+
             _audioSource2.clip = music.Clip;
             _audioSource2.pitch = music.Pitch;
             _audioSource2.loop = true;
 
             StartCoroutine(StartFade(1f, _audioSource1.volume, 0f, _audioSource1));
             StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume, _audioSource2));
-            
+
             _audioSource2.Play();
 
             yield return new WaitForSeconds(1f);
-            
+
             _audioSource1.Stop();
-            
+
             (_audioSource2, _audioSource1) = (_audioSource1, _audioSource2);
         }
 

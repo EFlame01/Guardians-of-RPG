@@ -12,14 +12,14 @@ public class DoorObject : InteractableObject
     [SerializeField] private ObjectSprite _doorSprite;
     [SerializeField] private string _nameOfSoundEffect;
     [SerializeField] private Portal _portal;
-    
+
     /// <summary>
     /// If player can interact, calls the
     /// OpenDoor() method.
     /// </summary>
     public override void InteractWithObject()
     {
-        if(CanInteract)
+        if (CanInteract)
             StartCoroutine(OpenDoor());
     }
 
@@ -39,26 +39,26 @@ public class DoorObject : InteractableObject
 
     private void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if(ObjectDetected)
+        if (ObjectDetected)
             return;
 
-        if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(PlayerDirection.UP))
+        if (collider2D.gameObject.CompareTag("Player") && PlayerSpawn.PlayerDirection.Equals(PlayerDirection.UP))
             RevealObjectIsInteractable(true);
     }
 
     private void OnTriggerStay2D(Collider2D collider2D)
     {
-        if(!ObjectDetected)
+        if (!ObjectDetected)
         {
             //see if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(PlayerDirection.UP))
+            if (collider2D.gameObject.CompareTag("Player") && PlayerSpawn.PlayerDirection.Equals(PlayerDirection.UP))
                 RevealObjectIsInteractable(true);
         }
-        else if(IsThisObjectDetected)
+        else if (IsThisObjectDetected)
         {
             //if an object is detected and it is this object that is detected
             //check to see if object should stay detected
-            if(collider2D.gameObject.tag.Equals("Player") && PlayerSpawn.PlayerDirection.Equals(PlayerDirection.UP))
+            if (collider2D.gameObject.CompareTag("Player") && PlayerSpawn.PlayerDirection.Equals(PlayerDirection.UP))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
@@ -69,7 +69,7 @@ public class DoorObject : InteractableObject
 
     private void OnTriggerExit2D(Collider2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player") && IsThisObjectDetected)
+        if (collider2D.gameObject.CompareTag("Player") && IsThisObjectDetected)
         {
             CanInteract = false;
             IsThisObjectDetected = false;

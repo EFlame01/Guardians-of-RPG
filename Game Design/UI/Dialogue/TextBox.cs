@@ -15,14 +15,14 @@ using System;
 public class TextBox : MonoBehaviour
 {
     [SerializeField] protected string TextBoxName;
-    [SerializeField] public TextMeshProUGUI TextMeshComponent;
-    [SerializeField] public Scrollbar ScrollBar;
+    public TextMeshProUGUI TextMeshComponent;
+    public Scrollbar ScrollBar;
     [SerializeField] protected Animator Animator;
     [SerializeField] protected bool PlayOnStart;
     [SerializeField] protected bool DestroyTextBox = true;
     [SerializeField] private InputActionReference Select;
 
-    public bool IsClosed {get; private set;}
+    public bool IsClosed { get; private set; }
 
     private DialogueData _dialogueData;
     private bool _textBoxOpened;
@@ -30,20 +30,20 @@ public class TextBox : MonoBehaviour
     public virtual void Start()
     {
         IsClosed = true;
-        if(PlayOnStart)
+        if (PlayOnStart)
             OpenTextBox();
     }
 
     public void Update()
     {
-        if(Select.action.ReadValue<float>() <= 0f)
+        if (Select.action.ReadValue<float>() <= 0f)
             return;
-        if(!_textBoxOpened)
+        if (!_textBoxOpened)
             return;
-        if(GameManager.Instance.EnableNarrationInputs)
+        if (GameManager.Instance.EnableNarrationInputs)
             OnContinueButtonPressed();
     }
-    
+
     /// <summary>
     /// Sets the game state to the start state,
     /// animate the text box start up, and begins
@@ -77,11 +77,13 @@ public class TextBox : MonoBehaviour
     /// </summary>
     public void EndNarration()
     {
-        try{
+        try
+        {
             _textBoxOpened = false;
             StartCoroutine(EndTextBoxAnimation());
             IsClosed = true;
-        } catch(Exception e)
+        }
+        catch (Exception e)
         {
             Debug.LogWarning(e.Message);
         }
@@ -93,9 +95,12 @@ public class TextBox : MonoBehaviour
     /// <returns></returns>
     public virtual IEnumerator StartTextBoxAnimation()
     {
-        try{
+        try
+        {
             TextMeshComponent.text = "";
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             Debug.LogWarning("TextBox does not have a TextMeshPro component: " + e.Message);
         }
         yield return new WaitForSeconds(0.01f);
@@ -118,15 +123,17 @@ public class TextBox : MonoBehaviour
         AudioManager.Instance.PlaySoundEffect("close_04");
         Animator.Play(TextBoxName + "_close");
         yield return new WaitForSeconds(0.5f);
-        if(DestroyTextBox)
+        if (DestroyTextBox)
             Destroy(gameObject);
     }
 
     public void ResetScrollBar()
     {
-        try{
+        try
+        {
             ScrollBar.value = 1;
-        }catch(Exception e)
+        }
+        catch (Exception e)
         {
             Debug.LogWarning("Error from ResetScrollBar(): " + e.Message);
         }
@@ -134,7 +141,7 @@ public class TextBox : MonoBehaviour
 
     protected void ContinueNarration()
     {
-        if(!DialogueManager.Instance.DialogueContinued)
+        if (!DialogueManager.Instance.DialogueContinued)
         {
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         }

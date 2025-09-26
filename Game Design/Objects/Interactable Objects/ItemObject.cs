@@ -12,13 +12,14 @@ using Ink.Runtime;
 /// </summary>
 public class ItemObject : InteractableObject, IDialogue
 {
-    [SerializeField] public string itemID;
+    private static WaitForSeconds _waitForSeconds0_4 = new WaitForSeconds(0.4f);
+    public string itemID;
     //-------TODO: delete Items[] and AmountsPerItem[]-------
-    [SerializeField] public string[] Items;
-    [SerializeField] public int[] AmountsPerItem;
+    public string[] Items;
+    public int[] AmountsPerItem;
     //-------------------------------------------------------
-    [SerializeField] public ItemObjectStruct[] Items_; //TODO: change name to Items
-    [SerializeField] public ObjectSprite ItemSprite;
+    public ItemObjectStruct[] Items_; //TODO: change name to Items
+    public ObjectSprite ItemSprite;
     [SerializeField] private DialogueData _itemLootSingular;
     [SerializeField] private DialogueData _itemLootPlural;
 
@@ -35,8 +36,8 @@ public class ItemObject : InteractableObject, IDialogue
     public void OnEnable()
     {
         _itemData = ItemDataContainer.GetItemData(itemID) ?? new ItemData(itemID, false);
-        
-        if(_itemData.Opened)
+
+        if (_itemData.Opened)
             Destroy(gameObject);
     }
 
@@ -46,7 +47,7 @@ public class ItemObject : InteractableObject, IDialogue
     /// </summary>
     public override void InteractWithObject()
     {
-        if(CanInteract && !_openedItem)
+        if (CanInteract && !_openedItem)
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             _openedItem = true;
@@ -63,7 +64,8 @@ public class ItemObject : InteractableObject, IDialogue
     {
         _openedItem = true;
         ItemSprite.OpenAnimation();
-        yield return new WaitForSeconds(0.4f);
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.RECIEVED);
+        yield return _waitForSeconds0_4;
         StartDialogue();
         _itemData.UpdateItemData(true);
         CheckForInteraction = true;
@@ -116,9 +118,9 @@ public class ItemObject : InteractableObject, IDialogue
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         */
         //----------------------------------------------------------------------------------------------
-        
+
         //-------------------------------TODO: delete the old method--------------------------------------
-        
+
         //Convert string to actual Item objects
         Item[] items = ConvertListToItems();
 
@@ -154,7 +156,7 @@ public class ItemObject : InteractableObject, IDialogue
 
         //Open text box and start dialogue
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
-        
+
         //----------------------------------------------------------------------------------------------
     }
 
@@ -176,10 +178,10 @@ public class ItemObject : InteractableObject, IDialogue
     /// </summary>
     /// <returns>an array of type <c>Item</c></returns>
     private Item[] ConvertListToItems()
-    {   
+    {
         List<Item> list = new List<Item>();
 
-        foreach(string item in Items)
+        foreach (string item in Items)
             list.Add(ItemMaker.Instance.GetItemBasedOnName(item));
 
         return list.ToArray();
@@ -187,34 +189,34 @@ public class ItemObject : InteractableObject, IDialogue
 
     private void OnCollisionEnter2D(Collision2D collider2D)
     {
-        if(_openedItem)
+        if (_openedItem)
             return;
 
-        if(ObjectDetected)
+        if (ObjectDetected)
             return;
 
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
             RevealObjectIsInteractable(true);
     }
 
     private void OnCollisionStay2D(Collision2D collider2D)
     {
-        if(_openedItem)
+        if (_openedItem)
             return;
-        
-        if(!ObjectDetected)
+
+        if (!ObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
         }
 
-        if(IsThisObjectDetected)
+        if (IsThisObjectDetected)
         {
             //check if object should be detected
-            if(collider2D.gameObject.tag.Equals("Player"))
+            if (collider2D.gameObject.CompareTag("Player"))
                 RevealObjectIsInteractable(true);
             else
                 RevealObjectIsInteractable(false);
@@ -223,7 +225,7 @@ public class ItemObject : InteractableObject, IDialogue
 
     private void OnCollisionExit2D(Collision2D collider2D)
     {
-        if(collider2D.gameObject.tag.Equals("Player"))
+        if (collider2D.gameObject.CompareTag("Player"))
         {
             CanInteract = false;
             IsThisObjectDetected = false;

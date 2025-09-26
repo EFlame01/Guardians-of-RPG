@@ -14,10 +14,10 @@ public class MapCursor : MonoBehaviour
     // [SerializeField] Button NoMansLand;
     // [SerializeField] Button GormaniaA;
 
-    [SerializeField] public Transform Cursor;
-    [SerializeField] public ButtonField[] ButtonFields;
-    [SerializeField] public float x_offset = 1f;
-    [SerializeField] public float y_offset = 15f;
+    public Transform Cursor;
+    public ButtonField[] ButtonFields;
+    public float x_offset = 1f;
+    public float y_offset = 15f;
 
     // private bool doneWithStart;
     // private Vector2 currentPos = new Vector2(0,0);
@@ -34,13 +34,13 @@ public class MapCursor : MonoBehaviour
     {
         string sceneName = MapLocation.GetCurrentMapLocation();
 
-        foreach(ButtonField buttonField in ButtonFields)
+        foreach (ButtonField buttonField in ButtonFields)
         {
-            if(sceneName.Contains(buttonField.name))
+            if (sceneName.Contains(buttonField.name))
                 Cursor.position = new Vector3(buttonField.button.position.x - x_offset, buttonField.button.position.y + y_offset, 0f);
-            
+
         }
-        
+
         // currentPos = new Vector2(Cursor.position.x, Cursor.position.y);
         // doneWithStart = true;
     }

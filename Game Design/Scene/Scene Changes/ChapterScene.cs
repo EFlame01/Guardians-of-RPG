@@ -4,13 +4,13 @@ using TMPro;
 
 public class ChapterScene : MonoBehaviour
 {
-    [SerializeField] public TextMeshProUGUI PartText;
-    [SerializeField] public TextMeshProUGUI ChapterText;
+    public TextMeshProUGUI PartText;
+    public TextMeshProUGUI ChapterText;
     public static string SceneName;
     public static string PartName;
     public static string ChapterName;
     public static string ChapterStoryFlag;
-    
+
     // public void Awake()
     // {
     //     PartText.text = PartName;
@@ -29,7 +29,7 @@ public class ChapterScene : MonoBehaviour
 
         AudioManager.Instance.StopCurrentMusic(false);
 
-        if(ChapterStoryFlag != null)
+        if (ChapterStoryFlag != null)
             Player.Instance().StoryFlagManager.UpdateFlag(ChapterStoryFlag, true);
 
         yield return new WaitForSeconds(3f);
