@@ -23,6 +23,8 @@ public class WellData
         ID = id;
         DaysWithoutWater = days;
         NumberOfWater = num;
+
+        WellDataContainer.WellDataList.Add(this);
     }
 
 }

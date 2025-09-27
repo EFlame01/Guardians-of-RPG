@@ -6,5 +6,9 @@
 /// </summary>
 public interface IDialogue
 {
+    /// <summary>
+    /// Displays the dialogue in the 
+    /// Story via the DialougeManager.
+    /// </summary>
     public void StartDialogue();
 }

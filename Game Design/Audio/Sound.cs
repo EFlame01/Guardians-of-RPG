@@ -7,8 +7,9 @@ using UnityEngine;
 /// needed to control a piece of audio.
 /// </summary>
 [System.Serializable]
-public class Sound 
+public class Sound
 {
+    //public variables
     public string Name;
     public AudioClip Clip;
 

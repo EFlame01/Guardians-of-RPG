@@ -53,7 +53,7 @@ public class FightObject : NPCObject
         if (CanInteract)
         {
             CanInteract = false;
-            if (_npcData.foughtPlayer)
+            if (NpcData.foughtPlayer)
                 ConfrontPlayer3();
             else
                 StartCoroutine(ConfrontPlayer1());
@@ -88,7 +88,7 @@ public class FightObject : NPCObject
     /// <returns></returns>
     public IEnumerator ConfrontPlayer2()
     {
-        if (!_npcData.foughtPlayer)
+        if (!NpcData.foughtPlayer)
         {
             _confrontedPlayer = true;
             CanInteract = false;
@@ -112,9 +112,9 @@ public class FightObject : NPCObject
     /// <returns></returns>
     private void ConfrontPlayer3()
     {
-        if (!_talkedToPlayer)
+        if (!TalkedToPlayer)
         {
-            _talkedToPlayer = true;
+            TalkedToPlayer = true;
             _dialogueData = DialogueDataAfterBattle;
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             StartCoroutine(TalkToPlayer());
@@ -180,12 +180,12 @@ public class FightObject : NPCObject
     private void StartFight()
     {
         startedBattle = true;
-        _npcData.foughtPlayer = true;
-        _npcData.Position = transform.position;
+        NpcData.foughtPlayer = true;
+        NpcData.Position = transform.position;
         if (PlayerViewDirection.Equals(PlayerDirection.NONE))
-            _npcData.direction = GetCollisionSide().ToString();
+            NpcData.direction = GetCollisionSide().ToString();
         else
-            _npcData.direction = PlayerViewDirection.ToString();
+            NpcData.direction = PlayerViewDirection.ToString();
         SetUpBattleMusic();
         SetUpForBattle();
     }

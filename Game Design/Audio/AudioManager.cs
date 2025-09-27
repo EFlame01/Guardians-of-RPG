@@ -10,6 +10,7 @@ using UnityEngine;
 ///</summary>
 public class AudioManager : PersistentSingleton<AudioManager>
 {
+    //Serialized variables
     [Header("Current Track")]
     [SerializeField] private string _currentMusic;
 

@@ -4,51 +4,33 @@ using Ink.Runtime;
 using TMPro.Examples;
 using UnityEngine;
 
+/// <summary>
+/// WellObject is a class that extends the
+/// InteractableObject. WellObjects are objects
+/// that the player can interact with
+/// to recieve water a limited amount of times
+/// per day.
+/// </summary>
 public class WellObject : InteractableObject, IDialogue
 {
-    public string WellID;
-    public int NumberOfWater;
-    public DialogueData GetWaterDialogueData;
-    public DialogueData DontGetWaterDialogueData;
-    [SerializeField] private GameObject _textBoxObject;
-    private bool usingWell;
+    //Serialized variables
+    [SerializeField] private string WellID;
+    [SerializeField] private int NumberOfWater;
+    [SerializeField] private DialogueData GetWaterDialogueData;
+    [SerializeField] private DialogueData DontGetWaterDialogueData;
 
+    //private variables
+    private bool _usingWell;
     private Item _water;
     private DialogueData _dialogueData;
     private Story _story;
     private WellData _wellData;
-    private bool takesWater;
-
 
     public void OnEnable()
     {
-        // _wellData = WellDataContainer.GetWellData(WellID);
-        //TEST - Delete later 
-        _wellData = new WellData(WellID, 1, NumberOfWater);
-        WellDataContainer.WellDataList.Add(_wellData);
-        //end of TEST
+        _wellData = WellDataContainer.GetWellData(WellID);
+        _wellData ??= new WellData(WellID, 1, NumberOfWater);
         NumberOfWater = _wellData == null ? NumberOfWater : _wellData.NumberOfWater;
-    }
-
-    public void Start()
-    {
-
-    }
-
-    public override void InteractWithObject()
-    {
-        GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-        if (CanInteract && _wellData.DaysWithoutWater > 0 && !usingWell)
-        {
-            usingWell = true;
-            GetWater();
-        }
-        else if (CanInteract && _wellData.DaysWithoutWater <= 0 && !usingWell)
-        {
-            usingWell = true;
-            DontGetWater();
-        }
-        CheckForInteraction = true;
     }
 
     // Update is called once per frame
@@ -60,6 +42,22 @@ public class WellObject : InteractableObject, IDialogue
 
         if (_story != null)
             UpdateStory();
+    }
+
+    public override void InteractWithObject()
+    {
+        GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+        if (CanInteract && _wellData.DaysWithoutWater > 0 && !_usingWell)
+        {
+            _usingWell = true;
+            GetWater();
+        }
+        else if (CanInteract && _wellData.DaysWithoutWater <= 0 && !_usingWell)
+        {
+            _usingWell = true;
+            DontGetWater();
+        }
+        CheckForInteraction = true;
     }
 
     public void StartDialogue()
@@ -128,7 +126,7 @@ public class WellObject : InteractableObject, IDialogue
     {
         if (collider2D.gameObject.CompareTag("Player"))
         {
-            usingWell = false;
+            _usingWell = false;
             CanInteract = false;
             IsThisObjectDetected = false;
             HideInputSymbol();

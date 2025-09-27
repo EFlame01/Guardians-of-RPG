@@ -11,19 +11,21 @@ using Ink.Runtime;
 /// </summary>
 public class MedicalObject : InteractableObject
 {
-    private static WaitForSeconds _waitForSeconds1_5 = new WaitForSeconds(1.5f);
-    private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
+    //Serialized variables
+    [SerializeField] private string _medicalCenterID;
+    [SerializeField] private PlayerDirection _directionToUseMC;
+    [SerializeField] private int _numOfUses;
+    [SerializeField] private int _maxUses;
+    [SerializeField] private DialogueData _useMCDialogue;
+    [SerializeField] private DialogueData _cannotUseMCDialogue;
+    [SerializeField] private DialogueData _usedMCDialogue;
+    [SerializeField] private Animator animator;
 
-    //public 
-    public string _medicalCenterID;
-    public PlayerDirection _directionToUseMC;
-    public int _numOfUses;
-    public int _maxUses;
-    public DialogueData _useMCDialogue;
-    public DialogueData _cannotUseMCDialogue;
-    public DialogueData _usedMCDialogue;
-    public Animator animator;
+    //private static variables
+    private static readonly WaitForSeconds _waitForSeconds1_5 = new WaitForSeconds(1.5f);
+    private static readonly WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
 
+    //private variables
     private bool _useMedicalCenter;
     private Story _story;
     private bool _stopCheckingStoryUpdate;

@@ -12,35 +12,34 @@ using UnityEngine;
 /// </summary>
 public class NPCObject : InteractableObject, IDialogue
 {
+    //Serialized variables
     [Header("NPCObject Properties")]
     [SerializeField] protected PlayerSprite _npcSprite;
     [SerializeField] private string _characterName;
     [SerializeField] private Sprite _characterSprite;
     [SerializeField] private GameObject _textBoxCharacterObject;
     [SerializeField] protected DialogueData _dialogueData;
-    public string npcID;
-    public string[] flags;
-    public bool[] flagValues;
-    public bool isSitting = false;
+    [SerializeField] private string npc_ID;
+    [SerializeField] private string[] flags;
+    [SerializeField] private bool[] flagValues;
+    [SerializeField] private bool isSitting;
 
-    protected bool _talkedToPlayer;
-    protected NpcData _npcData;
+    //protected variables
+    protected bool TalkedToPlayer;
+    protected NpcData NpcData;
 
     public void OnEnable()
     {
         //_npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
-        _npcData = NpcDataContainer.GetNpcData(npcID);
-        if (_npcData == null)
-            _npcData = new NpcData(npcID, transform.position, flags, flagValues);
+        NpcData = NpcDataContainer.GetNpcData(npc_ID);
+        if (NpcData == null)
+            NpcData = new NpcData(npc_ID, transform.position, flags, flagValues);
         else
-            transform.position = _npcData.Position;
+            transform.position = NpcData.Position;
 
-        // if (_npcData == null)
-        //     return;
-
-        if (_npcData.direction != null)
+        if (NpcData.direction != null)
         {
-            switch (_npcData.direction)
+            switch (NpcData.direction)
             {
                 case "UP":
                     _npcSprite.PerformIdleAnimation(PlayerDirection.UP);
@@ -68,6 +67,11 @@ public class NPCObject : InteractableObject, IDialogue
                 Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Display the light surrounding
+    /// the character. This signals that
+    /// you can interact with the character.
+    /// </summary>
     public override void DisplayInputSymbol()
     {
         if (_myLight2D != null)
@@ -80,10 +84,10 @@ public class NPCObject : InteractableObject, IDialogue
     /// </summary>
     public override void InteractWithObject()
     {
-        if (CanInteract && !_talkedToPlayer)
+        if (CanInteract && !TalkedToPlayer)
         {
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-            _talkedToPlayer = true;
+            TalkedToPlayer = true;
             if (isSitting)
                 StartDialogue();
             else
@@ -168,7 +172,7 @@ public class NPCObject : InteractableObject, IDialogue
     {
         if (collider2D.gameObject.CompareTag("Player"))
         {
-            _talkedToPlayer = false;
+            TalkedToPlayer = false;
             CanInteract = false;
             IsThisObjectDetected = false;
             HideInputSymbol();
