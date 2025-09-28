@@ -2,26 +2,33 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// ChapterScene is a class that displays
+/// the information in the ChapterScene
+/// </summary>
 public class ChapterScene : MonoBehaviour
 {
-    public TextMeshProUGUI PartText;
-    public TextMeshProUGUI ChapterText;
+    //Serialized varialbes
+    [SerializeField] private TextMeshProUGUI PartText;
+    [SerializeField] private TextMeshProUGUI ChapterText;
+
+    //public static variables
     public static string SceneName;
     public static string PartName;
     public static string ChapterName;
     public static string ChapterStoryFlag;
-
-    // public void Awake()
-    // {
-    //     PartText.text = PartName;
-    //     ChapterText.text = ChapterName;
-    // }
 
     public void Start()
     {
         StartCoroutine(StartChapter());
     }
 
+    /// <summary>
+    /// Sets up the information
+    /// needed to display the chapter details
+    /// in the ChapterScene.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator StartChapter()
     {
         PartText.text = PartName;

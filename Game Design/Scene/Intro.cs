@@ -4,48 +4,52 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Intro is a class that handles the UI 
+/// for the IntroScene.
+/// </summary>
 public class Intro : MonoBehaviour, IDialogue
 {
+    //Serialized variables
     [Header("Dialogue")]
-    public DialogueData DialogueData;
+    [SerializeField] private DialogueData DialogueData;
 
     [Header("Class Field")]
-    public TextMeshProUGUI descriptionText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
 
     [Header("Archetype Field")]
-    public TextMeshProUGUI archetypeButton1Text;
-    public TextMeshProUGUI archetypeButton2Text;
-    public TextMeshProUGUI atkStatText1;
-    public TextMeshProUGUI defStatText1;
-    public TextMeshProUGUI hpStatText1;
-    public TextMeshProUGUI spdStatText1;
-    public TextMeshProUGUI evaStatText1;
+    [SerializeField] private TextMeshProUGUI archetypeButton1Text;
+    [SerializeField] private TextMeshProUGUI archetypeButton2Text;
+    [SerializeField] private TextMeshProUGUI atkStatText1;
+    [SerializeField] private TextMeshProUGUI defStatText1;
+    [SerializeField] private TextMeshProUGUI hpStatText1;
+    [SerializeField] private TextMeshProUGUI spdStatText1;
+    [SerializeField] private TextMeshProUGUI evaStatText1;
 
     [Header("Name Field")]
-    public TextMeshProUGUI nameTextField;
-    public TextMeshProUGUI[] keyboard;
+    [SerializeField] private TextMeshProUGUI nameTextField;
+    [SerializeField] private TextMeshProUGUI[] keyboard;
 
     [Header("Verification Field")]
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI archetypeText;
-    public TextMeshProUGUI bitsText;
-    public TextMeshProUGUI levelText;
-    public TextMeshProUGUI limText;
-    public TextMeshProUGUI currText;
-    public TextMeshProUGUI atkStatText2;
-    public TextMeshProUGUI defStatText2;
-    public TextMeshProUGUI evaStatText2;
-    public TextMeshProUGUI hpStatText2;
-    public TextMeshProUGUI spdStatText2;
-    public Image playerImage;
-    public Sprite maleSprite;
-    public Sprite femaleSprite;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI archetypeText;
+    [SerializeField] private TextMeshProUGUI bitsText;
+    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI limText;
+    [SerializeField] private TextMeshProUGUI currText;
+    [SerializeField] private TextMeshProUGUI atkStatText2;
+    [SerializeField] private TextMeshProUGUI defStatText2;
+    [SerializeField] private TextMeshProUGUI evaStatText2;
+    [SerializeField] private TextMeshProUGUI hpStatText2;
+    [SerializeField] private TextMeshProUGUI spdStatText2;
+    [SerializeField] private Image playerImage;
+    [SerializeField] private Sprite maleSprite;
+    [SerializeField] private Sprite femaleSprite;
 
     [Header("Intros")]
-    public IntroObject[] IntroObjects;
+    [SerializeField] private IntroObject[] IntroObjects;
 
-    private bool generatedMove = false;
-
+    //public variable
     [Serializable]
     public struct IntroObject
     {
@@ -53,7 +57,7 @@ public class Intro : MonoBehaviour, IDialogue
         public int state;
     }
 
-    //Private Fields
+    //private variables
     private Story story;
     private int currentState;
     private string saveTheWorld = "";
@@ -64,11 +68,7 @@ public class Intro : MonoBehaviour, IDialogue
     private int letterIndex = 0;
     private string playerName;
     private Player player;
-
-    public void StartDialogue()
-    {
-        DialogueManager.Instance.DisplayNextDialogue(DialogueData);
-    }
+    private bool generatedMove = false;
 
     // Start is called before the first frame update
     void Start()
@@ -113,6 +113,15 @@ public class Intro : MonoBehaviour, IDialogue
         }
     }
 
+    public void StartDialogue()
+    {
+        DialogueManager.Instance.DisplayNextDialogue(DialogueData);
+    }
+
+    /// <summary>
+    /// Initializes the Dialogue to start
+    /// the introduction in the IntroScene.
+    /// </summary>
     private void Init()
     {
         ActivateState(0);
@@ -122,6 +131,11 @@ public class Intro : MonoBehaviour, IDialogue
         currentState = (int)story.variablesState["currentState"];
     }
 
+    /// <summary>
+    /// Handles the first part of the introduction
+    /// in the IntroScene. This part determines if
+    /// you wish to play the game.
+    /// </summary>
     private void Intro1()
     {
         if (story != null && saveTheWorld.Length <= 0)
@@ -134,6 +148,11 @@ public class Intro : MonoBehaviour, IDialogue
         Debug.Log(saveTheWorld);
     }
 
+    /// <summary>
+    /// Handles the second part of the introduction
+    /// in the IntroScene. This part determines if you
+    /// have selected an avatar.
+    /// </summary>
     private void Intro2()
     {
         ActivateState(2);
@@ -141,6 +160,11 @@ public class Intro : MonoBehaviour, IDialogue
             story.variablesState["sex"] = sex;
     }
 
+    /// <summary>
+    /// Handles the third part of the introduction
+    /// in the IntroScene. This part determines if
+    /// you have selected a class.
+    /// </summary>
     private void Intro3()
     {
         ActivateState(3);
@@ -150,6 +174,11 @@ public class Intro : MonoBehaviour, IDialogue
             story.variablesState["class"] = playerClass;
     }
 
+    /// <summary>
+    /// Handles the fourth part of the introduction
+    /// in the IntroScene. This part determines if you
+    /// have selected an archetype.
+    /// </summary>
     private void Intro4()
     {
         switch (playerClass)
@@ -184,6 +213,11 @@ public class Intro : MonoBehaviour, IDialogue
             story.variablesState["archetype"] = true;
     }
 
+    /// <summary>
+    /// Handles the fifth part of the introduction
+    /// in the IntroScene. This part detemines if
+    /// you have created a name.
+    /// </summary>
     private void Intro5()
     {
         ActivateState(5);
@@ -219,6 +253,11 @@ public class Intro : MonoBehaviour, IDialogue
         playerName = newName;
     }
 
+    /// <summary>
+    /// Handles the last part of the introduction
+    /// in the IntroScene. This part determines if
+    /// you are satisfied with your choices.
+    /// </summary>
     private void Intro6()
     {
         player.SetName(playerName);
@@ -238,6 +277,10 @@ public class Intro : MonoBehaviour, IDialogue
         ActivateState(6);
     }
 
+    /// <summary>
+    /// Starts the game after you have
+    /// created your avatar in the IntroScene.
+    /// </summary>
     private void StartGame()
     {
         ActivateState(0);
@@ -247,6 +290,11 @@ public class Intro : MonoBehaviour, IDialogue
         SceneLoader.Instance.LoadScene("Chapter Scene", TransitionType.FADE_TO_BLACK);
     }
 
+    /// <summary>
+    /// Deactivates any other state
+    /// with the exception of one.
+    /// </summary>
+    /// <param name="state"></param>
     private void ActivateState(int state)
     {
         foreach (IntroObject io in IntroObjects)
@@ -258,11 +306,23 @@ public class Intro : MonoBehaviour, IDialogue
         }
     }
 
+    /// <summary>
+    /// Assigns the sex value you selected
+    /// in the UI to the variable sex to be
+    /// stored for later.
+    /// </summary>
+    /// <param name="s"></param>
     public void SelectSex(string s)
     {
         sex = s;
     }
 
+    /// <summary>
+    /// Assigns the class value you selected
+    /// in the UI to the variable playerClass to be
+    /// stored for later.
+    /// </summary>
+    /// <param name="c"></param>
     public void SelectClass(string c)
     {
         playerClass = c;
@@ -287,6 +347,11 @@ public class Intro : MonoBehaviour, IDialogue
         }
     }
 
+    /// <summary>
+    /// Displays archetype information as well as
+    /// stores the value in the variable archetype.
+    /// </summary>
+    /// <param name="option"></param>
     public void SelectArchetype(int option)
     {
         archetype = option == 1 ? archetypeButton1Text.text : archetypeButton2Text.text;
@@ -301,6 +366,11 @@ public class Intro : MonoBehaviour, IDialogue
         story.variablesState["archetype"] = true;
     }
 
+    /// <summary>
+    /// Handles keyboard input on UI in order
+    /// for player to create their name.
+    /// </summary>
+    /// <param name="letter"></param>
     public void AddLetter(string letter)
     {
         char[] newName = nameTextField.text.ToCharArray();
@@ -330,6 +400,10 @@ public class Intro : MonoBehaviour, IDialogue
         letterIndex = Mathf.Clamp(0, !letter.Equals("_") ? letterIndex + 1 : letterIndex, 9);
     }
 
+    /// <summary>
+    /// Alternates between uppercase or lowercase on all the
+    /// buttons in the keyboard UI.
+    /// </summary>
     private void Shift()
     {
         foreach (TextMeshProUGUI key in keyboard)
