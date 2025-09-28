@@ -1,13 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// NPCPathFinder is a class
+/// </summary>
 public class NPCPathFinder : MonoBehaviour
 {
-    public WayPoint[] _wayPoints;
+    //Serialized variables
+    [SerializeField] private WayPoint[] _wayPoints;
     [SerializeField] protected float _speed;
     [SerializeField] protected float _waitTime;
-    public PlayerSprite _npcSprite;
+    [SerializeField] private PlayerSprite _npcSprite;
 
+    //protected variables
     protected Vector3 _startPosition;
     protected int _wayPointIndex;
     protected WalkCycleState _walkCycleState;
@@ -43,6 +48,12 @@ public class NPCPathFinder : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the NPC can travel to a certain
+    /// WayPoint. If it can, it will use Vector2.MoveTowards
+    /// to traverse to that location. This method works 
+    /// when it is called in the Update() method (called every frame).
+    /// </summary>
     private void TravelToWayPoint()
     {
         if (_walkCycleState.Equals(WalkCycleState.CANNOT_MOVE) || _walkCycleState.Equals(WalkCycleState.WAITING))
@@ -52,12 +63,26 @@ public class NPCPathFinder : MonoBehaviour
         transform.position = Vector2.MoveTowards(_startPosition, _wayPoints[_wayPointIndex].Position, Time.fixedDeltaTime * _speed);
     }
 
+    /// <summary>
+    /// Checks if NPC has made it
+    /// to WayPoint.
+    /// </summary>
+    /// <returns><c>TRUE</c> if NPC made it to WayPoint. Otherwise it returns <c>FALSE</c></returns>
     private bool MadeItToWayPoint()
     {
-        //TODO: placeholder logic. find better way to test if npc made it to waypoint. - Ese Omene
+        //TODO: placeholder logic. find better way to test if npc made it to waypoint.
         return Vector3.Distance(transform.position, _wayPoints[_wayPointIndex].Position) < 0.005f;
     }
 
+    /// <summary>
+    /// After randomly deciding a duration from a 
+    /// specified range, this method will set the
+    /// NPC's WalkCycleState to CANNOT_MOVE until
+    /// the duration is over. Once the time has ran
+    /// out, this method sets the NPC's WalkCycleState
+    /// to WALKING.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator WaitToTravel()
     {
         if (_waiting)
@@ -70,6 +95,12 @@ public class NPCPathFinder : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This method indexes the next WayPoint
+    /// in the array to go through. If the NPC
+    /// has reached the end of the array, then
+    /// this metod resets the index to 0.
+    /// </summary>
     private void GetNextWayPoint()
     {
         _npcSprite.PerformIdleAnimation(_wayPoints[_wayPointIndex++].Direction);
@@ -77,6 +108,12 @@ public class NPCPathFinder : MonoBehaviour
             _wayPointIndex = 0;
     }
 
+    /// <summary>
+    /// This method returns the animation
+    /// name associated with the direction
+    /// the player is facing.
+    /// </summary>
+    /// <returns>The name of the animation</returns>
     private string GetDirectionString()
     {
         return _wayPoints[_wayPointIndex].Direction switch

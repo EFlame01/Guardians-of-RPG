@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -7,20 +6,23 @@ using UnityEngine;
 /// </summary>
 public class NPCCompanion : MonoBehaviour
 {
-    public PlayerSprite npcSprite;
-    public CharacterPos targetPos;
-    public CharacterPos charPos;
-    public int zOffset;
-    public string npcID;
-    public string[] flags;
-    public bool[] flagValues;
-    public string cutSceneFlag;
+    //Serialized variables
+    [SerializeField] private PlayerSprite npcSprite;
+    [SerializeField] private CharacterPos targetPos;
+    [SerializeField] private CharacterPos charPos;
+    [SerializeField] private int zOffset;
+    [SerializeField] private string npcID;
+    [SerializeField] private string[] flags;
+    [SerializeField] private bool[] flagValues;
+    [SerializeField] private string cutSceneFlag;
+
+    //private variables
     private float _speed;
     private int lastIndex = 0;
     private NpcData _npcData;
 
     /// <summary>
-    /// When enabled, NPCCompanion will check the NPC data
+    /// When enabled, <c>NPCCompanion</c> will check the NPC data
     /// to ensure that the character is in the last position
     /// it was saved in, and whether or not the gameObject should
     /// be active based on the Save data.
@@ -43,7 +45,7 @@ public class NPCCompanion : MonoBehaviour
     }
 
     /// <summary>
-    /// When stated, NPCCompanion will set the NPC's speed
+    /// When stated, <c>NPCCompanion</c> will set the NPC's speed
     /// to the player's speed, and sets the start position
     /// of the NPC Companion.
     /// </summary>
@@ -54,7 +56,7 @@ public class NPCCompanion : MonoBehaviour
     }
 
     /// <summary>
-    /// At every frame, NPCCompanion will check
+    /// At every frame, <c>NPCCompanion</c> will check
     /// if the WayPoints should be reset based on
     /// the method <c>CheckToClearWayPoints</c>
     /// </summary>
@@ -64,7 +66,7 @@ public class NPCCompanion : MonoBehaviour
     }
 
     /// <summary>
-    /// During the fixed update, NPCCompanion will 
+    /// During the fixed update, <c>NPCCompanion</c> will 
     /// check the WayPoints and travel to them at 
     /// every frame the player moves.
     /// </summary>
@@ -179,7 +181,7 @@ public class NPCCompanion : MonoBehaviour
     }
 
     /// <summary>
-    /// InCutScene() checks if the NPCCompanion is attached to a cut
+    /// InCutScene() checks if the <c>NPCCompanion</c> is attached to a cut
     /// scene or is currently in a cut scene. If it meets one of these
     /// criteria, it will return TRUE. If it does not, it will return 
     /// FALSE.

@@ -7,13 +7,15 @@ using UnityEngine;
 /// </summary>
 public class Portal : MonoBehaviour
 {
+    //Serialized variables
     [SerializeField] private string _sceneName;
     [SerializeField] private Vector3 _scenePosition;
     [SerializeField] private PlayerDirection _direction;
     [SerializeField] private TransitionType _transitionType;
     [SerializeField] private bool _fadeSongOut;
 
-    private bool traveled;
+    //private variables
+    private bool _traveled;
 
     /// <summary>
     /// Sends player to a new location.
@@ -34,6 +36,7 @@ public class Portal : MonoBehaviour
         SceneLoader.Instance.LoadScene(_sceneName, _transitionType);
     }
 
+    //Collision Methods
     public void OnTriggerEnter2D(Collider2D collider2D)
     {
         if (!collider2D.gameObject.CompareTag("Player"))
@@ -42,9 +45,9 @@ public class Portal : MonoBehaviour
         if (GameManager.Instance.PlayerState.Equals(PlayerState.TRANSITION))
             return;
 
-        if (!traveled)
+        if (!_traveled)
         {
-            traveled = true;
+            _traveled = true;
             SendToNewLocation();
         }
     }
