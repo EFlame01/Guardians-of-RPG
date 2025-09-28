@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class StaticInstance<T> : MonoBehaviour where T : MonoBehaviour
 {
-    public static T Instance {get; protected set;}
-    
+    public static T Instance { get; protected set; }
+
     protected virtual void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
             Instance = this as T;
     }
 
@@ -19,11 +17,11 @@ public abstract class StaticInstance<T> : MonoBehaviour where T : MonoBehaviour
     }
 }
 
-public abstract class Singleton<T> : StaticInstance<T> where T : MonoBehaviour 
+public abstract class Singleton<T> : StaticInstance<T> where T : MonoBehaviour
 {
     protected override void Awake()
     {
-        if(Instance != null)
+        if (Instance != null)
             Destroy(gameObject);
         base.Awake();
     }
