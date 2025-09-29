@@ -36,7 +36,7 @@ public class SceneLoader : Singleton<SceneLoader>
 
     private void Start()
     {
-        if(_transitionOnStart)
+        if (_transitionOnStart)
             ShowScene();
     }
 
@@ -54,7 +54,7 @@ public class SceneLoader : Singleton<SceneLoader>
         _transitionType = transType;
         Texture2D texture = _textureDictionary[_transitionType];
 
-        switch(_transitionType)
+        switch (_transitionType)
         {
             case TransitionType.FADE_TO_BLACK:
                 _transitionOnStart = true;
@@ -74,7 +74,7 @@ public class SceneLoader : Singleton<SceneLoader>
                 break;
             default:
                 _transitionOnStart = true;
-                if(texture == null)
+                if (texture == null)
                     return;
                 StartCoroutine(LoadWithTransition(nameOfScene, "battle_transition", texture, true));
                 break;
@@ -86,7 +86,7 @@ public class SceneLoader : Singleton<SceneLoader>
     /// </summary>
     public void ShowScene()
     {
-        switch(_transitionType)
+        switch (_transitionType)
         {
             case TransitionType.FADE_TO_BLACK:
                 StartCoroutine(LoadWithFade(null, "black_to_scene"));
@@ -104,7 +104,7 @@ public class SceneLoader : Singleton<SceneLoader>
         //checks if you should activate the walkIn CutScene
         //  by checking the variable and if there are any active
         //  cut scenes.
-        if(!walkInAnimation)
+        if (!walkInAnimation)
             return;
 
         WalkIn();
@@ -118,14 +118,12 @@ public class SceneLoader : Singleton<SceneLoader>
     /// </summary>
     private void WalkIn()
     {
-        Debug.Log("Test 1: Made it to WalkIn()...");
         walkInAnimation = false;
 
-        if(CutScenesActive())
+        if (CutScenesActive())
             return;
-                
-        Debug.Log("Test 2: No cut scenes are active...");
-        switch(PlayerSpawn.PlayerDirection)
+
+        switch (PlayerSpawn.PlayerDirection)
         {
             case PlayerDirection.DOWN:
                 _walkCutScene.director = _playableDirectors[Units.DOWN];
@@ -157,7 +155,6 @@ public class SceneLoader : Singleton<SceneLoader>
                 break;
         }
 
-        Debug.Log("Test 3: PlayableDirector used: " + (_walkCutScene.director != null));
         _walkCutScene.gameObject.SetActive(true);
         _walkCutScene.StartCutScene();
     }
@@ -171,16 +168,13 @@ public class SceneLoader : Singleton<SceneLoader>
     /// <returns>TRUE if there is an active CutScene. FALSE otherwise.</returns>
     private bool CutScenesActive()
     {
-        if(_cutScenes.Length <= 0)
+        if (_cutScenes.Length <= 0)
             return false;
 
-        foreach(CutScene cutScene in _cutScenes)
+        foreach (CutScene cutScene in _cutScenes)
         {
-            if(cutScene != null && cutScene.gameObject.activeSelf && cutScene.PlayOnStart)
-            {
-                Debug.Log("Active Cut Scene: " + cutScene.gameObject.name + " " + cutScene.gameObject.activeSelf);
+            if (cutScene != null && cutScene.gameObject.activeSelf && cutScene.PlayOnStart)
                 return true;
-            }
         }
 
         return false;
@@ -196,14 +190,14 @@ public class SceneLoader : Singleton<SceneLoader>
     private IEnumerator LoadWithFade(string nameOfScene, string nameOfAnimation)
     {
         _transitionAnimator.Play(nameOfAnimation);
-        
+
         yield return new WaitForSeconds(1f);
-        
-        if(nameOfScene != null)
+
+        if (nameOfScene != null)
             SceneManager.LoadScene(nameOfScene);
         else
         {
-            if(GameManager.Instance.PlayerState != PlayerState.CUT_SCENE)
+            if (GameManager.Instance.PlayerState != PlayerState.CUT_SCENE)
                 GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
         }
     }
@@ -219,7 +213,7 @@ public class SceneLoader : Singleton<SceneLoader>
     /// <returns></returns>
     private IEnumerator LoadWithTransition(string nameOfScene, string nameOfAnimation, Texture2D texture, bool battleTransition)
     {
-        if(nameOfAnimation != null)
+        if (nameOfAnimation != null)
         {
             _transitionAnimator.Play(nameOfAnimation);
             yield return new WaitForSeconds(0.5f);
@@ -229,8 +223,8 @@ public class SceneLoader : Singleton<SceneLoader>
         _material.SetTexture("_TransitionTex", texture);
         _material.SetFloat("_Cutoff", 0f);
         float cutOffValue = 0f;
-        
-        while(cutOffValue <= 1)
+
+        while (cutOffValue <= 1)
         {
             _material.SetFloat("_Cutoff", cutOffValue);
             cutOffValue += 0.05f;
@@ -239,7 +233,7 @@ public class SceneLoader : Singleton<SceneLoader>
         _material.SetFloat("_Cutoff", 1f);
         _transitionType = battleTransition ? TransitionType.OPENING_BATTLE : _transitionType;
         _transitionOnStart = true;
-        
+
         //load next scene
         SceneManager.LoadScene(nameOfScene);
     }
@@ -254,20 +248,20 @@ public class SceneLoader : Singleton<SceneLoader>
         _material.SetFloat("_Cutoff", 1f);
         _transitionTextureCanvas.gameObject.SetActive(true);
         float cutOffValue = 1f;
-        
-        while(cutOffValue >= 0)
+
+        while (cutOffValue >= 0)
         {
             _material.SetFloat("_Cutoff", cutOffValue);
             cutOffValue -= 0.05f;
             yield return new WaitForSeconds(0.04f);
         }
-        
+
         _material.SetFloat("_Cutoff", 0f);
         _transitionOnStart = false;
         _transitionTextureCanvas.gameObject.SetActive(false);
-        
-        if(GameManager.Instance.PlayerState != PlayerState.CUT_SCENE)
-                GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
+
+        if (GameManager.Instance.PlayerState != PlayerState.CUT_SCENE)
+            GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }
 
     /// <summary>
@@ -275,7 +269,7 @@ public class SceneLoader : Singleton<SceneLoader>
     /// </summary>
     private void InitTextureDictionary()
     {
-        foreach(TransitionTexture transTexture in _transTexturesList)
+        foreach (TransitionTexture transTexture in _transTexturesList)
             _textureDictionary[transTexture.Type] = transTexture.Texture;
     }
 }

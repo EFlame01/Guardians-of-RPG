@@ -431,32 +431,26 @@ public class BattleActionEffect : MonoBehaviour
         }
         else if (_effect == "MOVE")
         {
-            Debug.Log("effect is: " + _effect);
             Move move = _user.BattleStatus.ChosenMove;
             if (move.DidMoveHit(_user, Target))
             {
-                Debug.Log("move hit");
                 if (Target.BaseStats.Hp == 0)
                 {
                     _effectText.Add(Target.Name + " is already knocked out!");
-                    Debug.Log(Target.Name + " is already knocked out!");
                     return false;
                 }
                 if (Target.BattleStatus.ProtectionStatus != "NONE")
                 {
                     _effectText.Add(Target.Name + " protected themselves!");
-                    Debug.Log(Target.Name + " protected themselves!");
                     return false;
                 }
             }
             else
             {
                 _effectText.Add("But the move missed!");
-                Debug.Log("But the move missed!");
                 return false;
             }
         }
-        Debug.Log(_effect + " was successful...");
         return true;
     }
 

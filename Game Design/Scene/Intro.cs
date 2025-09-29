@@ -68,7 +68,7 @@ public class Intro : MonoBehaviour, IDialogue
     private int letterIndex = 0;
     private string playerName;
     private Player player;
-    private bool generatedMove = false;
+    private volatile bool generatedMove = false;
 
     // Start is called before the first frame update
     void Start()
@@ -144,8 +144,6 @@ public class Intro : MonoBehaviour, IDialogue
             if (!saveTheWorld.Equals("Yes") && DialogueManager.Instance.DialogueEnded)
                 SceneLoader.Instance.LoadScene("Start Scene", TransitionType.FADE_TO_BLACK);
         }
-
-        Debug.Log(saveTheWorld);
     }
 
     /// <summary>

@@ -14,6 +14,9 @@ using System;
 /// </summary>
 public class TextBox : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
+    private static WaitForSeconds _waitForSeconds0_25 = new WaitForSeconds(0.25f);
+    private static WaitForSeconds _waitForSeconds0_01 = new WaitForSeconds(0.01f);
     [SerializeField] protected string TextBoxName;
     public TextMeshProUGUI TextMeshComponent;
     public Scrollbar ScrollBar;
@@ -101,16 +104,16 @@ public class TextBox : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogWarning("TextBox does not have a TextMeshPro component: " + e.Message);
+            Debug.LogWarning("WARNING: " + e.Message);
         }
-        yield return new WaitForSeconds(0.01f);
+        yield return _waitForSeconds0_01;
 
         //Method placed here to always reset scroll bar after opening text box
         ResetScrollBar();
 
         AudioManager.Instance.PlaySoundEffect("open_01");
         Animator.Play(TextBoxName + "_open");
-        yield return new WaitForSeconds(0.25f);
+        yield return _waitForSeconds0_25;
         _textBoxOpened = true;
     }
 
@@ -122,7 +125,7 @@ public class TextBox : MonoBehaviour
     {
         AudioManager.Instance.PlaySoundEffect("close_04");
         Animator.Play(TextBoxName + "_close");
-        yield return new WaitForSeconds(0.5f);
+        yield return _waitForSeconds0_5;
         if (DestroyTextBox)
             Destroy(gameObject);
     }
@@ -135,7 +138,7 @@ public class TextBox : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogWarning("Error from ResetScrollBar(): " + e.Message);
+            Debug.LogWarning("WARNING from ResetScrollBar(): " + e.Message);
         }
     }
 

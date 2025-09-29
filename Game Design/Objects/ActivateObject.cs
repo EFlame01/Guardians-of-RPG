@@ -50,8 +50,6 @@ public class ActivateObject : MonoBehaviour
 
                 if (!criteriaExists || !criteriaTheSame)
                     return false;
-
-                Debug.Log(criteria.storyFlagID + ": " + StoryFlagManager.FlagDictionary[criteria.storyFlagID].Value);
             }
         }
         catch (Exception e)
@@ -87,15 +85,13 @@ public class ActivateObject : MonoBehaviour
 
                 if (!criteriaExists || !criteriaTheSame)
                     deactivate = false;
-
-                Debug.Log(criteria.storyFlagID + ": " + StoryFlagManager.FlagDictionary[criteria.storyFlagID].Value);
             }
 
             return deactivate;
         }
         catch (Exception e)
         {
-            Debug.LogWarning(e.ToString());
+            Debug.LogWarning("WARNING: " + e.Message);
         }
 
         return false;

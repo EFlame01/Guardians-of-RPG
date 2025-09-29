@@ -22,12 +22,12 @@ public class MoveMaker : Singleton<MoveMaker>
     /// <returns>the <c>Move</c> objects or <c>null</c> if the move could not be found.</returns>
     public Move GetMoveBasedOnName(string name)
     {
-        if(name == null) 
+        if (name == null)
             return null;
-            
+
         string[] mainAttributes;
 
-        DataEncoder.Instance.DecodeFile(_moveDatabasePath);   
+        DataEncoder.Instance.DecodeFile(_moveDatabasePath);
         mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 
@@ -52,19 +52,20 @@ public class MoveMaker : Singleton<MoveMaker>
         moveListData = DataEncoder.GetData().Split('\n');
         DataEncoder.ClearData();
         int index = 0;
-        foreach(string moveData in moveListData)
+        foreach (string moveData in moveListData)
         {
             try
             {
-                if(index != 0)
+                if (index != 0)
                 {
                     string[] moveAttributes = moveData.Split(',');
-                    if(int.Parse(moveAttributes[7]) <= level && (moveAttributes[8].Equals(archetype) || moveAttributes[8].Equals(classtype)))
+                    if (int.Parse(moveAttributes[7]) <= level && (moveAttributes[8].Equals(archetype) || moveAttributes[8].Equals(classtype)))
                         listOfMoves.Add(GetMove(moveAttributes, moveAttributes[5]));
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
-                Debug.LogWarning("Caught Exception... i dunno what happened...\n" + e.ToString() + "\n" + moveData);
+                Debug.LogWarning("WARNING: " + e.Message);
                 return listOfMoves.ToArray();
             }
             index++;
@@ -84,7 +85,7 @@ public class MoveMaker : Singleton<MoveMaker>
         Move move = null;
         string[] additionalAttributes;
 
-        switch(moveType)
+        switch (moveType)
         {
             case "REGULAR":
                 move = new RegularMove

@@ -135,10 +135,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         _textBoxType = (int)CurrentStory.variablesState["textBoxType"];
 
         if (_originalText == null || _originalText.Length <= 0)
-        {
-            Debug.Log(_originalText);
             EndDialogue();
-        }
         else
         {
             switch (_textBoxType)
@@ -245,7 +242,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         }
         catch (Exception e)
         {
-            Debug.LogWarning("Error in FinishEarly(): " + e.Message);
+            Debug.LogWarning("WARNING: " + e.Message);
         }
     }
 
@@ -278,7 +275,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         }
         catch (Exception e)
         {
-            Debug.LogWarning("Error at choice index" + index + ": " + e.Message);
+            Debug.LogWarning("WARNING: " + e.Message);
         }
     }
 
