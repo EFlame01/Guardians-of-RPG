@@ -7,16 +7,16 @@ using UnityEngine;
 ///</summary>
 public class Move
 {
-    public string Name {get; protected set;}
-    public string Description {get; protected set;}
-    public double Power {get; protected set;}
-    public double Accuracy {get; protected set;}
-    public string ArchetypeName {get; protected set;}
-    public int Level {get; protected set;}
-    public MoveTarget Target {get; protected set;}
-    public MoveType Type {get; protected set;}
-    public double EP {get; protected set;}
-    public Effect[] SecondaryEffects {get; protected set;}
+    public string Name { get; protected set; }
+    public string Description { get; protected set; }
+    public double Power { get; protected set; }
+    public double Accuracy { get; protected set; }
+    public string ArchetypeName { get; protected set; }
+    public int Level { get; protected set; }
+    public MoveTarget Target { get; protected set; }
+    public MoveType Type { get; protected set; }
+    public double EP { get; protected set; }
+    public Effect[] SecondaryEffects { get; protected set; }
 
     ///<summary>
     /// Let's the <paramref name="user"/> perform
@@ -53,7 +53,7 @@ public class Move
     {
         int percent = Random.Range(0, 100) + 1;
         double chanceToHit = Accuracy * user.BaseStats.Acc;
-        double chanceOfNotDodging = 1 - (double)target.BaseStats.Eva/(double)target.BaseStats.GetBaseStatTotal();
+        double chanceOfNotDodging = 1 - (double)target.BaseStats.Eva / (double)target.BaseStats.GetBaseStatTotal();
         double CTH_PLUS_COND = chanceToHit + chanceOfNotDodging;
         double CTH_TIMES_COND = chanceToHit * chanceOfNotDodging;
 
@@ -79,24 +79,21 @@ public class Move
     ///<returns> The calculated damage for said move.</returns>
     protected int CalculateDamage(Character user, Character target, double epMultiplyer)
     {
-        double critPercent = (double) ((Random.Range(0, 100) + 1 )/100.0);
+        double critPercent = (double)((Random.Range(0, 100) + 1) / 100.0);
         int userAtk = user.BaseStats.Atk;
         int targetDef = target.BaseStats.Def;
         int dmg;
         double newPower = Power;
         double chanceOfCrit = user.BaseStats.Crt;
 
-        if(user.Archetype.ClassName == ArchetypeName || user.Archetype.ArchetypeName == ArchetypeName)
+        if (user.Archetype.ClassName == ArchetypeName || user.Archetype.ArchetypeName == ArchetypeName)
             newPower += Power * Units.STAB_DMG;
-        if(chanceOfCrit >= critPercent)
+        if (chanceOfCrit >= critPercent)
             newPower += Power * Units.CRIT_DMG;
-        if(epMultiplyer > 0)
+        if (epMultiplyer > 0)
             newPower += Power * epMultiplyer;
-        
-        userAtk = (int)(userAtk * newPower);
 
-        Debug.Log(userAtk + " - " + targetDef);
-        
+        userAtk = (int)(userAtk * newPower);
         dmg = Mathf.Clamp(userAtk - targetDef, 1, userAtk);
         return dmg;
     }
@@ -123,7 +120,7 @@ public class Move
         };
 
     }
-    
+
     /// <summary>
     /// Converts the string parameter <paramref name="moveTarget"/>
     /// into a <c>MoveTarget</c> enunm.
