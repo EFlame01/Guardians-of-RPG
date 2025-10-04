@@ -28,7 +28,10 @@ public class RollMechanic : MonoBehaviour
 
     public IEnumerator PlayRollAnimation()
     {
-        RollAnimator.Play(RollNumber.ToString());
+        if(RollAnimator.HasState(0, Animator.StringToHash(RollNumber.ToString())))
+            RollAnimator.Play(RollNumber.ToString());
+        else
+            Debug.LogWarning("WARNING: Animation " + RollNumber.ToString() + " could not be played...");
         yield return _waitForSeconds1_25;
     }
 

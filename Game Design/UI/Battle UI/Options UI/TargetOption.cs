@@ -59,7 +59,7 @@ public class TargetOption : MonoBehaviour
                 {
                     foreach (BattleCharacterData data in BattleInformation.BattleAlliesData)
                     {
-                        if (data.IsPlayer)
+                        if (data != null && data.IsPlayer)
                             MakeOneButton(Player.Instance(), data);
                         else if (data.CharacterData.Equals(character.Id))
                             MakeOneButton(character, data);
