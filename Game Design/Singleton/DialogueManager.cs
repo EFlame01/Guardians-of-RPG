@@ -285,6 +285,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         _clickedAlready = false;
         if (choices.Count <= 0 || _originalText.Length <= 0)
         {
+            Debug.LogWarning("WARNING: Dialiogue should end here.");
             EndDialogue();
             return;
         }
