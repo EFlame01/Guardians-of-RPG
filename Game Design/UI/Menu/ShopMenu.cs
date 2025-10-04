@@ -111,6 +111,7 @@ public class ShopMenu : MenuState
             return;
         }
 
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.PURCHASED);
         player.Inventory.AddItem(_item.Name, _itemAmount);
         player.SetBits(player.Bits - price);
         SetUpShop();
@@ -134,6 +135,7 @@ public class ShopMenu : MenuState
             return;
         }
 
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.PURCHASED);
         player.Inventory.AddItem(_item.Name, -1 * _itemAmount);
         player.SetBits(player.Bits + price);
         SetUpShop();

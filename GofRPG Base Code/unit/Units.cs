@@ -50,25 +50,25 @@ public static class Units
     public const int SPD_INDEX = 4;
     public const int ELX_INDEX = 5;
 
-    public const double BASE_ACC = 100.0/100.0;
-    public const double BASE_CRT = 5.0/100.0;
-    public const double LOWEST_CRT = 125.0/10000.0;
+    public const double BASE_ACC = 100.0 / 100.0;
+    public const double BASE_CRT = 5.0 / 100.0;
+    public const double LOWEST_CRT = 125.0 / 10000.0;
 
-    public const double STAGE_POS_6 = 8.0/2.0;
-    public const double STAGE_POS_5 = 7.0/2.0;
-    public const double STAGE_POS_4 = 6.0/2.0;
-    public const double STAGE_POS_3 = 5.0/2.0;
-    public const double STAGE_POS_2 = 4.0/2.0;
-    public const double STAGE_POS_1 = 3.0/2.0;
-    public const double STAGE_0 = 2.0/2.0;
-    public const double STAGE_NEG_1 = 2.0/3.0;
-    public const double STAGE_NEG_2 = 2.0/4.0;
-    public const double STAGE_NEG_3 = 2.0/5.0;
-    public const double STAGE_NEG_4 = 2.0/6.0;
-    public const double STAGE_NEG_5 = 2.0/7.0;
-    public const double STAGE_NEG_6 = 2.0/8.0;
+    public const double STAGE_POS_6 = 8.0 / 2.0;
+    public const double STAGE_POS_5 = 7.0 / 2.0;
+    public const double STAGE_POS_4 = 6.0 / 2.0;
+    public const double STAGE_POS_3 = 5.0 / 2.0;
+    public const double STAGE_POS_2 = 4.0 / 2.0;
+    public const double STAGE_POS_1 = 3.0 / 2.0;
+    public const double STAGE_0 = 2.0 / 2.0;
+    public const double STAGE_NEG_1 = 2.0 / 3.0;
+    public const double STAGE_NEG_2 = 2.0 / 4.0;
+    public const double STAGE_NEG_3 = 2.0 / 5.0;
+    public const double STAGE_NEG_4 = 2.0 / 6.0;
+    public const double STAGE_NEG_5 = 2.0 / 7.0;
+    public const double STAGE_NEG_6 = 2.0 / 8.0;
 
-    public const double BURN_DMG = 1.0/10.0;
+    public const double BURN_DMG = 1.0 / 10.0;
 
     public const int FREEZE_CHANCE_1 = 25;
     public const int FREEZE_CHANCE_2 = 50;
@@ -78,9 +78,9 @@ public static class Units
     public const int PETRIFIED_RATE = 90;
     public const int PETRIFIED_ROUNDS = 3;
 
-    public const double POISON_DMG_STG_1 = 5.0/100.0;
-    public const double POISON_DMG_STG_2 = 10.0/100.0;
-    public const double POISON_DMG_STG_3 = 15.0/100.0;
+    public const double POISON_DMG_STG_1 = 5.0 / 100.0;
+    public const double POISON_DMG_STG_2 = 10.0 / 100.0;
+    public const double POISON_DMG_STG_3 = 15.0 / 100.0;
 
     public const int STUN_PROB_1 = 25;
     public const int STUN_PROB_2 = 50;
@@ -97,16 +97,16 @@ public static class Units
     public const int EXHAUSTION_LEVEL_6 = 6;
 
     public const int CONFUSION_RATE = 30;
-    public const double CONFUSION_HIT = 1.0/8.0;
+    public const double CONFUSION_HIT = 1.0 / 8.0;
 
     public static Move BASE_ATTACK = new RegularMove("Base Attack", "User performs a normal attack for no Elixir.", 0.4, 1.0, "NONE", 1, MoveTarget.ENEMY, MoveType.REGULAR, 0, null);
 
-    public const double SUCCESSION_RATE_1 = 1.0/4.0;
-    public const double SUCCESSION_RATE_2 = 2.0/4.0;
-    public const double SUCCESSION_RATE_3 = 3.0/4.0;
-    public const double SUCCESSION_RATE_4 = 4.0/4.0;
-    
-    public const double ELIXIR_REGEN_RATE = 1.0/4.0;
+    public const double SUCCESSION_RATE_1 = 1.0 / 4.0;
+    public const double SUCCESSION_RATE_2 = 2.0 / 4.0;
+    public const double SUCCESSION_RATE_3 = 3.0 / 4.0;
+    public const double SUCCESSION_RATE_4 = 4.0 / 4.0;
+
+    public const double ELIXIR_REGEN_RATE = 1.0 / 4.0;
 
     public const string INITIALIZE_STATE = "INITIALIZE STATE";
     public const string BEFORE_ROUND_STATE = "BEFORE ROUND STATE";
@@ -168,7 +168,7 @@ public static class Units
 
     public class SoundEffect
     {
-        public const string DOOR_OPEN_1 = "door_open_1";
+        public const string DOOR_OPEN_1 = "door_open_01";
         public const string SCROLL_1 = "scroll_05";
         public const string OPEN_UI_1 = "open_01";
         public const string CLOSE_UI_4 = "close_04";
@@ -176,6 +176,8 @@ public static class Units
         public const string RECIEVED = "recieved";
         public const string QUEST_COMPLETED = "quest_completed";
         public const string HEALTH_RECHARGE = "health_recharge";
+        public const string EMOTE = "emote";
+        public const string PURCHASED = "purchased";
     }
 
     public static string[] DATABASE_PATHS =
@@ -199,7 +201,7 @@ public static class Units
         "/database/story_flags.csv"
     };
 
-    public static string[] SAVE_DATA_PATHS = 
+    public static string[] SAVE_DATA_PATHS =
     {
         "/database",
         "/game_data/",

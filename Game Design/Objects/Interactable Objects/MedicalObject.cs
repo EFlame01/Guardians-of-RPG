@@ -98,6 +98,7 @@ public class MedicalObject : InteractableObject
         RestorePlayerHealth();
         yield return _waitForSeconds0_5;
 
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.HEALTH_RECHARGE);
         animator.Play("heal");
         yield return _waitForSeconds1_5;
 

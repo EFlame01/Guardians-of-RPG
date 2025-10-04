@@ -128,6 +128,7 @@ public class FightObject : NPCObject
     /// <returns></returns>
     private IEnumerator PerformExclamation()
     {
+        AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.EMOTE);
         exclamationEmote.Play("surprised");
         yield return new WaitForSeconds(1f);
         exclamationEmote.Play("no_emote");
