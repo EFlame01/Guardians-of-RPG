@@ -47,8 +47,8 @@ public class TargetOption : MonoBehaviour
         {
             case ItemType.FOOD:
             case ItemType.MEDICAL:
+                MakeOneButton(Player.Instance(), BattleInformation.BattlePlayerData);
                 List<Character> allySide = new List<Character>();
-                allySide.Add(Player.Instance());
                 allySide.AddRange(BattleSimStatus.Allies.ToArray());
                 foreach (Character c in BattleSimStatus.Graveyard)
                 {
@@ -59,19 +59,13 @@ public class TargetOption : MonoBehaviour
                 {
                     foreach (BattleCharacterData data in BattleInformation.BattleAlliesData)
                     {
-                        if (data != null && data.IsPlayer)
-                            MakeOneButton(Player.Instance(), data);
-                        else if (data.CharacterData.Equals(character.Id))
+                        if (data != null && data.CharacterData.Equals(character.Id))
                             MakeOneButton(character, data);
                     }
                 }
                 break;
             default:
-                foreach (BattleCharacterData data in BattleInformation.BattleAlliesData)
-                {
-                    if (data.IsPlayer)
-                        MakeOneButton(Player.Instance(), data);
-                }
+                MakeOneButton(Player.Instance(), BattleInformation.BattlePlayerData);
                 break;
         }
     }
@@ -97,10 +91,9 @@ public class TargetOption : MonoBehaviour
             case MoveTarget.ALLY:
                 foreach (Character ally in BattleSimStatus.Allies)
                 {
-                    //TODO: create button with their avatar on it
                     foreach (BattleCharacterData data in BattleInformation.BattleAlliesData)
                     {
-                        if (data.CharacterData.Equals(ally.Id))
+                        if (data != null && data.CharacterData.Equals(ally.Id))
                             MakeOneButton(ally, data);
                     }
                 }
@@ -109,9 +102,13 @@ public class TargetOption : MonoBehaviour
                 MakeAllButton(BattleSimStatus.Allies.ToArray(), null);
                 break;
             case MoveTarget.ALLY_SIDE:
-                List<Character> allySide = new List<Character>();
-                allySide.Add(Player.Instance());
+                //TODO: create one button for ally's side
+                List<Character> allySide = new List<Character>
+                {
+                    Player.Instance()
+                };
                 allySide.AddRange(BattleSimStatus.Allies.ToArray());
+                MakeAllButton(allySide.ToArray(), null);
                 break;
             case MoveTarget.EVERYONE:
                 //TODO: create one button for everyone

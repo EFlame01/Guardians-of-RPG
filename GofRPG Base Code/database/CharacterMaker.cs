@@ -11,7 +11,7 @@ public class CharacterMaker : Singleton<CharacterMaker>
 
     public Character GetCharacterBasedOnName(string name)
     {
-        if(name == null) 
+        if (name == null)
             return null;
 
         Character character = null;
@@ -20,17 +20,17 @@ public class CharacterMaker : Singleton<CharacterMaker>
         characterAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 
-        Move[] moveArray = 
+        Move[] moveArray =
         {
             MoveMaker.Instance.GetMoveBasedOnName(characterAttributes[7]),
             MoveMaker.Instance.GetMoveBasedOnName(characterAttributes[8]),
             MoveMaker.Instance.GetMoveBasedOnName(characterAttributes[9]),
             MoveMaker.Instance.GetMoveBasedOnName(characterAttributes[10])
         };
-        int[] statArray = 
+        int[] statArray =
         {
-            5, 
-            5, 
+            5,
+            5,
             5,
             5,
             5,
@@ -40,8 +40,8 @@ public class CharacterMaker : Singleton<CharacterMaker>
             characterAttributes[0],//id
             characterAttributes[1],//name
             characterAttributes[3],//type
-            Int32.Parse(characterAttributes[2]),//level
-            Int32.Parse(characterAttributes[4]),//gold (bits)
+            int.Parse(characterAttributes[2]),//level
+            int.Parse(characterAttributes[4]),//gold (bits)
             characterAttributes[5],//archetype
             characterAttributes[6],//sex
             moveArray,//moves (7,8,9,10)
@@ -51,7 +51,7 @@ public class CharacterMaker : Singleton<CharacterMaker>
         );
 
         //Update stats for character
-        for(int i = 2; i <= character.Level; i++)
+        for (int i = 2; i <= character.Level; i++)
         {
             character.BaseStats.LevelUpStats(character.Archetype.ChooseStatBoostRandomly());
         }

@@ -3,8 +3,6 @@ using UnityEngine.Timeline;
 using UnityEngine.Playables;
 using System.Linq;
 using System;
-using UnityEditorInternal;
-using TMPro.Examples;
 
 /// <summary>
 /// CutScene is a class that is used to create and start all 
