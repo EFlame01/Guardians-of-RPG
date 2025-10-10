@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /// <summary>
 /// SetChapterState is a class that extends from the 
 /// <c>CutSceneState</c> class. SetChapterState
