@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 /// <summary>
 /// TargetOption is a class that handles
@@ -18,7 +16,7 @@ public class TargetOption : MonoBehaviour
     public Options Options;
     public Button NextButton;
 
-    public void Start()
+    public void OnEnable()
     {
         InitializeTargetOption();
     }
@@ -31,13 +29,13 @@ public class TargetOption : MonoBehaviour
     private void InitializeTargetOption()
     {
         Player player = Player.Instance();
-
+        ClearTargets();
         if (player.BattleStatus.ChosenMove != null)
             DetermineTargetForMove();
         else if (player.BattleStatus.ChosenItem != null)
             DetermineTargetForItem();
-        // else
-        //     Options.OnNextButtonPressed();
+        else
+            Debug.LogWarning("Chosen Move and Chosen Item are null");
     }
 
     private void DetermineTargetForItem()
@@ -81,7 +79,10 @@ public class TargetOption : MonoBehaviour
                     foreach (BattleCharacterData data in BattleInformation.BattleEnemiesData)
                     {
                         if (data != null && data.CharacterData.Equals(enemy.Id))
+                        {
                             MakeOneButton(enemy, data);
+                            break;
+                        }
                     }
                 }
                 break;
@@ -151,6 +152,14 @@ public class TargetOption : MonoBehaviour
         Player player = Player.Instance();
         player.BattleStatus.ChosenTargets.AddRange(targets);
         Options.OnNextButtonPressed();
+    }
+
+    private void ClearTargets()
+    {
+        foreach (Transform child in TargetLayout)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
 }

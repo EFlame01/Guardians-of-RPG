@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -32,8 +30,8 @@ public class MoveOption : MonoBehaviour
     public void Update()
     {
         NextButton.interactable = _moveName != null && Player.Instance().BattleStatus.ChosenMove != null;
-        
-        if(!NextButton.interactable)
+
+        if (!NextButton.interactable)
         {
             _moveName = null;
             SetMoveDescription();
@@ -61,15 +59,15 @@ public class MoveOption : MonoBehaviour
         MoveAccuracyText.text = "000";
         MoveTypeText.text = "";
         MoveDescriptionText.text = "";
-        
-        foreach(Move move in Player.Instance().BattleMoves)
+
+        foreach (Move move in Player.Instance().BattleMoves)
         {
-            if(move != null)
+            if (move != null)
             {
                 Button moveButton = Instantiate(MoveButtonPrefab, MoveLayout).GetComponent<Button>();
                 TextMeshProUGUI moveButtonText = moveButton.GetComponentInChildren<TextMeshProUGUI>();
-                moveButtonText.text = move.Name + "\n" + move.EP.ToString() +" EP";
-                moveButton.onClick.AddListener(() => 
+                moveButtonText.text = move.Name + "\n" + move.EP.ToString() + " EP";
+                moveButton.onClick.AddListener(() =>
                 {
                     _moveName = move.Name;
                     SetMoveDescription();
@@ -80,7 +78,7 @@ public class MoveOption : MonoBehaviour
 
     private void SetMoveDescription()
     {
-        if(_moveName == null)
+        if (_moveName == null)
         {
             MovePowerText.text = "000";
             MoveAccuracyText.text = "000";

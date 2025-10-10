@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -65,25 +66,6 @@ public class WildEncounter : MonoBehaviour
     }
 
     /// <summary>
-    /// Helper method that determines the type 
-    /// of enemy the player will encounter that's in the
-    /// <c>BattleCharacterDatas</c> array. If they will not 
-    /// encounter any, it returns -1.
-    /// </summary>
-    /// <returns>Index for the enemy, or -1.</returns>
-    private int DetermineEnemyIndex()
-    {
-        int encounterRate = (int)Random.Range(0f, 100f);
-        for (int i = 0; i < EncounterRate.Length; i++)
-        {
-            if (EncounterRate[i] > encounterRate)
-                return i;
-        }
-
-        return -1;
-    }
-
-    /// <summary>
     /// Determines how many emeies will spawn from the 
     /// wild encounter and adds that information to the
     /// <c>BattleInformation</c> class.
@@ -95,7 +77,7 @@ public class WildEncounter : MonoBehaviour
         int enemyIndex = 0;
         for (int i = 0; i < 3; i++)
         {
-            enemyEncounter = DetermineEnemyIndex();
+            enemyEncounter = DetermineEnemyIndex(i);
             if (enemyEncounter == -1)
                 continue;
             else
@@ -106,6 +88,52 @@ public class WildEncounter : MonoBehaviour
         }
 
         return enemyIndex;
+    }
+
+    /// <summary>
+    /// Helper method that determines the type 
+    /// of enemy the player will encounter that's in the
+    /// <c>BattleCharacterDatas</c> array. If they will not 
+    /// encounter any, it returns -1.
+    /// </summary>
+    /// <returns>Index for the enemy, or -1.</returns>
+    private int DetermineEnemyIndex()
+    {
+        int encounterRate = Random.Range(0, 100) + 1;
+        return DetermineEnemyIndexHelper(encounterRate);
+    }
+
+    /// <summary>
+    /// This overloaded method changes the odds in
+    /// which more enemies spawn.
+    /// </summary>
+    /// <param name="indexMultiplyer">The index in the forloop for enemies to spawn.</param>
+    /// <returns></returns>
+    private int DetermineEnemyIndex(double indexMultiplyer)
+    {
+        if (indexMultiplyer == 0)
+            indexMultiplyer = Units.STAGE_0;
+        else
+            indexMultiplyer *= Units.STAGE_POS_1;
+
+        int encounterRate = (int)(Random.Range(0f, 100f) * indexMultiplyer);
+        return DetermineEnemyIndexHelper(encounterRate);
+    }
+
+    private int DetermineEnemyIndexHelper(int encounterRate)
+    {
+        List<int> indexList = new List<int>();
+
+        for (int i = 0; i < EncounterRate.Length; i++)
+        {
+            if (EncounterRate[i] > encounterRate)
+                indexList.Add(i);
+        }
+
+        if (indexList.Count == 0)
+            return -1;
+
+        return indexList[Random.Range(0, indexList.Count)];
     }
 
     /// <summary>
@@ -139,13 +167,13 @@ public class WildEncounter : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider2D)
     {
-        if (collider2D.gameObject.CompareTag("Player"))
+        if (collider2D.gameObject.CompareTag("Grass"))
             inSpawn = true;
     }
 
     public void OnTriggerExit2D(Collider2D collider2D)
     {
-        if (collider2D.gameObject.CompareTag("Player"))
+        if (collider2D.gameObject.CompareTag("Grass"))
             inSpawn = false;
     }
 }
