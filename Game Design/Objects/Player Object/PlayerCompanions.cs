@@ -56,6 +56,11 @@ public class PlayerCompanions : PersistentSingleton<PlayerCompanions>
             CompanionData = data;
         else if (data == null)
             Debug.LogWarning("WARNING: could not add battle character data because data was null");
+        else if (CompanionData.Length != data.Length)
+        {
+            for (int i = 0; i < data.Length; i++)
+                AddCompanion(data[i]);
+        }
         else
         {
             for (int i = 0; i < CompanionData.Length; i++)
