@@ -69,6 +69,9 @@ public class TextBox : MonoBehaviour
 
     public void StartNarration(DialogueData dialogueData)
     {
+        //Method placed here to always reset scroll bar before text box starts dialogue
+        ResetScrollBar();
+
         _dialogueData = dialogueData;
         DialogueManager.Instance.SetTextBox(this);
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
@@ -98,18 +101,14 @@ public class TextBox : MonoBehaviour
     /// <returns></returns>
     public virtual IEnumerator StartTextBoxAnimation()
     {
-        try
-        {
-            TextMeshComponent.text = "";
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning("WARNING: " + e.Message);
-        }
-        yield return _waitForSeconds0_01;
-
+        //TODO: testing if placing ResetScrollBar in a different spot is better.
         //Method placed here to always reset scroll bar after opening text box
-        ResetScrollBar();
+        // ResetScrollBar();
+
+        if (TextMeshComponent != null)
+            TextMeshComponent.text = "";
+
+        yield return _waitForSeconds0_01;
 
         AudioManager.Instance.PlaySoundEffect("open_01");
         Animator.Play(TextBoxName + "_open");
