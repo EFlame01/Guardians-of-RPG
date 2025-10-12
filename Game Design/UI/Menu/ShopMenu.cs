@@ -184,16 +184,25 @@ public class ShopMenu : MenuState
         SetUpShop();
     }
 
+    /// <summary>
+    /// Sets up the buy or sell buttons based on
+    /// if the player is trying to buy or sell 
+    /// something.
+    /// </summary>
     private void SetUpButtons()
     {
         buyButton.interactable = _buyOrSell.Equals("BUY");
         sellButton.interactable = _buyOrSell.Equals("SELL");
         lessButton.interactable = false;
         moreButton.interactable = false;
-
-        Debug.Log(_buyOrSell.Equals("BUY") + " " + _buyOrSell.Equals("SELL"));
     }
 
+    /// <summary>
+    /// Based on if the player wants to buy
+    /// or sell something, this method sets
+    /// up the shop to be ready for either
+    /// scenario.
+    /// </summary>
     private void SetUpShop()
     {
         ClearContents();
@@ -213,6 +222,11 @@ public class ShopMenu : MenuState
         }
     }
 
+    /// <summary>
+    /// Sets up the shop for the player
+    /// to buy specific items unique to the
+    /// store/prices.
+    /// </summary>
     private void SetUpBuy()
     {
         sellLayout.SetActive(false);
@@ -231,6 +245,11 @@ public class ShopMenu : MenuState
         }
     }
 
+    /// <summary>
+    /// Sets up the shop for player
+    /// to sell specific items in their
+    /// inventory.
+    /// </summary>
     private void SetUpSell()
     {
         Player player = Player.Instance();
@@ -253,6 +272,10 @@ public class ShopMenu : MenuState
         }
     }
 
+    /// <summary>
+    /// Clears the list of items in the 
+    /// buyListLayout or sellListLayout.
+    /// </summary>
     private void ClearContents()
     {
         Player player = Player.Instance();
@@ -282,12 +305,20 @@ public class ShopMenu : MenuState
         }
     }
 
+    /// <summary>
+    /// Uses the sellRate/buyRate of the 
+    /// store to calculate the price of 
+    /// an item to be bought/sold. It 
+    /// returns the amount of bits in 
+    /// the form of an int.
+    /// </summary>
+    /// <returns>The item price to be bought/sold</returns>
     private int GetItemPrice()
     {
         if (_buyOrSell.Equals("SELL"))
-            return (int)((double)_item.Price * shopList.sellRate * _itemAmount);
+            return (int)(_item.Price * shopList.sellRate * _itemAmount);
         else
-            return (int)((double)_item.Price * shopList.buyRate * _itemAmount);
+            return (int)(_item.Price * shopList.buyRate * _itemAmount);
     }
 
 }
