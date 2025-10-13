@@ -30,6 +30,11 @@ public class TextBox : MonoBehaviour
     private DialogueData _dialogueData;
     private bool _textBoxOpened;
 
+    public void OnEnable()
+    {
+        ResetScrollBar();
+    }
+
     public virtual void Start()
     {
         IsClosed = true;
@@ -54,6 +59,9 @@ public class TextBox : MonoBehaviour
     /// </summary>
     public virtual void OpenTextBox()
     {
+        //Method placed here to always reset scroll bar before text box starts dialogue
+        ResetScrollBar();
+
         //start narraiton naimation and dialogue
         StartCoroutine(StartTextBoxAnimation());
         IsClosed = false;
@@ -69,9 +77,6 @@ public class TextBox : MonoBehaviour
 
     public void StartNarration(DialogueData dialogueData)
     {
-        //Method placed here to always reset scroll bar before text box starts dialogue
-        ResetScrollBar();
-
         _dialogueData = dialogueData;
         DialogueManager.Instance.SetTextBox(this);
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
