@@ -67,6 +67,7 @@ public class MoveOption : MonoBehaviour
                 Button moveButton = Instantiate(MoveButtonPrefab, MoveLayout).GetComponent<Button>();
                 TextMeshProUGUI moveButtonText = moveButton.GetComponentInChildren<TextMeshProUGUI>();
                 moveButtonText.text = move.Name + "\n" + move.EP.ToString() + " EP";
+                moveButton.interactable = Player.Instance().BaseStats.Elx < move.EP;
                 moveButton.onClick.AddListener(() =>
                 {
                     _moveName = move.Name;
