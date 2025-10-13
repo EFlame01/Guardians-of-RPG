@@ -12,14 +12,10 @@ public class PlayerCompanions : PersistentSingleton<PlayerCompanions>
 {
     //public methods
     public BattleCharacterData[] CompanionData { get; private set; }
-    public BattleCharacterData testData;
 
     public void Start()
     {
         CompanionData = new BattleCharacterData[2];
-
-        // TODO: Test. Delete Later
-        // CompanionData[0] = testData;
     }
 
     /// <summary>
@@ -35,6 +31,7 @@ public class PlayerCompanions : PersistentSingleton<PlayerCompanions>
         {
             if (CompanionData[i] == null)
             {
+                Debug.Log("Added companion: " + data.CharacterData);
                 CompanionData[i] = data;
                 added = true;
             }
