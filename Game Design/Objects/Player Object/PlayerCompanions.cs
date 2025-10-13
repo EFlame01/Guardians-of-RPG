@@ -31,9 +31,9 @@ public class PlayerCompanions : PersistentSingleton<PlayerCompanions>
         {
             if (CompanionData[i] == null)
             {
-                Debug.Log("Added companion: " + data.CharacterData);
                 CompanionData[i] = data;
                 added = true;
+                break;
             }
         }
         if (!added)
