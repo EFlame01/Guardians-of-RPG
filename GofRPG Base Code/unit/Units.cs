@@ -153,6 +153,7 @@ public static class Units
         public const string TEAM_SQL_BATTLE_THEME = "team_sql_battle_theme";
         public const string FINAL_BOSS_BATTLE_THEME = "final_boss_battle_theme";
         public const string VICTORY_THEME = "victory_theme";
+        public const string GAME_OVER_THEME = "game_over";
         public const string DUNGEON_THEME = "dungeon_theme";
         public const string ROUTE_1 = "route_01";
         public const string ARGUS_BEACH_THEME = "argus_beach_theme";
