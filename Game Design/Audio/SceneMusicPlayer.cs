@@ -48,7 +48,7 @@ public class SceneMusicPlayer : MonoBehaviour
     /// <returns><c>TRUE</c> if we can play music. <c>FALSE</c> if otherwise.</returns>
     private bool CanStartMusicPlayer()
     {
-        return (GameManager.Instance.PlayerState) switch
+        return GameManager.Instance.PlayerState switch
         {
             PlayerState.CUT_SCENE => false,
             PlayerState.TRANSITION => false,
