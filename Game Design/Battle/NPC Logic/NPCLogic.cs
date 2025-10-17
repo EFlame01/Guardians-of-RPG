@@ -13,6 +13,7 @@ public class NPCLogic
     public Character character;
     public List<Character> CharacterAllies { get; private set; }
     public List<Character> CharacterEnemies { get; private set; }
+    public int NPCLevel { get; private set; }
 
     //Constructor
     public NPCLogic(Character c)
@@ -22,12 +23,103 @@ public class NPCLogic
         CharacterEnemies = new List<Character>();
     }
 
+    public NPCLogic(Character c, int npcLevel)
+    {
+        character = c;
+        CharacterAllies = new List<Character>();
+        CharacterEnemies = new List<Character>();
+        NPCLevel = npcLevel;
+    }
+
+    public void DetermineBehaviour()
+    {
+        switch (NPCLevel)
+        {
+            case 0:
+                LevelZeroBehavior();
+                break;
+            case 1:
+                LevelOneBehavior();
+                break;
+            case 2:
+                LevelTwoBehavior();
+                break;
+            case 3:
+                LevelThreeBehavior();
+                break;
+            default:
+                LevelZeroBehavior();
+                break;
+        }
+    }
+
+    private void LevelZeroBehavior()
+    {
+        SetRandomMove();
+        SetTargetList();
+        SetRandomTargets();
+    }
+
+    private void LevelOneBehavior()
+    {
+        //Select a Move 
+        int thinkOption = Random.Range(0, 20) + 1;
+        if (thinkOption < 5)
+            character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
+        else if (thinkOption <= 10)
+            SetRandomMove();
+        else
+            SetSpecificMove();
+
+        //Set Target List
+        SetTargetList();
+
+        //Select Target(s)
+        thinkOption = Random.Range(0, 20) + 1;
+        if (thinkOption <= 10)
+            SetRandomTargets();
+        else
+            SetSpecificTargets();
+    }
+
+    private void LevelTwoBehavior()
+    {
+        int thinkOption = Random.Range(0, 20) + 1;
+        Mathf.Clamp(thinkOption, 0, 20);
+
+        if (thinkOption < 5)
+            character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
+        else if (thinkOption <= 10)
+            SetRandomMove();
+        else
+            SetSpecificMove();
+
+        SetTargetList();
+
+        thinkOption = Random.Range(0, 20) + 6;
+        Mathf.Clamp(thinkOption, 0, 20);
+
+        //Select Target(s)
+        thinkOption = Random.Range(0, 20) + 1;
+        if (thinkOption <= 10)
+            SetRandomTargets();
+        else
+            SetSpecificTargets();
+    }
+
+    private void LevelThreeBehavior()
+    {
+        SetSpecificMove();
+        SetTargetList();
+        SetSpecificTargets();
+    }
+
     /// <summary>
     /// Creates a list of potential targets that
     /// the <c>Character</c> can have based on the
     /// character.
     /// </summary>
-    public void SetTargetList()
+    private void SetTargetList()
     {
         List<Character> targets = new List<Character>();
         Player player = Player.Instance();
@@ -49,7 +141,7 @@ public class NPCLogic
     ///     <item>The moves available to the <c>Character</c></item>
     /// </list>
     /// </summary>
-    public void SetRandomMove()
+    private void SetRandomMove()
     {
         List<Move> allMoves = new List<Move>();
 
@@ -82,7 +174,7 @@ public class NPCLogic
     ///     <item>The targets available in the battle</item>
     /// </list>
     /// </summary>
-    public void SetRandomTargets()
+    private void SetRandomTargets()
     {
         Move move = character.BattleStatus.ChosenMove;
         int allyIndex = CharacterAllies.Count <= 0 ? -1 : Random.Range(0, 100) % CharacterAllies.Count;
@@ -135,9 +227,61 @@ public class NPCLogic
     /// </list>
     /// (THIS METHOD IS NOT COMPLETE. DO NOT USE)
     /// </summary>
-    public void SetSpecificMove()
+    private void SetSpecificMove()
     {
         //TODO: create sophisticated algorithm to determine the best choice to use
+        int elixir = character.BaseStats.Elx;
+        Move[] moves = character.BattleMoves;
+        Move move = null;
+        Dictionary<Move, int> moveFavorIndex = new Dictionary<Move, int>
+        {
+            { Units.BASE_ATTACK, 0 }
+        };
+
+        for (int i = 0; i < moves.Length; i++)
+        {
+            moveFavorIndex.Add(moves[i], 0);
+            if (moves[i].EP > elixir)
+                moveFavorIndex[moves[i]]--;
+            else
+                moveFavorIndex[moves[i]]++;
+            if (CanUseMove(moves[i], CharacterAllies, CharacterEnemies))
+                moveFavorIndex[moves[i]]--;
+            else
+                moveFavorIndex[moves[i]]++;
+        }
+
+        foreach (KeyValuePair<Move, int> moveIndex in moveFavorIndex)
+        {
+            if (move == null)
+                move = moveIndex.Key;
+            else if (moveFavorIndex[move] < moveIndex.Value)
+                move = moveIndex.Key;
+            else if (moveFavorIndex[move] == moveIndex.Value)
+            {
+                //Determine the best move between the two.
+                //  - value elixir saving
+                //  - value easy KOs
+                //  - value helping allies
+                int elixirSaving = Random.Range(0, 100) + 1;
+                int easyKO = Random.Range(0, 100) + 1;
+                int helpingAllies = Random.Range(0, 100) + 1;
+
+                if (elixirSaving > easyKO && elixirSaving > helpingAllies)
+                    move = moveIndex.Key.EP > move.EP ? move : moveIndex.Key;
+                else if (easyKO > elixirSaving && easyKO > helpingAllies)
+                    move = moveIndex.Key.Power < move.Power ? move : moveIndex.Key;
+                else if (helpingAllies > elixirSaving && helpingAllies > easyKO)
+                {
+                    if (moveIndex.Key.Target.Equals(MoveTarget.ALLY) || moveIndex.Key.Target.Equals(MoveTarget.ALL_ALLIES) || moveIndex.Key.Target.Equals(MoveTarget.ALLY_SIDE))
+                        move = moveIndex.Key;
+                }
+                else
+                    move = Random.Range(0, 100) + 1 > 50 ? move : moveIndex.Key;
+            }
+        }
+
+        character.BattleStatus.ChosenMove = move;
     }
 
     /// <summary>
@@ -151,9 +295,148 @@ public class NPCLogic
     /// </list>
     /// (THIS METHOD IS NOT COMPLETE. DO NOT USE)
     /// </summary>
-    public void SetSpecificTarget()
+    private void SetSpecificTargets()
     {
         //TODO: create sophisticated algorithm to determine the best target to select
+        Move move = character.BattleStatus.ChosenMove;
+        if (move == null)
+            return;
+
+        switch (move.Target)
+        {
+            case MoveTarget.USER:
+                character.BattleStatus.ChosenTargets.Add(character);
+                break;
+            case MoveTarget.ENEMY:
+                if (CharacterEnemies.Count == 1)
+                    character.BattleStatus.ChosenTargets.Add(CharacterEnemies[0]);
+                else
+                {
+                    Character enemyTarget = null;
+                    switch (move.Type)
+                    {
+                        case MoveType.REGULAR:
+                            foreach (Character enemy in CharacterEnemies)
+                            {
+                                if (enemyTarget == null)
+                                    enemyTarget = enemy;
+                                else if (enemy.BaseStats.Hp < enemyTarget.BaseStats.Hp)
+                                    enemyTarget = enemy;
+                            }
+                            break;
+                        case MoveType.PRIORITY:
+                            foreach (Character enemy in CharacterEnemies)
+                            {
+                                if (enemyTarget == null)
+                                    enemyTarget = enemy;
+                                else if (enemy.BaseStats.Spd > enemyTarget.BaseStats.Spd || enemy.BaseStats.Spd > character.BaseStats.Spd)
+                                    enemyTarget = enemy;
+                            }
+                            break;
+                        case MoveType.KNOCK_OUT:
+                            foreach (Character enemy in CharacterEnemies)
+                            {
+                                if (enemyTarget == null)
+                                    enemyTarget = enemy;
+                                else if (enemy.BaseStats.Hp > enemyTarget.BaseStats.Hp)
+                                    enemyTarget = enemy;
+                            }
+                            break;
+                        default:
+                            foreach (Character enemy in CharacterEnemies)
+                            {
+                                if (enemyTarget == null)
+                                    enemyTarget = enemy;
+                                else if (enemy.BaseStats.Hp < enemyTarget.BaseStats.Hp)
+                                    enemyTarget = enemy;
+                            }
+                            break;
+                    }
+                }
+                break;
+            case MoveTarget.ALL_ENEMIES:
+                character.BattleStatus.ChosenTargets.AddRange(CharacterEnemies);
+                break;
+            case MoveTarget.ALLY:
+                if (CharacterAllies.Count == 1)
+                    character.BattleStatus.ChosenTargets.Add(CharacterAllies[0]);
+                else
+                {
+                    Character allyTarget = null;
+                    Character ally1 = CharacterAllies[0];
+                    Character ally2 = CharacterAllies[2];
+                    switch (move.Type)
+                    {
+                        case MoveType.HEALING:
+                            if (ally1.BaseStats.Hp > ally2.BaseStats.Hp)
+                                character.BattleStatus.ChosenTargets.Add(ally2);
+                            else
+                                character.BattleStatus.ChosenTargets.Add(ally1);
+                            break;
+                        case MoveType.STAT_CHANGING:
+                            //TODO: delete later
+                            StatChangingMove stMove = (StatChangingMove)move;
+                            switch (stMove._stats[0])
+                            {
+                                case "ATK":
+                                    if (ally1.BaseStats.Atk > ally2.BaseStats.Atk)
+                                        character.BattleStatus.ChosenTargets.Add(ally2);
+                                    else
+                                        character.BattleStatus.ChosenTargets.Add(ally1);
+                                    break;
+                                case "DEF":
+                                    if (ally1.BaseStats.Def > ally2.BaseStats.Def)
+                                        character.BattleStatus.ChosenTargets.Add(ally2);
+                                    else
+                                        character.BattleStatus.ChosenTargets.Add(ally1);
+                                    break;
+                                case "EVA":
+                                    if (ally1.BaseStats.Eva > ally2.BaseStats.Eva)
+                                        character.BattleStatus.ChosenTargets.Add(ally2);
+                                    else
+                                        character.BattleStatus.ChosenTargets.Add(ally1);
+                                    break;
+                                case "SPD":
+                                    if (ally1.BaseStats.Spd > ally2.BaseStats.Spd)
+                                        character.BattleStatus.ChosenTargets.Add(ally2);
+                                    else
+                                        character.BattleStatus.ChosenTargets.Add(ally1);
+                                    break;
+                                case "HP":
+                                    if (ally1.BaseStats.Hp > ally2.BaseStats.Hp)
+                                        character.BattleStatus.ChosenTargets.Add(ally2);
+                                    else
+                                        character.BattleStatus.ChosenTargets.Add(ally1);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            foreach (Character ally in CharacterAllies)
+                            {
+                                if (allyTarget == null)
+                                    allyTarget = ally;
+                                else if (allyTarget.BaseStats.Hp > ally.BaseStats.Hp)
+                                    allyTarget = ally;
+                            }
+                            character.BattleStatus.ChosenTargets.Add(allyTarget);
+                            break;
+                    }
+                }
+                break;
+            case MoveTarget.ALL_ALLIES:
+                character.BattleStatus.ChosenTargets.Add(character);
+                character.BattleStatus.ChosenTargets.AddRange(CharacterAllies);
+                break;
+            case MoveTarget.ALLY_SIDE:
+                character.BattleStatus.ChosenTargets.AddRange(CharacterAllies);
+                break;
+            case MoveTarget.EVERYONE:
+                character.BattleStatus.ChosenTargets.AddRange(CharacterEnemies);
+                character.BattleStatus.ChosenTargets.AddRange(CharacterAllies);
+                break;
+        }
     }
 
     /// <summary>
