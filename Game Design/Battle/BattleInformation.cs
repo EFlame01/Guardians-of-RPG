@@ -18,6 +18,33 @@ public class BattleInformation : MonoBehaviour
     public static Vector3 PlayerPosition = new Vector3(0, 0, 0);
     public static string[] StoryFlagsIfWon;
 
+    public static int GetNPCLogicNumber(string characterID, string type)
+    {
+        switch(type){
+            case "ALLY":
+                for(int i = 0; i < BattleAlliesData.Length; i++)
+                {
+                    if(BattleAlliesData[i].CharacterData.Equals(characterID))
+                        return BattleAlliesData[i].NPCLevel;
+                }
+                break;
+            case "ENEMY":
+            case "BOSS":
+                for(int i = 0; i < BattleEnemiesData.Length; i++)
+                {
+                    if(BattleEnemiesData[i].CharacterData.Equals(characterID))
+                        return BattleEnemiesData[i].NPCLevel;
+                }
+                break;
+            default:
+                Debug.LogWarning("WARNING: Character type is not an ally, enemy, or boss...");
+                return 0;
+        }
+
+        Debug.LogWarning("WARNING: characterID " + characterID + " was not found...");
+        return 0;
+    }
+
     /// <summary>
     /// Resets the information in the
     /// <c>BattleInformation</c> class 
