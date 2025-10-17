@@ -184,6 +184,7 @@ public static class Units
     public static string[] DATABASE_PATHS =
     {
         "/database/abilities.csv",
+        "/database/base_stats.csv",
         "/database/characters.csv",
         "/database/effects.csv",
         "/database/health_boost_effects.csv",
