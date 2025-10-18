@@ -33,7 +33,7 @@ public class Level
 
         player.SetLevel(player.Level + 1);
         player.SetCurrentXP(player.CurrXP - player.LimXP);
-        player.SetLimitXP((int) (Mathf.Pow(player.Level, 3) * 4 / 3));
+        player.SetLimitXP((int) (Mathf.Pow(player.Level, (float)Units.STAGE_NEG_1) * Units.STAGE_POS_1));
         player.BaseStats.LevelUpStats(player.Archetype.ChooseStatBoostRandomly());
 
         if(CanLevelUp())
