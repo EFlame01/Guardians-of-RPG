@@ -121,8 +121,6 @@ public class NPCLogic
     /// </summary>
     private void SetTargetList()
     {
-        List<Character> targets = new List<Character>();
-        Player player = Player.Instance();
         string type = character.Type;
 
         if (type.Equals("ALLY"))
