@@ -84,11 +84,6 @@ public class OptionState : BattleState
         foreach (Character c in list)
         {
             c.BattleStatus.ResetRound();
-            // NPCLogic logic = new NPCLogic(c);
-            //TODO: Update NPC logic based on NPC logic level
-            // logic.SetRandomMove();
-            // logic.SetTargetList();
-            // logic.SetRandomTargets();
             NPCLogic logic = new NPCLogic(c, BattleInformation.GetNPCLogicNumber(c.Id, c.Type));
             logic.DetermineBehaviour();
         }
