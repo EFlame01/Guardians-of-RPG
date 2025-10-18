@@ -1,6 +1,7 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// NPCLogic is a class that determines
@@ -15,12 +16,13 @@ public class NPCLogic
     public List<Character> CharacterEnemies { get; private set; }
     public int NPCLevel { get; private set; }
 
-    //Constructor
+    //Constructors
     public NPCLogic(Character c)
     {
         character = c;
         CharacterAllies = new List<Character>();
         CharacterEnemies = new List<Character>();
+        NPCLevel = 0;
     }
 
     public NPCLogic(Character c, int npcLevel)
@@ -31,6 +33,13 @@ public class NPCLogic
         NPCLevel = npcLevel;
     }
 
+    /// <summary>
+    /// Determines the behavior of the NPC
+    /// when it comes to selecting a move
+    /// and a target for that move. The Level
+    /// of strategy that the NPC will go through
+    /// ranges from Level 0 to Level 3.
+    /// </summary>
     public void DetermineBehaviour()
     {
         switch (NPCLevel)
@@ -53,6 +62,10 @@ public class NPCLogic
         }
     }
 
+    /// <summary>
+    /// Level 0 Behavior selects a random
+    /// move and a random target.
+    /// </summary>
     private void LevelZeroBehavior()
     {
         SetRandomMove();
@@ -60,53 +73,40 @@ public class NPCLogic
         SetRandomTargets();
     }
 
+    /// <summary>
+    /// Level 1 Behavior rolls the dice and
+    /// has the chance to perform a random move
+    /// or a specific move, and a random target
+    /// or a specific target. The odds are not 
+    /// weighted.
+    /// </summary>
     private void LevelOneBehavior()
     {
-        //Select a Move 
-        int thinkOption = Random.Range(0, 20) + 1;
-        if (thinkOption < 5)
-            character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
-        else if (thinkOption <= 10)
-            SetRandomMove();
-        else
-            SetSpecificMove();
-
-        //Set Target List
+        SetPartialSpecificMove(0);
         SetTargetList();
-
-        //Select Target(s)
-        thinkOption = Random.Range(0, 20) + 1;
-        if (thinkOption <= 10)
-            SetRandomTargets();
-        else
-            SetSpecificTargets();
+        SetPartialSpecificTargets(0);
     }
 
+    /// <summary>
+    /// Level 2 Behavior rolls the dice and
+    /// has the chance to perform a random move
+    /// or a specific move, and a random target
+    /// or a specific target. The odds are not 
+    /// weighted for selecting a move, but they
+    /// are weighted for selecting a target.
+    /// </summary>
     private void LevelTwoBehavior()
     {
-        int thinkOption = Random.Range(0, 20) + 1;
-        Mathf.Clamp(thinkOption, 0, 20);
-
-        if (thinkOption < 5)
-            character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
-        else if (thinkOption <= 10)
-            SetRandomMove();
-        else
-            SetSpecificMove();
-
+        SetPartialSpecificMove(0);
         SetTargetList();
-
-        thinkOption = Random.Range(0, 20) + 6;
-        Mathf.Clamp(thinkOption, 0, 20);
-
-        //Select Target(s)
-        thinkOption = Random.Range(0, 20) + 1;
-        if (thinkOption <= 10)
-            SetRandomTargets();
-        else
-            SetSpecificTargets();
+        SetPartialSpecificTargets(5);
     }
 
+    /// <summary>
+    /// Level 3 Behavior selects a specific
+    /// move and a specific target. The most
+    /// strategic of all the behaviors.
+    /// </summary>
     private void LevelThreeBehavior()
     {
         SetSpecificMove();
@@ -155,8 +155,8 @@ public class NPCLogic
         {
             int randomIndex = Random.Range(0, 100) % allMoves.Count;
             Move move = character.BattleMoves[randomIndex];
-            if (CanUseMove(move, CharacterAllies, CharacterEnemies))
-                character.BattleStatus.ChosenMove = character.BattleMoves[randomIndex];
+            if (CanUseMove(move, CharacterAllies, CharacterEnemies) && move.EP <= character.BaseStats.Elx)
+                character.BattleStatus.ChosenMove = move;
             else
                 character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
         }
@@ -229,7 +229,6 @@ public class NPCLogic
     /// </summary>
     private void SetSpecificMove()
     {
-        //TODO: create sophisticated algorithm to determine the best choice to use
         int elixir = character.BaseStats.Elx;
         Move[] moves = character.BattleMoves;
         Move move = null;
@@ -238,50 +237,59 @@ public class NPCLogic
             { Units.BASE_ATTACK, 0 }
         };
 
-        for (int i = 0; i < moves.Length; i++)
+        try
         {
-            moveFavorIndex.Add(moves[i], 0);
-            if (moves[i].EP > elixir)
-                moveFavorIndex[moves[i]]--;
-            else
-                moveFavorIndex[moves[i]]++;
-            if (CanUseMove(moves[i], CharacterAllies, CharacterEnemies))
-                moveFavorIndex[moves[i]]--;
-            else
-                moveFavorIndex[moves[i]]++;
-        }
-
-        foreach (KeyValuePair<Move, int> moveIndex in moveFavorIndex)
-        {
-            if (move == null)
-                move = moveIndex.Key;
-            else if (moveFavorIndex[move] < moveIndex.Value)
-                move = moveIndex.Key;
-            else if (moveFavorIndex[move] == moveIndex.Value)
+            for (int i = 0; i < moves.Length; i++)
             {
-                //Determine the best move between the two.
-                //  - value elixir saving
-                //  - value easy KOs
-                //  - value helping allies
-                int elixirSaving = Random.Range(0, 100) + 1;
-                int easyKO = Random.Range(0, 100) + 1;
-                int helpingAllies = Random.Range(0, 100) + 1;
-
-                if (elixirSaving > easyKO && elixirSaving > helpingAllies)
-                    move = moveIndex.Key.EP > move.EP ? move : moveIndex.Key;
-                else if (easyKO > elixirSaving && easyKO > helpingAllies)
-                    move = moveIndex.Key.Power < move.Power ? move : moveIndex.Key;
-                else if (helpingAllies > elixirSaving && helpingAllies > easyKO)
-                {
-                    if (moveIndex.Key.Target.Equals(MoveTarget.ALLY) || moveIndex.Key.Target.Equals(MoveTarget.ALL_ALLIES) || moveIndex.Key.Target.Equals(MoveTarget.ALLY_SIDE))
-                        move = moveIndex.Key;
-                }
+                moveFavorIndex.Add(moves[i], 0);
+                if (moves[i].EP > elixir)
+                    moveFavorIndex[moves[i]]--;
                 else
-                    move = Random.Range(0, 100) + 1 > 50 ? move : moveIndex.Key;
+                    moveFavorIndex[moves[i]]++;
+                if (CanUseMove(moves[i], CharacterAllies, CharacterEnemies))
+                    moveFavorIndex[moves[i]]--;
+                else
+                    moveFavorIndex[moves[i]]++;
             }
+
+            foreach (KeyValuePair<Move, int> moveIndex in moveFavorIndex)
+            {
+                if (move == null)
+                    move = moveIndex.Key;
+                else if (moveFavorIndex[move] < moveIndex.Value)
+                    move = moveIndex.Key;
+                else if (moveFavorIndex[move] == moveIndex.Value)
+                {
+                    //Determine the best move between the two.
+                    //  - value elixir saving
+                    //  - value easy KOs
+                    //  - value helping allies
+                    int elixirSaving = Random.Range(0, 100) + 1;
+                    int easyKO = Random.Range(0, 100) + 1;
+                    int helpingAllies = Random.Range(0, 100) + 1;
+
+                    if (elixirSaving > easyKO && elixirSaving > helpingAllies)
+                        move = moveIndex.Key.EP > move.EP ? move : moveIndex.Key;
+                    else if (easyKO > elixirSaving && easyKO > helpingAllies)
+                        move = moveIndex.Key.Power < move.Power ? move : moveIndex.Key;
+                    else if (helpingAllies > elixirSaving && helpingAllies > easyKO)
+                    {
+                        if (moveIndex.Key.Target.Equals(MoveTarget.ALLY) || moveIndex.Key.Target.Equals(MoveTarget.ALL_ALLIES) || moveIndex.Key.Target.Equals(MoveTarget.ALLY_SIDE))
+                            move = moveIndex.Key;
+                    }
+                    else
+                        move = Random.Range(0, 100) + 1 > 50 ? move : moveIndex.Key;
+                }
+            }
+
+            character.BattleStatus.ChosenMove = move;
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("WARNING: " + e.Message);
+            character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
         }
 
-        character.BattleStatus.ChosenMove = move;
     }
 
     /// <summary>
@@ -297,7 +305,6 @@ public class NPCLogic
     /// </summary>
     private void SetSpecificTargets()
     {
-        //TODO: create sophisticated algorithm to determine the best target to select
         Move move = character.BattleStatus.ChosenMove;
         if (move == null)
             return;
@@ -352,6 +359,7 @@ public class NPCLogic
                             }
                             break;
                     }
+                    character.BattleStatus.ChosenTargets.Add(enemyTarget);
                 }
                 break;
             case MoveTarget.ALL_ENEMIES:
@@ -374,7 +382,6 @@ public class NPCLogic
                                 character.BattleStatus.ChosenTargets.Add(ally1);
                             break;
                         case MoveType.STAT_CHANGING:
-                            //TODO: delete later
                             StatChangingMove stMove = (StatChangingMove)move;
                             switch (stMove._stats[0])
                             {
@@ -440,6 +447,42 @@ public class NPCLogic
     }
 
     /// <summary>
+    /// Determines based on probability if the NPC
+    /// will select a base attack, a random move, or 
+    /// a specific move. This probability is also
+    /// determined by the <paramref name="weight"/>.
+    /// </summary>
+    /// <param name="weight">The degree in which the NPC will think critically.</param>
+    private void SetPartialSpecificMove(int weight)
+    {
+        int thinkOption = Random.Range(0, 20) + 1 + weight;
+        Mathf.Clamp(thinkOption, 0, 20);
+        if (thinkOption < 5)
+            character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
+        else if (thinkOption <= 10)
+            SetRandomMove();
+        else
+            SetSpecificMove();
+    }
+
+    /// <summary>
+    /// Determines based on probability if the NPC
+    /// will select a random target or a specific
+    /// target. This probability is also
+    /// determined by the <paramref name="weight"/>.
+    /// </summary>
+    /// <param name="weight">The degree in which the NPC will think critically.</param>
+    private void SetPartialSpecificTargets(int weight)
+    {
+        int thinkOption = Random.Range(0, 20) + 1 + weight;
+        Mathf.Clamp(thinkOption, 0, 20);
+        if (thinkOption <= 10)
+            SetRandomTargets();
+        else
+            SetSpecificTargets();
+    }
+
+    /// <summary>
     /// Sorts characters in Battle into list of 
     /// <paramref name="allies"/>, <paramref name="enemies"/>,
     /// based on if the character is an ALLY or ENEMY, and the 
@@ -467,6 +510,16 @@ public class NPCLogic
         }
     }
 
+    /// <summary>
+    /// Determines if there are targets the NPC can use a <paramref name="move"/> on
+    /// based on the <paramref name="allies"/> list and the <paramref name="enemies"/>
+    /// list. If there are targets available for the move to work, it will return <c>TRUE</c>.
+    /// Otherwise it will return <c>FALSE</c>.
+    /// </summary>
+    /// <param name="move">The move the NPC wishes to use</param>
+    /// <param name="allies">The list of allies that the NPC would have to choose from to use the move.</param>
+    /// <param name="enemies">The list of enemies that the NPC would have to choose from to use the move.</param>
+    /// <return><c>TRUE</c> if there are targets to choose from. <c>FALSE</c> if otherwise.</return>
     private bool CanUseMove(Move move, List<Character> allies, List<Character> enemies)
     {
         MoveTarget moveTarget = move.Target;
