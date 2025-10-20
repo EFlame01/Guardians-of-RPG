@@ -133,7 +133,6 @@ public class TextBox : MonoBehaviour
         {
             ScrollRect.verticalNormalizedPosition = 1f;
             ScrollBar.value = 1f;
-            Debug.Log(ScrollBar.value);
         }
         catch (Exception e)
         {
