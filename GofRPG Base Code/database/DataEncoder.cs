@@ -162,7 +162,7 @@ public class DataEncoder : Singleton<DataEncoder>
         int rowNum = 1;
         foreach (string row in _data.Split('\n'))
         {
-            if (rowNum > 1)
+            if (rowNum > 1 && row.Length > 0)
                 rows.Add(row);
             rowNum++;
         }
