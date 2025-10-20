@@ -19,6 +19,7 @@ public class TextBox : MonoBehaviour
     private static WaitForSeconds _waitForSeconds0_01 = new WaitForSeconds(0.01f);
     [SerializeField] protected string TextBoxName;
     public TextMeshProUGUI TextMeshComponent;
+    public ScrollRect ScrollRect;
     public Scrollbar ScrollBar;
     [SerializeField] protected Animator Animator;
     [SerializeField] protected bool PlayOnStart;
@@ -29,11 +30,6 @@ public class TextBox : MonoBehaviour
 
     private DialogueData _dialogueData;
     private bool _textBoxOpened;
-
-    public void OnEnable()
-    {
-        ResetScrollBar();
-    }
 
     public virtual void Start()
     {
@@ -59,9 +55,6 @@ public class TextBox : MonoBehaviour
     /// </summary>
     public virtual void OpenTextBox()
     {
-        //Method placed here to always reset scroll bar before text box starts dialogue
-        ResetScrollBar();
-
         //start narraiton naimation and dialogue
         StartCoroutine(StartTextBoxAnimation());
         IsClosed = false;
@@ -138,7 +131,9 @@ public class TextBox : MonoBehaviour
     {
         try
         {
-            ScrollBar.value = 1;
+            ScrollRect.verticalNormalizedPosition = 1f;
+            ScrollBar.value = 1f;
+            Debug.Log(ScrollBar.value);
         }
         catch (Exception e)
         {
