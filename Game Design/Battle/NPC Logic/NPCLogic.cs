@@ -239,6 +239,8 @@ public class NPCLogic
         {
             for (int i = 0; i < moves.Length; i++)
             {
+                if (moves[i] == null)
+                    continue;
                 moveFavorIndex.Add(moves[i], 0);
                 if (moves[i].EP > elixir)
                     moveFavorIndex[moves[i]]--;

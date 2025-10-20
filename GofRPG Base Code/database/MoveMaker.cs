@@ -49,15 +49,17 @@ public class MoveMaker : Singleton<MoveMaker>
         List<Move> listOfMoves = new List<Move>();
 
         DataEncoder.Instance.DecodeFile(_moveDatabasePath);
-        moveListData = DataEncoder.GetData().Split('\n');
+        // Debug.Log(DataEncoder.GetData());
+        moveListData = DataEncoder.Instance.GetRowsOfData();
         DataEncoder.ClearData();
-        int index = 0;
+        // Debug.Log(moveListData);
         foreach (string moveData in moveListData)
         {
             try
             {
-                if (index != 0)
+                if (moveData != null || moveData.Length > 0)
                 {
+                    Debug.Log(moveData.Length);
                     string[] moveAttributes = moveData.Split(',');
                     if (int.Parse(moveAttributes[7]) <= level && (moveAttributes[8].Equals(archetype) || moveAttributes[8].Equals(classtype)))
                         listOfMoves.Add(GetMove(moveAttributes, moveAttributes[5]));
@@ -68,7 +70,6 @@ public class MoveMaker : Singleton<MoveMaker>
                 Debug.LogWarning("WARNING: " + e.Message);
                 return listOfMoves.ToArray();
             }
-            index++;
         }
         return listOfMoves.ToArray();
     }

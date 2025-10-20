@@ -6,7 +6,7 @@ public class Level
 
     public static int DetermineXPForQuest()
     {
-        return (int) Mathf.Pow(Player.Instance().Level, 2);
+        return (int)Mathf.Pow(Player.Instance().Level, 2);
     }
 
     public static int DetermineXPForBattle(int level)
@@ -27,16 +27,16 @@ public class Level
     public static void LevelUpPlayer()
     {
         Player player = Player.Instance();
-        
-        if(!CanLevelUp())
+
+        if (!CanLevelUp())
             return;
 
         player.SetLevel(player.Level + 1);
         player.SetCurrentXP(player.CurrXP - player.LimXP);
-        player.SetLimitXP((int) (Mathf.Pow(player.Level, (float)Units.STAGE_NEG_1) * Units.STAGE_POS_1));
+        player.SetLimitXP((int)(Mathf.Pow(player.Level, (float)Units.STAGE_POS_1) * Units.STAGE_POS_1));
         player.BaseStats.LevelUpStats(player.Archetype.ChooseStatBoostRandomly());
 
-        if(CanLevelUp())
+        if (CanLevelUp())
             LevelUpPlayer();
     }
 
@@ -46,11 +46,11 @@ public class Level
         Move[] moves = MoveMaker.Instance.GetLevelUpMoves(player.Level, player.Archetype.ArchetypeName, player.Archetype.ClassName);
         List<Move> learnedMoves = new List<Move>();
 
-        if(moves.Length <= 0)
+        if (moves.Length <= 0)
             return null;
-        
-        foreach(Move move in moves)
-            if((move.Level == player.Level) && !(player.MoveManager.MoveExistsInBattleSlot(move.Name)))
+
+        foreach (Move move in moves)
+            if ((move.Level == player.Level) && !player.MoveManager.MoveExistsInBattleSlot(move.Name))
                 learnedMoves.Add(move);
 
         return learnedMoves.ToArray();
@@ -61,10 +61,10 @@ public class Level
         Player player = Player.Instance();
         Move[] moves = MoveMaker.Instance.GetLevelUpMoves(player.Level, player.Archetype.ArchetypeName, player.Archetype.ClassName);
 
-        if(moves.Length <= 0)
+        if (moves.Length <= 0)
             return;
-        
-        foreach(Move move in moves)
+
+        foreach (Move move in moves)
             player.MoveManager.AddMove(move.Name);
     }
 }

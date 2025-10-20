@@ -39,18 +39,18 @@ public class DataEncoder : Singleton<DataEncoder>
     public void EncodeAllFiles()
     {
         //create direcories for encoded files
-        foreach(string relativePath in Units.SAVE_DATA_PATHS)
+        foreach (string relativePath in Units.SAVE_DATA_PATHS)
         {
             //update databases by first deleting old data in game
-            if(relativePath.Contains("database") && Directory.Exists(Application.persistentDataPath + relativePath))
+            if (relativePath.Contains("database") && Directory.Exists(Application.persistentDataPath + relativePath))
                 FileUtil.DeleteFileOrDirectory(Application.persistentDataPath + relativePath);
-            
-            if(!Directory.Exists(Application.persistentDataPath + relativePath))
+
+            if (!Directory.Exists(Application.persistentDataPath + relativePath))
                 Directory.CreateDirectory(Application.persistentDataPath + relativePath);
         }
 
         //encode files from streamingAssetsPath to persistentDataPath
-        foreach(string relativePath in Units.DATABASE_PATHS)
+        foreach (string relativePath in Units.DATABASE_PATHS)
             EncodeFile(Application.streamingAssetsPath, relativePath);
     }
 
@@ -67,13 +67,13 @@ public class DataEncoder : Singleton<DataEncoder>
         //take data from combined path
         StartCoroutine(PullFileData(dataPath + relativePath));
 
-        if(File.Exists(dataPath + relativePath))
+        if (File.Exists(dataPath + relativePath))
             _data = File.ReadAllText(dataPath + relativePath);
 
         string encryptedData = AESEncryption(_data);
-        
+
         //write data inside persistent data path
-        if(File.Exists(dataPath + relativePath))
+        if (File.Exists(dataPath + relativePath))
             File.Delete(Application.persistentDataPath + relativePath);
 
         File.WriteAllText(Application.persistentDataPath + relativePath, encryptedData);
@@ -88,11 +88,14 @@ public class DataEncoder : Singleton<DataEncoder>
     public void DecodeFile(string path)
     {
         //take data from persistent assets path
-        try{
+        try
+        {
             string encryptedData = File.ReadAllText(Application.persistentDataPath + path);
             _data = AESDecryption(encryptedData);
-        } catch(Exception e){
-            Debug.Log(e.Message + "... Encoding and storing new files...");
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("WARNING: " + e.Message + "... Encoding and storing new files...");
             EncodeAllFiles();
             string encryptedData = File.ReadAllText(Application.persistentDataPath + path);
             _data = AESDecryption(encryptedData);
@@ -121,9 +124,9 @@ public class DataEncoder : Singleton<DataEncoder>
     /// <returns>a list of the row's data information seperated by commas.</returns>
     public string GetRowOfData(string id)
     {
-        foreach(string row in _data.Split('\n'))
+        foreach (string row in _data.Split('\n'))
         {
-            if(row.Contains(id))
+            if (row.Contains(id))
                 return row;
         }
         return null;
@@ -139,9 +142,9 @@ public class DataEncoder : Singleton<DataEncoder>
     {
         List<string> rows = new List<string>();
 
-        foreach(string row in _data.Split('\n'))
+        foreach (string row in _data.Split('\n'))
         {
-            if(row.Contains(id))
+            if (row.Contains(id))
                 rows.Add(row);
         }
 
@@ -157,9 +160,9 @@ public class DataEncoder : Singleton<DataEncoder>
         List<string> rows = new List<string>();
 
         int rowNum = 1;
-        foreach(string row in _data.Split('\n'))
+        foreach (string row in _data.Split('\n'))
         {
-            if(rowNum > 1)
+            if (rowNum > 1)
                 rows.Add(row);
             rowNum++;
         }
@@ -174,7 +177,7 @@ public class DataEncoder : Singleton<DataEncoder>
     {
         _data = "";
     }
-    
+
     /// <summary>
     /// Pulls data from <paramref name="filePath"/> and
     /// stores it inside <c>_data</c> variable.
@@ -183,18 +186,19 @@ public class DataEncoder : Singleton<DataEncoder>
     /// <returns></returns>
     private IEnumerator PullFileData(string filePath)
     {
-        if (filePath.Contains("://")) {
+        if (filePath.Contains("://"))
+        {
             UnityWebRequest webRequest = new UnityWebRequest(filePath);
             yield return webRequest;
-            if(webRequest.result != UnityWebRequest.Result.Success)
+            if (webRequest.result != UnityWebRequest.Result.Success)
                 Debug.Log(webRequest.error);
             else
                 _data = webRequest.downloadHandler.text;
-        } 
+        }
         else
             _data = File.ReadAllText(filePath);
     }
- 
+
     /// <summary>
     /// Uses Advanced Encryption Standard to encrypt
     /// <paramref name="inputData"/>.
