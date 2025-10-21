@@ -80,6 +80,7 @@ public class FightState : CutSceneState
                 BattleInformation.BattleEnemiesData[i] = BattleEnemiesData[i];
         }
 
+        BattleSimStatus.CanRun = false;
         BattleSimStatus.SceneName = SceneManager.GetActiveScene().name;
         SceneLoader.Instance.LoadScene("Battle Scene", TransitionType);
     }

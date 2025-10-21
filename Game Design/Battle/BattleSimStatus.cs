@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +23,7 @@ public class BattleSimStatus
     public static int TotalRounds = 0;
     public static bool RoundStarted;
     public static bool AfterRoundStarted;
+    public static bool CanRun = true;
     public static bool RunSuccessful;
     public static GameObject BurnSymbol;
     public static GameObject FrozenSymbol;
@@ -32,7 +31,7 @@ public class BattleSimStatus
     public static GameObject PoisonSymbol;
     public static GameObject SleepSymbol;
     public static GameObject StunSymbol;
-    
+
     /// <summary>
     /// Determines if the <c>Character</c> has
     /// any other <c>Character</c>s of the same
@@ -46,20 +45,20 @@ public class BattleSimStatus
     /// <returns></returns>
     public static bool CharacterTypePresent(string type)
     {
-        if(type.Equals("ALLY"))
+        if (type.Equals("ALLY"))
         {
-            if(Allies.Count > 0)
+            if (Allies.Count > 0)
                 return true;
-            foreach(Character c in Graveyard)
+            foreach (Character c in Graveyard)
             {
-                if(c.Type.Equals(type))
+                if (c.Type.Equals(type))
                     return true;
             }
             return false;
         }
-        else if(type.Equals("ENEMY"))
+        else if (type.Equals("ENEMY"))
         {
-            if(Enemies.Count > 0)
+            if (Enemies.Count > 0)
                 return true;
             else
                 return false;
@@ -87,6 +86,7 @@ public class BattleSimStatus
         StartAfterRound = false;
         AfterRoundStarted = false;
         RunSuccessful = false;
+        CanRun = true;
     }
 
     /// <summary>
@@ -114,9 +114,9 @@ public class BattleSimStatus
     {
         AfterRoundStarted = true;
         BattleQueue.Clear();
-        foreach(Character enemy in Enemies)
+        foreach (Character enemy in Enemies)
             BattleQueue.Enqueue(enemy);
-        foreach(Character ally in Allies)
+        foreach (Character ally in Allies)
             BattleQueue.Enqueue(ally);
         BattleQueue.Enqueue(Player.Instance());
     }

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -61,9 +59,12 @@ public class BattleSimulator : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        try{
+        try
+        {
             DayNightCycle.Instance.StopTimer();
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             Debug.LogWarning("WARNING: " + e.ToString());
         }
         BattleStateMachine.StartState(InitializeState);
@@ -79,10 +80,10 @@ public class BattleSimulator : MonoBehaviour
 
     private void CheckState(string nextState)
     {
-        if(nextState == null)
+        if (nextState == null)
             return;
 
-        switch(nextState)
+        switch (nextState)
         {
             case "OPTION STATE":
                 UpdateElixirPool();
@@ -121,18 +122,21 @@ public class BattleSimulator : MonoBehaviour
         Player.Instance().BaseStats.ResetStats();
 
         //Reset Health if HP = 0
-        if(Player.Instance().BaseStats.Hp == 0)
+        if (Player.Instance().BaseStats.Hp == 0)
             Player.Instance().BaseStats.ResetHealth();
-        
+
         //Take player back to original scene
         string sceneName = BattleSimStatus.SceneName;
         PlayerSpawn.PlayerPosition = BattleInformation.PlayerPosition;
         BattleSimStatus.ClearBattleSimStatus();
         BattleStateMachine.EndStateMachine();
         BattleInformation.ResetBattleInformation();
-        try{
+        try
+        {
             DayNightCycle.Instance.ResumeTimer();
-        } catch(Exception e){
+        }
+        catch (Exception e)
+        {
             Debug.LogWarning("WARNING: " + e.ToString());
         }
         //TODO: create method in sceneloader to fade music out
@@ -145,21 +149,21 @@ public class BattleSimulator : MonoBehaviour
         //BattlePlayer
         BattlePlayer.Character.BaseStats.RegenElx();
         BattlePlayer.UpdateHUD();
-        
+
         //BattleAllies
-        foreach(BattleCharacter battleAlly in BattleAllies)
+        foreach (BattleCharacter battleAlly in BattleAllies)
         {
-            if(battleAlly.Character != null && battleAlly.Character.BaseStats.Hp > 0)
+            if (battleAlly.Character != null && battleAlly.Character.BaseStats.Hp > 0)
             {
                 battleAlly.Character.BaseStats.RegenElx();
                 battleAlly.UpdateHUD();
             }
         }
-        
+
         //BattleEnemies
-        foreach(BattleCharacter battleEnemy in BattleEnemies)
+        foreach (BattleCharacter battleEnemy in BattleEnemies)
         {
-            if(battleEnemy.Character != null && battleEnemy.Character.BaseStats.Hp > 0)
+            if (battleEnemy.Character != null && battleEnemy.Character.BaseStats.Hp > 0)
             {
                 battleEnemy.Character.BaseStats.RegenElx();
                 battleEnemy.UpdateHUD();

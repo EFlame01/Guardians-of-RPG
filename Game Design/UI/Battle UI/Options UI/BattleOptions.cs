@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 /// <summary>
 /// BattleOptions is a class that is responsible
@@ -12,10 +9,17 @@ using TMPro;
 /// </summary>
 public class BattleOptions : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds0_3 = new WaitForSeconds(0.3f);
+
     //serialized variables
     public Button RunButton;
     public Options Options;
     public Animator Animator;
+
+    void Start()
+    {
+        RunButton.interactable = BattleSimStatus.CanRun;
+    }
 
     /// <summary>
     /// Closes the BattleOptions UI and
@@ -44,7 +48,6 @@ public class BattleOptions : MonoBehaviour
     /// </summary>
     public void OnRunButtonPressed()
     {
-        //TODO: player's option is to run
         StartCoroutine(CloseBattleOptions());
         Player.Instance().BattleStatus.SetRollRun(true);
         Player.Instance().BattleStatus.SetTurnStatus(TurnStatus.RUN);
@@ -56,8 +59,6 @@ public class BattleOptions : MonoBehaviour
     /// </summary>
     public void OnSkipButtonPressed()
     {
-        //TODO: player's option is to skip turn
-        Debug.Log("Skip button pressed...");
         StartCoroutine(CloseBattleOptions());
         Player.Instance().BattleStatus.SetTurnStatus(TurnStatus.SKIP);
         BattleSimStatus.EndPlayerOption = true;
@@ -69,7 +70,7 @@ public class BattleOptions : MonoBehaviour
     public IEnumerator CloseBattleOptions()
     {
         Animator.Play("text_box_battle_options_close");
-        yield return new WaitForSeconds(0.3f);
-        this.gameObject.SetActive(false);
+        yield return _waitForSeconds0_3;
+        gameObject.SetActive(false);
     }
 }

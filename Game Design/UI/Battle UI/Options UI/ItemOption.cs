@@ -58,6 +58,8 @@ public class ItemOption : MonoBehaviour
         ClearItemList();
         foreach (KeyValuePair<string, int> itemInfo in Player.Instance().Inventory.ItemList)
         {
+            if (itemInfo.Value <= 0)
+                continue;
             Item item = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
             if (item.Type.Equals(_itemType))
             {
