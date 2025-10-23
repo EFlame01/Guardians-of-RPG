@@ -25,6 +25,7 @@ public class BattleSimStatus
     public static bool AfterRoundStarted;
     public static bool CanRun = true;
     public static bool RunSuccessful;
+    public static bool GameOverScreenIfLost;
     public static GameObject BurnSymbol;
     public static GameObject FrozenSymbol;
     public static GameObject PetrifiedSymbol;
@@ -87,6 +88,7 @@ public class BattleSimStatus
         AfterRoundStarted = false;
         RunSuccessful = false;
         CanRun = true;
+        GameOverScreenIfLost = false;
     }
 
     /// <summary>
