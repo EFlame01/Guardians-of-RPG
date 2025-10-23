@@ -141,7 +141,10 @@ public class BattleSimulator : MonoBehaviour
         }
         //TODO: create method in sceneloader to fade music out
         AudioManager.Instance.StopCurrentMusic(false);
-        SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
+        if (BattleOverState.Winner().Equals("ENEMY") && BattleSimStatus.GameOverScreenIfLost)
+            SceneLoader.Instance.LoadScene("Game Over Screen", TransitionType.FADE_TO_BLACK);
+        else
+            SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
     }
 
     private void UpdateElixirPool()
