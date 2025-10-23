@@ -1,5 +1,3 @@
-using System.Collections;
-using UnityEngine;
 
 /// <summary>
 /// Battle State is an abstract class that
@@ -10,9 +8,9 @@ using UnityEngine;
 public abstract class BattleState
 {
     //public variables
-    public string PrevState {get; protected set;}
-    public string NextState {get; protected set;}
-    public string CurrentState {get; protected set;}
+    public string PrevState { get; protected set; }
+    public string NextState { get; protected set; }
+    public string CurrentState { get; protected set; }
 
     protected bool _roundOver;
 
@@ -48,11 +46,11 @@ public abstract class BattleState
     /// <returns><c>TRUE</c> if the battle is over, <c>FALSE</c> if otherwise</returns>
     public bool BattleOver()
     {
-        if(BattleSimStatus.Enemies.Count == 0 )
+        if (BattleSimStatus.Enemies.Count == 0)
             return true;
-        if(BattleSimStatus.Allies.Count == 0 && Player.Instance().BaseStats.Hp == 0)
+        if (BattleSimStatus.Allies.Count == 0 && Player.Instance().BaseStats.Hp == 0)
             return true;
-        
+
         return false;
     }
 
@@ -62,11 +60,11 @@ public abstract class BattleState
     /// <returns><c>"PLAYER"</c> if the player won, <c>"ENEMY"</c> if the player lost. (May also return <c>"NO ONE"</c>).</returns>
     public string Winner()
     {
-        if(BattleSimStatus.Enemies.Count == 0 )
+        if (BattleSimStatus.Enemies.Count == 0)
             return "PLAYER";
-        if(BattleSimStatus.Allies.Count == 0 && Player.Instance().BaseStats.Hp == 0)
+        if (BattleSimStatus.Allies.Count == 0 && Player.Instance().BaseStats.Hp == 0)
             return "ENEMY";
-        
+
         return "NO ONE";
     }
 
