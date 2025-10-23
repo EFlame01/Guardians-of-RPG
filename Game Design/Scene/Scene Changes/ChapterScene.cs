@@ -8,6 +8,8 @@ using TMPro;
 /// </summary>
 public class ChapterScene : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds3 = new WaitForSeconds(3f);
+
     //Serialized varialbes
     [SerializeField] private TextMeshProUGUI PartText;
     [SerializeField] private TextMeshProUGUI ChapterText;
@@ -39,7 +41,7 @@ public class ChapterScene : MonoBehaviour
         if (ChapterStoryFlag != null)
             Player.Instance().StoryFlagManager.UpdateFlag(ChapterStoryFlag, true);
 
-        yield return new WaitForSeconds(3f);
+        yield return _waitForSeconds3;
         SceneLoader.Instance.LoadScene(SceneName, TransitionType.FADE_TO_BLACK);
     }
 }
