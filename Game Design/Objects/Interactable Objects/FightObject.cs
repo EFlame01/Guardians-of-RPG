@@ -217,7 +217,8 @@ public class FightObject : NPCObject
 
         BattleSimStatus.GameOverScreenIfLost = GameOverScreen;
 
-        GameOverScene.Instance.SetScene(LoseMessage, SceneName, Position);
+        if (GameOverScreen)
+            GameOverScene.SetScene(LoseMessage, SceneName, Position);
 
         for (int i = 0; i < BattleAlliesData.Length; i++)
         {

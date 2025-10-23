@@ -98,6 +98,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             if (!_dialogueEnded)
             {
                 CurrentStory = new Story(_dialogueData.InkJSON.text);
+                CurrentStory.onError += HandleStoryError;
                 SetUpDialogueVariables();
             }
 
@@ -399,6 +400,21 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                 CurrentStory.variablesState["person"] = "person";
                 break;
         }
+    }
+
+    private void HandleStoryError(string message, Ink.ErrorType type)
+    {
+        // 'type' is an enum (Error, Warning)
+        if (type == Ink.ErrorType.Error)
+        {
+            Debug.LogError($"Ink Error: {message}");
+            // Handle fatal errors, such as stopping the game or resetting the story state.
+        }
+        else if (type == Ink.ErrorType.Warning)
+        {
+            Debug.LogWarning($"Ink Warning: {message}");
+        }
+        EndDialogue();
     }
 
 }

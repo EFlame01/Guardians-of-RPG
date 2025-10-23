@@ -61,9 +61,15 @@ public abstract class BattleState
     public string Winner()
     {
         if (BattleSimStatus.Enemies.Count == 0)
+        {
+            BattleSimStatus.DidPlayerWin = true;
             return "PLAYER";
+        }
         if (BattleSimStatus.Allies.Count == 0 && Player.Instance().BaseStats.Hp == 0)
+        {
+            BattleSimStatus.DidPlayerWin = false;
             return "ENEMY";
+        }
 
         return "NO ONE";
     }

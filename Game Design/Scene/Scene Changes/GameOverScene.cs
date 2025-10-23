@@ -8,19 +8,26 @@ public class GameOverScene : Singleton<GameOverScene>
     [SerializeField] public string NextScene;
     [SerializeField] private Vector3 Position = new Vector3(0, 0, 0);
 
+    public static string gameOverText;
+    public static string nextScene;
+    public static Vector3 playerPosition;
+
     public void Start()
     {
         UIAnimator.Play("game_over_fade");
+        GameOverText.text = gameOverText;
+        NextScene = nextScene;
+        Position = playerPosition;
 
-        //TODO: Test. Delete later
-        // SetScene("Game Over\n Loser", "Start Scene");
+        PlayerSpawn.PlayerPosition = Position;
+        PlayerSpawn.PlayerDirection = PlayerDirection.DOWN;
     }
 
-    public void SetScene(string text, string sceneName, Vector3 position)
+    public static void SetScene(string text, string sceneName, Vector3 position)
     {
-        GameOverText.text = text;
-        NextScene = sceneName;
-        Position = position;
+        gameOverText = text;
+        nextScene = sceneName;
+        playerPosition = position;
     }
 
     public void OnOKButtonPressed()

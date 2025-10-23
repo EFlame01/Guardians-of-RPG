@@ -118,6 +118,9 @@ public class BattleSimulator : MonoBehaviour
 
     private void EndBattle()
     {
+        bool didPlayerWin = BattleSimStatus.DidPlayerWin;
+        bool gameOverScreen = BattleSimStatus.GameOverScreenIfLost;
+
         //Reset Elx
         Player.Instance().BaseStats.ResetStats();
 
@@ -141,7 +144,7 @@ public class BattleSimulator : MonoBehaviour
         }
         //TODO: create method in sceneloader to fade music out
         AudioManager.Instance.StopCurrentMusic(false);
-        if (BattleOverState.Winner().Equals("ENEMY") && BattleSimStatus.GameOverScreenIfLost)
+        if (!didPlayerWin && gameOverScreen)
             SceneLoader.Instance.LoadScene("Game Over Screen", TransitionType.FADE_TO_BLACK);
         else
             SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
