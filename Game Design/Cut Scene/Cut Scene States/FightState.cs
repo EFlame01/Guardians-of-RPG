@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +24,12 @@ public class FightState : CutSceneState
 
     [Header("Music")]
     public string TrackName;
+
+    [Header("Lose Battle Information")]
+    public bool GameOverScreen;
+    public string SceneName;
+    public string LoseMessage;
+    public Vector3 Position = new Vector3(0, 0, 0);
 
     public override void Enter()
     {
@@ -67,6 +71,10 @@ public class FightState : CutSceneState
         BattleInformation.BattlePlayerData = BattlePlayerData;
         BattleInformation.PlayerPosition = transform.position;
         BattleInformation.StoryFlagsIfWon = StoryFlagsIfWon;
+
+        BattleSimStatus.GameOverScreenIfLost = GameOverScreen;
+
+        GameOverScene.Instance.SetScene(LoseMessage, SceneName, Position);
 
         for (int i = 0; i < BattleAlliesData.Length; i++)
         {

@@ -36,6 +36,12 @@ public class FightObject : NPCObject
     [Header("Music")]
     public string TrackName;
 
+    [Header("Lose Battle Information")]
+    public bool GameOverScreen;
+    public string SceneName;
+    public string LoseMessage;
+    public Vector3 Position = new Vector3(0, 0, 0);
+
     //private variables
     private bool _bumpIntoPlayer;
     private bool _confrontedPlayer;
@@ -208,6 +214,10 @@ public class FightObject : NPCObject
         BattleInformation.BattlePlayerData = BattlePlayerData;
         BattleInformation.PlayerPosition = PlayerSpawn.PlayerPosition;
         BattleInformation.StoryFlagsIfWon = StoryFlagsIfWon;
+
+        BattleSimStatus.GameOverScreenIfLost = GameOverScreen;
+
+        GameOverScene.Instance.SetScene(LoseMessage, SceneName, Position);
 
         for (int i = 0; i < BattleAlliesData.Length; i++)
         {
