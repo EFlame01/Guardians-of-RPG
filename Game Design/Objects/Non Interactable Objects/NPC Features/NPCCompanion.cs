@@ -200,11 +200,11 @@ public class NPCCompanion : MonoBehaviour
         {
             case PlayerState.MOVING:
             case PlayerState.NOT_MOVING:
+            case PlayerState.INTERACTING_WITH_OBJECT:
+            case PlayerState.TRANSITION:
                 return false;
             case PlayerState.PAUSED:
             case PlayerState.CUT_SCENE:
-            case PlayerState.TRANSITION:
-            case PlayerState.INTERACTING_WITH_OBJECT:
             case PlayerState.CANNOT_MOVE:
                 return true;
             default:
