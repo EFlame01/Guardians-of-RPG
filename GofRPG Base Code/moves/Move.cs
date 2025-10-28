@@ -85,13 +85,23 @@ public class Move
         int dmg;
         double newPower = Power;
         double chanceOfCrit = user.BaseStats.Crt;
+        int rollDef = Random.Range(1, 20) + 1;
 
         if (user.Archetype.ClassName == ArchetypeName || user.Archetype.ArchetypeName == ArchetypeName)
             newPower += Power * Units.STAB_DMG;
         if (chanceOfCrit >= critPercent)
-            newPower += Power * Units.CRIT_DMG;
+            newPower += Mathf.Ceil((float)(Power * Units.CRIT_DMG));
         if (epMultiplyer > 0)
             newPower += Power * epMultiplyer;
+        
+        if(rollDef <= 5)
+            targetDef -= (int)(Mathf.Ceil((float)(Power * Units.CRIT_DMG)));
+        if(rollDef <= 10)
+            targetDef = 0;
+        if(rollDef <= 15)
+            targetDef += (int)(Mathf.Ceil((float)(Power * Units.CRIT_DMG)));
+        if(rollDef == 20)
+            targetDef *= 2;
 
         userAtk = (int)(userAtk * newPower);
         dmg = Mathf.Clamp(userAtk - targetDef, 1, userAtk);
