@@ -232,6 +232,7 @@ public class FightObject : NPCObject
                 BattleInformation.BattleEnemiesData[i] = BattleEnemiesData[i];
         }
 
+        BattleSimStatus.CanRun = false;
         BattleSimStatus.SceneName = SceneManager.GetActiveScene().name;
         SceneLoader.Instance.LoadScene("Battle Scene", TransitionType);
     }
