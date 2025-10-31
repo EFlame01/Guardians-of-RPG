@@ -29,6 +29,7 @@ public class CutScene : MonoBehaviour
     public bool SetDayOnStart;
     public int TimeOfDay;
     public bool StartTimer;
+    public bool SetNewDay;
 
     [Header("Music")]
     public string TrackName;
@@ -284,6 +285,8 @@ public class CutScene : MonoBehaviour
         try
         {
             DayNightCycle.Instance.SetTimeOfDay(TimeOfDay, startTimer);
+            if (SetNewDay)
+                DayNightCycle.Instance.SetNewDay(TimeOfDay);
         }
         catch (Exception e)
         {
