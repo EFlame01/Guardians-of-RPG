@@ -11,9 +11,9 @@ using UnityEngine;
 public class DayNightCycle : PersistentSingleton<DayNightCycle>
 {
     //public static variables
-    public static int TimeOfDay {get; private set;}
-    public static float Timer {get; private set;}
-    public static float TimeRemaining {get; private set;}
+    public static int TimeOfDay { get; private set; }
+    public static float Timer { get; private set; }
+    public static float TimeRemaining { get; private set; }
 
     //private variables
     private bool _timerStarted = false;
@@ -28,13 +28,13 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     // Update is called once per frame
     public void FixedUpdate()
     {
-        if(_timerStarted)
+        if (_timerStarted)
         {
             Timer += Time.fixedDeltaTime;
             TimeRemaining -= Time.fixedDeltaTime;
         }
 
-        if((int)Timer%(int)Units.TIME_PER_PART == 0)
+        if ((int)Timer % (int)Units.TIME_PER_PART == 0)
             ChangeTimeOfDay();
     }
 
@@ -75,10 +75,21 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     public void SetTimeOfDay(int timeOfDay, bool startTimer)
     {
         TimeRemaining = Units.TIME_PER_PART;
-        TimeOfDay = timeOfDay == -1? TimeOfDay: timeOfDay;
+        TimeOfDay = timeOfDay == -1 ? TimeOfDay : timeOfDay;
         Timer = 0;
         _prevTime = 0;
         _timerStarted = startTimer;
+    }
+
+    /// <summary>
+    /// This method sets everything to a new day
+    /// </summary>
+    public void SetNewDay(int timeOfDay)
+    {
+        TimeOfDay = timeOfDay == -1 ? Units.MORNING : timeOfDay;
+        WellDataContainer.IncrementWellDay();
+        MedicalCenterDataContainer.ResetNumOfTimesUsed();
+        GameManager.Instance.NumberOfDays++;
     }
 
     /// <summary>
@@ -87,18 +98,15 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     /// </summary>
     private void ChangeTimeOfDay()
     {
-        if(Timer - _prevTime < Units.TIME_PER_PART)
+        if (Timer - _prevTime < Units.TIME_PER_PART)
             return;
-        
+
         _prevTime = Timer;
         TimeRemaining = Units.TIME_PER_PART;
 
-        if(TimeOfDay + 1 > Units.NIGHT)
+        if (TimeOfDay + 1 > Units.NIGHT)
         {
-            TimeOfDay = Units.MORNING;
-            WellDataContainer.IncrementWellDay();
-            MedicalCenterDataContainer.ResetNumOfTimesUsed();
-            GameManager.Instance.NumberOfDays++;
+            SetNewDay(Units.MORNING);
         }
         else
             TimeOfDay++;
