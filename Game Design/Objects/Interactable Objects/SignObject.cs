@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 /// <summary>
 /// SignObject is a class that extends the
@@ -32,7 +33,15 @@ public class SignObject : InteractableObject, IDialogue
 
     public void StartDialogue()
     {
-        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        try
+        {
+            DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("ERROR: " + e.Message);
+            GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
+        }
     }
 
     /// <summary>
