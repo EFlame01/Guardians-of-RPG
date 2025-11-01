@@ -30,6 +30,7 @@ public class DoorObject : InteractableObject
     /// <returns></returns>
     private IEnumerator OpenDoor()
     {
+        GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
         AudioManager.Instance.PlaySoundEffect(_nameOfSoundEffect);
         _doorSprite.OpenAnimation();
         yield return new WaitForSeconds(1f);
