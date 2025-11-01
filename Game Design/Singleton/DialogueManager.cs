@@ -7,7 +7,7 @@ using Ink.Runtime;
 
 /// <summary>
 /// Class that inherites from PersistentSingleton class.
-/// DialogueManager is reponsible for using the DialogueData
+/// DialogueManager is responsible for using the DialogueData
 /// to diplay the panels required to reveal the dialogue and
 /// interact with the story.
 /// </summary>
