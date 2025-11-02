@@ -46,6 +46,13 @@ public class FightObject : NPCObject
     private bool _bumpIntoPlayer;
     private bool _confrontedPlayer;
 
+    public override void Update()
+    {
+        base.Update();
+        if (!NpcData.foughtPlayer && _confrontedPlayer && !CanInteract)
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+    }
+
     /// <summary>
     /// If Player can interact with
     /// object, it will check if the Player
@@ -241,6 +248,9 @@ public class FightObject : NPCObject
     {
         if (GameManager.Instance.PlayerState.Equals(PlayerState.INTERACTING_WITH_OBJECT))
         {
+            if (_bumpIntoPlayer)
+                return;
+
             if (collision2D.gameObject.CompareTag("Player"))
                 _bumpIntoPlayer = true;
             else
