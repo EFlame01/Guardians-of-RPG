@@ -100,7 +100,10 @@ public class QuestState : CutSceneState, IDialogue
                 DialogueManager.Instance.CurrentStory.variablesState["levelUp"] = false;
         }
         else
+        {
             Debug.LogWarning("WARNING: QuestID " + questID + " does not exist or was not assigned to player...");
+            Exit();
+        }
 
         StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.QUEST_COMPLETED, 2f));
         StartDialogue();
@@ -124,7 +127,10 @@ public class QuestState : CutSceneState, IDialogue
 
         }
         else
+        {
             Debug.LogWarning("WARNING: QuestID " + questID + " does not exist. Could not be assigned to player");
+            Exit();
+        }
 
         StartCoroutine(AudioManager.Instance.PlaySoundEffect2(Units.SoundEffect.RECIEVED, 1f));
         StartDialogue();
