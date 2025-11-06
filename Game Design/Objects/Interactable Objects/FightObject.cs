@@ -65,7 +65,7 @@ public class FightObject : NPCObject
         if (CanInteract)
         {
             CanInteract = false;
-            if (NpcData.foughtPlayer)
+            if (NpcData.foughtPlayer || NpcData.wonAgainstPlayer)
                 ConfrontPlayer3();
             else
                 StartCoroutine(ConfrontPlayer1());

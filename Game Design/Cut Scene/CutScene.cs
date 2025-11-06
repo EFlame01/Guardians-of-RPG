@@ -73,29 +73,10 @@ public class CutScene : MonoBehaviour
         if (!_cutSceneStarted)
             return;
 
-        if (director.time >= director.duration - 0.10)
+        if (director.time >= director.duration - 0.10 && CurrentState == null)
             EndCutScene();
 
-        if (CurrentState == null)
-            return;
-
-        switch (director.state)
-        {
-            case PlayState.Playing:
-                if (director.time >= CurrentState.TimeStamp)
-                {
-                    director.Pause();
-                    CurrentState.Enter();
-                }
-                break;
-            case PlayState.Paused:
-                if (CurrentState.IsDone)
-                {
-                    CurrentState = CurrentState.NextState;
-                    director.Resume();
-                }
-                break;
-        }
+        CheckForCutSceneState();
     }
 
     /// <summary>
@@ -154,6 +135,9 @@ public class CutScene : MonoBehaviour
     /// </summary>
     private void EndCutScene()
     {
+        if (CurrentState != null && !CurrentState.IsDone)
+            Debug.LogWarning("WARNING: Current CutSceneState is NOT done.");
+
         if (!EndDirection.Equals(PlayerDirection.NONE))
             PlayerSpawn.PlayerDirection = EndDirection;
 
@@ -303,6 +287,30 @@ public class CutScene : MonoBehaviour
     {
         if (TrackName != null && TrackName.Length > 0)
             StartCoroutine(AudioManager.Instance.BlendMusic(TrackName));
+    }
+
+    private void CheckForCutSceneState()
+    {
+        if (CurrentState == null)
+            return;
+
+        switch (director.state)
+        {
+            case PlayState.Playing:
+                if (director.time >= CurrentState.TimeStamp)
+                {
+                    director.Pause();
+                    CurrentState.Enter();
+                }
+                break;
+            case PlayState.Paused:
+                if (CurrentState.IsDone)
+                {
+                    CurrentState = CurrentState.NextState;
+                    director.Resume();
+                }
+                break;
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D collider2D)

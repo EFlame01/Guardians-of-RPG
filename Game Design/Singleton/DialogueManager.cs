@@ -147,7 +147,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                         CloseRightTextBox(TextBox);
                         TextBox.gameObject.SetActive(true);
                         yield return new WaitForSeconds(0.4f);
-                        TextBox.OpenTextBox();
+                        OpenRightTextBox(TextBox);
                         yield return new WaitForSeconds(0.25f);
                     }
                     _currentTextBox = TextBox;
@@ -157,7 +157,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     {
                         CloseRightTextBox(NarrationTextBox);
                         yield return new WaitForSeconds(0.4f);
-                        NarrationTextBox.OpenTextBox();
+                        OpenRightTextBox(NarrationTextBox);
                         yield return new WaitForSeconds(0.25f);
                     }
                     _currentTextBox = NarrationTextBox;
@@ -167,7 +167,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     {
                         CloseRightTextBox(ConfirmationTextBox);
                         yield return new WaitForSeconds(0.4f);
-                        ConfirmationTextBox.OpenTextBox();
+                        OpenRightTextBox(ConfirmationTextBox);
                         yield return new WaitForSeconds(0.25f);
                     }
                     SetUpConfirmation();
@@ -178,7 +178,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     {
                         CloseRightTextBox(DecisionTextBox);
                         yield return new WaitForSeconds(0.4f);
-                        DecisionTextBox.OpenTextBox();
+                        OpenRightTextBox(DecisionTextBox);
                         yield return new WaitForSeconds(0.25f);
                     }
                     SetUpDecision();
@@ -331,13 +331,49 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     private void CloseRightTextBox(TextBox textBox)
     {
         if (!NarrationTextBox.Equals(textBox) && !NarrationTextBox.IsClosed)
+        {
             NarrationTextBox.EndNarration();
+            NarrationTextBox.gameObject.SetActive(false);
+        }
         if (!ConfirmationTextBox.Equals(textBox) && !ConfirmationTextBox.IsClosed)
+        {
             ConfirmationTextBox.EndNarration();
+            ConfirmationTextBox.gameObject.SetActive(false);
+        }
         if (!DecisionTextBox.Equals(textBox) && !DecisionTextBox.IsClosed)
+        {
             DecisionTextBox.EndNarration();
+            DecisionTextBox.gameObject.SetActive(false);
+        }
         if (TextBox != null && !TextBox.Equals(textBox) && !TextBox.IsClosed)
+        {
             TextBox.EndNarration();
+            TextBox.gameObject.SetActive(false);
+        }
+    }
+
+    private void OpenRightTextBox(TextBox textBox)
+    {
+        if (!NarrationTextBox.Equals(textBox) && !NarrationTextBox.IsClosed)
+        {
+            NarrationTextBox.gameObject.SetActive(true);
+            NarrationTextBox.OpenTextBox();
+        }
+        if (!ConfirmationTextBox.Equals(textBox) && !ConfirmationTextBox.IsClosed)
+        {
+            ConfirmationTextBox.gameObject.SetActive(true);
+            ConfirmationTextBox.OpenTextBox();
+        }
+        if (!DecisionTextBox.Equals(textBox) && !DecisionTextBox.IsClosed)
+        {
+            DecisionTextBox.gameObject.SetActive(true);
+            DecisionTextBox.OpenTextBox();
+        }
+        if (TextBox != null && !TextBox.Equals(textBox) && !TextBox.IsClosed)
+        {
+            TextBox.gameObject.SetActive(true);
+            TextBox.OpenTextBox();
+        }
     }
 
     public IEnumerator WaitUntilDialogueIsOver()

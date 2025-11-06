@@ -27,6 +27,8 @@ public class Map : ButtonUI
     public TextMeshProUGUI countryText;
     public TextMeshProUGUI continentText;
     public TextMeshProUGUI descriptionText;
+    public ScrollRect scrollRect;
+    public Scrollbar scrollBar;
 
     //private variables
     private bool mapReset;
@@ -74,6 +76,9 @@ public class Map : ButtonUI
     /// <param name="id">The id correlating to <c>LocationInformation</c></param>
     public void OnLocationPressed(string id)
     {
+        scrollRect.verticalNormalizedPosition = 1f;
+        scrollBar.value = 1f;
+
         mapReset = false;
         LocationInformation locationInformation = MapDescMaker.Instance.GetLocationInformationTEST(id);
 

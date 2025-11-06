@@ -16,6 +16,7 @@ public class NpcData
     public string ID;
     public Vector3 Position;
     public bool foughtPlayer;
+    public bool wonAgainstPlayer;
     public string direction;
 
     //flag and flag values are conditions that need to be met for NPC to stay active

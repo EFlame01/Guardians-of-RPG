@@ -10,14 +10,9 @@ using UnityEngine.SceneManagement;
 
 public class MapCursor : MonoBehaviour
 {
-    // [SerializeField] Button EquitumCity;
-    // [SerializeField] Button NoMansLand;
-    // [SerializeField] Button GormaniaA;
 
     public Transform Cursor;
     public ButtonField[] ButtonFields;
-    public float x_offset = 1f;
-    public float y_offset = 15f;
 
     // private bool doneWithStart;
     // private Vector2 currentPos = new Vector2(0,0);
@@ -37,17 +32,8 @@ public class MapCursor : MonoBehaviour
         foreach (ButtonField buttonField in ButtonFields)
         {
             if (sceneName.Contains(buttonField.name))
-                Cursor.position = new Vector3(buttonField.button.position.x - x_offset, buttonField.button.position.y + y_offset, 0f);
+                Cursor.position = new Vector3(buttonField.button.position.x - 13f, buttonField.button.position.y + 50.6f, 0f);
 
         }
-
-        // currentPos = new Vector2(Cursor.position.x, Cursor.position.y);
-        // doneWithStart = true;
-    }
-
-    public void Update()
-    {
-        // if(doneWithStart)
-        //     Cursor.position = new Vector3(currentPos.x - x_offset, currentPos.y + y_offset, 0f);
     }
 }

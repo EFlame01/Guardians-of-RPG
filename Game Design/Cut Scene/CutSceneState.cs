@@ -52,9 +52,9 @@ public class CutSceneState : MonoBehaviour
     /// </summary>
     public virtual void Exit()
     {
+        SetStoryFlagsInCutScene();
         IsActive = false;
         IsDone = true;
-        SetStoryFlagsInCutScene();
     }
 
     protected void SetStoryFlagsInCutScene()

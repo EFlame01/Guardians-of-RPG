@@ -44,13 +44,13 @@ public class BattleOverState : BattleState
 
     public override void Update()
     {
-        if(startedDialogue && DialogueManager.Instance.DialogueEnded)
+        if (startedDialogue && DialogueManager.Instance.DialogueEnded)
             NextState = Units.END_BATTLE;
     }
 
     public override void Exit()
     {
-        if(Winner().Equals("ENEMY"))
+        if (Winner().Equals("ENEMY"))
             Player.Instance().BaseStats.SetHp((int)Mathf.Clamp((float)Player.Instance().BaseStats.FullHp * 0.2f, 1, Player.Instance().BaseStats.FullHp));
         NextState = null;
     }
@@ -62,45 +62,45 @@ public class BattleOverState : BattleState
         List<Character> enemies = new List<Character>();
         string text = "";
 
-        foreach(Character c in BattleSimStatus.Allies)
+        foreach (Character c in BattleSimStatus.Allies)
             allies.Add(c);
-        foreach(Character c in BattleSimStatus.Graveyard)
+        foreach (Character c in BattleSimStatus.Graveyard)
         {
-            if(c.Type.Equals("ALLY"))
+            if (c.Type.Equals("ALLY"))
                 allies.Add(c);
         }
-        foreach(Character c in BattleSimStatus.Enemies)
+        foreach (Character c in BattleSimStatus.Enemies)
             enemies.Add(c);
-        foreach(Character c in BattleSimStatus.Graveyard)
+        foreach (Character c in BattleSimStatus.Graveyard)
         {
-            if(c.Type.Equals("ENEMY"))
+            if (c.Type.Equals("ENEMY"))
                 enemies.Add(c);
         }
 
-        if(_winner.Equals("PLAYER"))
+        if (_winner.Equals("PLAYER"))
         {
             text = Player.Instance().Name + " ";
-            
-            for(int i = 0; i < allies.Count; i++)
+
+            for (int i = 0; i < allies.Count; i++)
             {
-                if(i == 0 && i + 1 == allies.Count)
-                    text += "and " +  (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
-                else if(i == 0)
+                if (i == 0 && i + 1 == allies.Count)
+                    text += "and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
+                else if (i == 0)
                     text += ", " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
-                else if(i + 1 == allies.Count)
+                else if (i + 1 == allies.Count)
                     text += ", and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
             }
-            
+
             text += " defeated ";
 
-            for(int i = 0; i < enemies.Count; i++)
+            for (int i = 0; i < enemies.Count; i++)
             {
-                if(i == 0)
-                    text += enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower()  : enemies[i].Name;
-                else if(i + 1 == enemies.Count)
-                    text += ", and " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower()  : enemies[i].Name);
+                if (i == 0)
+                    text += enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower() : enemies[i].Name;
+                else if (i + 1 == enemies.Count)
+                    text += ", and " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower() : enemies[i].Name);
                 else
-                    text += ", " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower()  : enemies[i].Name);
+                    text += ", " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower() : enemies[i].Name);
             }
 
             text += "!";
@@ -109,27 +109,27 @@ public class BattleOverState : BattleState
         else if (_winner.Equals("ENEMY"))
         {
             text = Player.Instance().Name + " ";
-            
-            for(int i = 0; i < allies.Count; i++)
+
+            for (int i = 0; i < allies.Count; i++)
             {
-                if(i == 0 && i + 1 == allies.Count)
-                    text += "and " +  (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower()  : allies[i].Name);
-                else if(i == 0)
-                    text += ", " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower()  : allies[i].Name);
-                else if(i + 1 == allies.Count)
-                    text += ", and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower()  : allies[i].Name);
+                if (i == 0 && i + 1 == allies.Count)
+                    text += "and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
+                else if (i == 0)
+                    text += ", " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
+                else if (i + 1 == allies.Count)
+                    text += ", and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
             }
-            
+
             text += " was defeated by ";
 
-            for(int i = 0; i < enemies.Count; i++)
+            for (int i = 0; i < enemies.Count; i++)
             {
-                if(i == 0)
+                if (i == 0)
                     text += enemies[i].Name;
-                else if(i + 1 == enemies.Count)
-                    text += ", and " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower()  : enemies[i].Name);
+                else if (i + 1 == enemies.Count)
+                    text += ", and " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower() : enemies[i].Name);
                 else
-                    text += ", " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower()  : enemies[i].Name);
+                    text += ", " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower() : enemies[i].Name);
             }
 
             text += "!";
@@ -145,9 +145,9 @@ public class BattleOverState : BattleState
         int bits = 0;
         List<Item> itemHaul = new List<Item>();
 
-        foreach(Character c in BattleSimStatus.Graveyard)
+        foreach (Character c in BattleSimStatus.Graveyard)
         {
-            if(c.Type.Equals("ENEMY"))
+            if (c.Type.Equals("ENEMY"))
             {
                 xp += Level.DetermineXPForBattle(c.Level);
                 bits += c.Bits;
@@ -159,17 +159,17 @@ public class BattleOverState : BattleState
         int newLevel = Player.Instance().Level;
         Move[] newMoves = MoveMaker.Instance.GetLevelUpMoves(newLevel, Player.Instance().Archetype.ArchetypeName, Player.Instance().Archetype.ClassName);
 
-        if(bits > 0)
+        if (bits > 0)
             texts.Add("You gained " + xp + " XP" + " and " + bits + " bits!");
         else
             texts.Add("You gained " + xp + " XP!");
 
-        if(newLevel != oldLevel)
+        if (newLevel != oldLevel)
         {
             texts.Add("You are now level " + newLevel + "!");
-            foreach(Move move in newMoves)
+            foreach (Move move in newMoves)
             {
-                if(!MoveManager.MoveDictionary.ContainsKey(move.Name))
+                if (!MoveManager.MoveDictionary.ContainsKey(move.Name))
                 {
                     texts.Add("You learned " + move.Name + "!");
                     Player.Instance().MoveManager.AddMove(move.Name);
@@ -186,7 +186,7 @@ public class BattleOverState : BattleState
         //TODO: find victory song to play
         if (_winner.Equals("PLAYER"))
             AudioManager.Instance.BlendMusic2(Units.Music.VICTORY_THEME);
-        
+
         DialogueManager.Instance.CurrentStory = new Story(dialogueData.InkJSON.text);
         for (int i = 0; i < texts.Count; i++)
         {
@@ -203,13 +203,31 @@ public class BattleOverState : BattleState
 
     public void UpdateFlagForWin()
     {
-        if(_winner.Equals("PLAYER"))
+        if (_winner.Equals("PLAYER"))
         {
-            if(BattleInformation.StoryFlagsIfWon != null && BattleInformation.StoryFlagsIfWon.Length > 0)
+            SetVictoryNPCFlag(true);
+            if (BattleInformation.StoryFlagsIfWon != null && BattleInformation.StoryFlagsIfWon.Length > 0)
             {
-                foreach(string flagID in BattleInformation.StoryFlagsIfWon)
+                foreach (string flagID in BattleInformation.StoryFlagsIfWon)
                     Player.Instance().StoryFlagManager.UpdateFlag(flagID, true);
             }
+        }
+        else
+            SetVictoryNPCFlag(false);
+    }
+
+    private void SetVictoryNPCFlag(bool flag)
+    {
+        List<Character> enemies = new List<Character>();
+        enemies.AddRange(BattleSimStatus.Enemies);
+        foreach (Character c in BattleSimStatus.Graveyard)
+        {
+            if (c.Type.Equals("ENEMY"))
+                enemies.Add(c);
+        }
+        foreach (Character c in enemies)
+        {
+            NpcDataContainer.GetNpcData(c.Id).wonAgainstPlayer = flag;
         }
     }
 
