@@ -27,6 +27,7 @@ public class TextBox : MonoBehaviour
     [SerializeField] private InputActionReference Select;
 
     public bool IsClosed { get; private set; }
+    public bool ClosedTextBox { get; private set; }
 
     private DialogueData _dialogueData;
     private bool _textBoxOpened;
@@ -34,6 +35,7 @@ public class TextBox : MonoBehaviour
     public virtual void Start()
     {
         IsClosed = true;
+        ClosedTextBox = false;
         if (PlayOnStart)
             OpenTextBox();
     }
@@ -58,6 +60,7 @@ public class TextBox : MonoBehaviour
         //start narraiton naimation and dialogue
         StartCoroutine(StartTextBoxAnimation());
         IsClosed = false;
+        ClosedTextBox = false;
     }
 
     /// <summary>
@@ -125,6 +128,7 @@ public class TextBox : MonoBehaviour
         yield return _waitForSeconds0_5;
         if (DestroyTextBox)
             Destroy(gameObject);
+        ClosedTextBox = true;
     }
 
     public void ResetScrollBar()

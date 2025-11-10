@@ -284,8 +284,11 @@ public class BattleActionEffect : MonoBehaviour
             DialogueManager.Instance.CurrentStory.variablesState[variable] = _effectText[i];
         }
 
-        _textBox.OpenTextBox();
-        _textBox.StartNarration(_dialogueData);
+        DialogueManager.Instance.TextBox = _textBox;
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+
+        // _textBox.OpenTextBox();
+        // _textBox.StartNarration(_dialogueData);
         StartedDialogue = true;
     }
 

@@ -37,33 +37,33 @@ public class CharacterActionState : BattleState, IDialogue
     public override void Enter()
     {
         //Determine order of operations if the round just started
-        if(!BattleSimStatus.RoundStarted)
+        if (!BattleSimStatus.RoundStarted)
             DetermineOrder();
         //If the round is not over, show the character's action
         //Otherwise, determine which state to go to
-        if(!RoundOver())
+        if (!RoundOver())
             DisplayAction();
         else
         {
             //TODO: test why RoundStarted is commented out
             // BattleSimStatus.RoundStarted = false;
-            if(BattleSimStatus.RunSuccessful)
+            if (BattleSimStatus.RunSuccessful)
                 NextState = Units.END_BATTLE;
-            else if(BattleOver())
+            else if (BattleOver())
                 NextState = Units.BATTLE_OVER_STATE;
             else
                 NextState = Units.AFTER_ROUND_STATE;
-                // NextState = "AFTER ROUND STATE";
+            // NextState = "AFTER ROUND STATE";
         }
     }
 
     public override void Update()
     {
-        if(_roundOver)
+        if (_roundOver)
             return;
-        if(_startedDialogue && DialogueManager.Instance.DialogueEnded)
+        if (_startedDialogue && DialogueManager.Instance.DialogueEnded)
         {
-            if(HasAction(BattleSimStatus.ChosenCharacter))
+            if (HasAction(BattleSimStatus.ChosenCharacter))
                 NextState = Units.ACTION_EFFECT_STATE;
             else
                 NextState = Units.CHARACTER_ACTION_STATE;
@@ -72,7 +72,7 @@ public class CharacterActionState : BattleState, IDialogue
 
     public override void Exit()
     {
-        
+
     }
 
     private void DetermineOrder()
@@ -87,7 +87,7 @@ public class CharacterActionState : BattleState, IDialogue
         Character character = BattleSimStatus.BattleQueue.Dequeue();
         BattleSimStatus.ChosenCharacter = character;
 
-        if(character.BaseStats.Hp <= 0 && !character.BattleStatus.TurnStatus.Equals(TurnStatus.ITEM))
+        if (character.BaseStats.Hp <= 0 && !character.BattleStatus.TurnStatus.Equals(TurnStatus.ITEM))
         {
             character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
             character.BattleStatus.SetTurnStatusTag(character.Name + " is knocked out and cannot move!");
@@ -123,13 +123,15 @@ public class CharacterActionState : BattleState, IDialogue
         _startedDialogue = true;
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
         DialogueManager.Instance.CurrentStory.variablesState["text"] = _characterActionText;
-        _narrationTextBox.OpenTextBox();
+        DialogueManager.Instance.TextBox = _narrationTextBox;
+        // _narrationTextBox.gameObject.SetActive(true);
+        // _narrationTextBox.OpenTextBox();
         _narrationTextBox.StartNarration(_dialogueData);
     }
 
     private bool HasAction(Character character)
     {
-        switch(character.BattleStatus.TurnStatus)
+        switch (character.BattleStatus.TurnStatus)
         {
             case TurnStatus.SKIP:
             case TurnStatus.CANNOT_MOVE:

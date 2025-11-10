@@ -153,7 +153,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = TextBox;
                     break;
                 case Units.NARRATION:
-                    if (NarrationTextBox.IsClosed)
+                    if (!NarrationTextBox.gameObject.activeSelf || NarrationTextBox.IsClosed)
                     {
                         CloseRightTextBox(NarrationTextBox);
                         yield return new WaitForSeconds(0.4f);
@@ -163,7 +163,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = NarrationTextBox;
                     break;
                 case Units.CONFIRMATION:
-                    if (ConfirmationTextBox.IsClosed)
+                    if (ConfirmationTextBox.gameObject.activeSelf || ConfirmationTextBox.IsClosed)
                     {
                         CloseRightTextBox(ConfirmationTextBox);
                         yield return new WaitForSeconds(0.4f);
@@ -174,7 +174,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = ConfirmationTextBox;
                     break;
                 case Units.DECISION:
-                    if (DecisionTextBox.IsClosed)
+                    if (DecisionTextBox.gameObject.activeSelf || DecisionTextBox.IsClosed)
                     {
                         CloseRightTextBox(DecisionTextBox);
                         yield return new WaitForSeconds(0.4f);
@@ -330,49 +330,42 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void CloseRightTextBox(TextBox textBox)
     {
-        if (!NarrationTextBox.Equals(textBox) && !NarrationTextBox.IsClosed)
-        {
-            NarrationTextBox.EndNarration();
-            NarrationTextBox.gameObject.SetActive(false);
-        }
-        if (!ConfirmationTextBox.Equals(textBox) && !ConfirmationTextBox.IsClosed)
-        {
-            ConfirmationTextBox.EndNarration();
-            ConfirmationTextBox.gameObject.SetActive(false);
-        }
-        if (!DecisionTextBox.Equals(textBox) && !DecisionTextBox.IsClosed)
-        {
-            DecisionTextBox.EndNarration();
-            DecisionTextBox.gameObject.SetActive(false);
-        }
-        if (TextBox != null && !TextBox.Equals(textBox) && !TextBox.IsClosed)
-        {
-            TextBox.EndNarration();
-            TextBox.gameObject.SetActive(false);
-        }
+        EndNarrationForTextBox(NarrationTextBox, textBox);
+        EndNarrationForTextBox(ConfirmationTextBox, textBox);
+        EndNarrationForTextBox(DecisionTextBox, textBox);
+        EndNarrationForTextBox(TextBox, textBox);
     }
 
     private void OpenRightTextBox(TextBox textBox)
     {
-        if (!NarrationTextBox.Equals(textBox) && !NarrationTextBox.IsClosed)
+        OpenNarrationForTextBox(NarrationTextBox, textBox);
+        OpenNarrationForTextBox(ConfirmationTextBox, textBox);
+        OpenNarrationForTextBox(DecisionTextBox, textBox);
+        OpenNarrationForTextBox(TextBox, textBox);
+    }
+
+    private void EndNarrationForTextBox(TextBox textBox, TextBox referenceTextBox)
+    {
+        if (textBox != null && textBox.gameObject.activeSelf && !textBox.Equals(referenceTextBox))
         {
-            NarrationTextBox.gameObject.SetActive(true);
-            NarrationTextBox.OpenTextBox();
+            textBox.EndNarration();
+            StartCoroutine(DeactivateTextBox(textBox));
         }
-        if (!ConfirmationTextBox.Equals(textBox) && !ConfirmationTextBox.IsClosed)
+    }
+
+    private IEnumerator DeactivateTextBox(TextBox textBox)
+    {
+        while (!textBox.ClosedTextBox)
+            yield return null;
+        textBox.gameObject.SetActive(false);
+    }
+
+    private void OpenNarrationForTextBox(TextBox textBox, TextBox referenceTextBox)
+    {
+        if (textBox != null && textBox.Equals(referenceTextBox) && textBox.IsClosed)
         {
-            ConfirmationTextBox.gameObject.SetActive(true);
-            ConfirmationTextBox.OpenTextBox();
-        }
-        if (!DecisionTextBox.Equals(textBox) && !DecisionTextBox.IsClosed)
-        {
-            DecisionTextBox.gameObject.SetActive(true);
-            DecisionTextBox.OpenTextBox();
-        }
-        if (TextBox != null && !TextBox.Equals(textBox) && !TextBox.IsClosed)
-        {
-            TextBox.gameObject.SetActive(true);
-            TextBox.OpenTextBox();
+            textBox.gameObject.SetActive(true);
+            textBox.OpenTextBox();
         }
     }
 
