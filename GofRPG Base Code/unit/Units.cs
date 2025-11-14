@@ -106,7 +106,7 @@ public static class Units
     public const double SUCCESSION_RATE_3 = 3.0 / 4.0;
     public const double SUCCESSION_RATE_4 = 4.0 / 4.0;
 
-    public const double ELIXIR_REGEN_RATE = 1.0 / 4.0;
+    public const double ELIXIR_REGEN_RATE = 1.0 / 10.0;
 
     public const string INITIALIZE_STATE = "INITIALIZE STATE";
     public const string BEFORE_ROUND_STATE = "BEFORE ROUND STATE";
