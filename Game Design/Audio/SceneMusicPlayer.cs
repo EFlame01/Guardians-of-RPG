@@ -38,8 +38,6 @@ public class SceneMusicPlayer : MonoBehaviour
             _musicStarted = true;
             AudioManager.Instance.PlayMusic(trackName, playTrackImmediately);
         }
-        else
-            return;
     }
 
     /// <summary>
