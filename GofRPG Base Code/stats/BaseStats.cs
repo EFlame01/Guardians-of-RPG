@@ -10,15 +10,15 @@ using UnityEngine;
 ///</summary>
 public class BaseStats
 {
-    public int FullHp {get; private set;}
-    public int Atk {get; private set;}
-    public int Def {get; private set;}
-    public int Eva {get; private set;}
-    public int Hp {get; private set;}
-    public int Spd {get; private set;}
-    public double Acc {get; private set;}
-    public double Crt {get; private set;}
-    public int Elx {get; private set;}
+    public int FullHp { get; private set; }
+    public int Atk { get; private set; }
+    public int Def { get; private set; }
+    public int Eva { get; private set; }
+    public int Hp { get; private set; }
+    public int Spd { get; private set; }
+    public double Acc { get; private set; }
+    public double Crt { get; private set; }
+    public int Elx { get; private set; }
     private int _regAtk;
     private int _regDef;
     private int _regEva;
@@ -57,25 +57,25 @@ public class BaseStats
     //Getters and Setters
     public void SetAtk(int atk)
     {
-        if(atk < 0)
+        if (atk < 0)
             atk = 0;
         Atk = atk;
     }
     public void SetDef(int def)
     {
-        if(def < 0)
+        if (def < 0)
             def = 0;
         Def = def;
     }
     public void SetEva(int eva)
     {
-        if(eva < 0)
+        if (eva < 0)
             eva = 0;
         Eva = eva;
     }
     public void SetSpd(int spd)
     {
-        if(spd < 0)
+        if (spd < 0)
             spd = 0;
         Spd = spd;
     }
@@ -85,20 +85,20 @@ public class BaseStats
     }
     public void SetFullHp(int fullHp)
     {
-        if(fullHp < 1)
+        if (fullHp < 1)
             fullHp = 1;
         FullHp = fullHp;
         SetHp(Hp);
     }
     public void SetAcc(double acc)
     {
-        if(acc < Units.STAGE_NEG_6)
+        if (acc < Units.STAGE_NEG_6)
             acc = Units.STAGE_NEG_6;
         Acc = acc;
     }
     public void SetCrt(double crt)
     {
-        if(crt < Units.LOWEST_CRT)
+        if (crt < Units.LOWEST_CRT)
             crt = Units.LOWEST_CRT;
     }
     public int GetFullElx()
@@ -157,9 +157,9 @@ public class BaseStats
     ///</summary>
     public void ResetStats()
     {
-        if(Hp > _regHp)
+        if (Hp > _regHp)
             Hp = _regHp;
-        
+
         FullHp = _regHp;
         Atk = _regAtk;
         Def = _regDef;
@@ -173,7 +173,7 @@ public class BaseStats
     public void ResetHealth()
     {
         int newHp = (int)((double)FullHp * 0.10);
-        newHp = newHp == 0? 1: newHp;
+        newHp = newHp == 0 ? 1 : newHp;
         SetHp(newHp);
     }
 
@@ -205,13 +205,13 @@ public class BaseStats
     //helper method to the ChangeStat method
     private bool ChangeStatHelper(double stat, double regStat, int statStage, int stage)
     {
-        if(statStage == 6 || statStage == -6)
+        if (statStage == 6 || statStage == -6)
             return false;
 
         stage = Mathf.Clamp(stage, -6, 6);
         statStage += stage;
-        
-        switch(statStage)
+
+        switch (statStage)
         {
             case -6:
                 stat = (int)(regStat * Units.STAGE_NEG_6);
@@ -254,9 +254,9 @@ public class BaseStats
                 break;
         }
 
-        if(Hp > FullHp)
+        if (Hp > FullHp)
             FullHp = Hp;
-        
+
         return true;
     }
 }
