@@ -32,6 +32,7 @@ public class OptionState : BattleState
 
     public override void Enter()
     {
+        TextBoxBattle.EndNarrationNow = true;
         BattleSimStatus.RoundStarted = false;
         InitializeBattleOptions();
     }

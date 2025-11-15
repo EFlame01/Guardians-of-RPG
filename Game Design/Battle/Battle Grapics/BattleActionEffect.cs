@@ -131,6 +131,7 @@ public class BattleActionEffect : MonoBehaviour
             moveEffects = GetMoveEffects(Target);
             if (ActionSuccessful())
             {
+                TextBoxBattle.EndNarrationNow = true;
                 switch (_effect)
                 {
                     case "MOVE":
@@ -275,6 +276,7 @@ public class BattleActionEffect : MonoBehaviour
 
     private void DisplayText()
     {
+        TextBoxBattle.KeepTextBoxOpened = true;
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
 
         for (int i = 0; i < _effectText.Count; i++)

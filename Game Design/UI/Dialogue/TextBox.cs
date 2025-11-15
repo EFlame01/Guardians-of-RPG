@@ -40,7 +40,7 @@ public class TextBox : MonoBehaviour
             OpenTextBox();
     }
 
-    public void Update()
+    public virtual void Update()
     {
         if (Select.action.ReadValue<float>() <= 0f)
             return;
@@ -82,10 +82,12 @@ public class TextBox : MonoBehaviour
     /// Animates the text box to disappear, and 
     /// sets the game state to the end state
     /// </summary>
-    public void EndNarration()
+    public virtual void EndNarration()
     {
         try
         {
+            if (TextMeshComponent != null)
+                TextMeshComponent.text = "";
             _textBoxOpened = false;
             StartCoroutine(EndTextBoxAnimation());
             IsClosed = true;
@@ -102,10 +104,6 @@ public class TextBox : MonoBehaviour
     /// <returns></returns>
     public virtual IEnumerator StartTextBoxAnimation()
     {
-        //TODO: testing if placing ResetScrollBar in a different spot is better.
-        //Method placed here to always reset scroll bar after opening text box
-        // ResetScrollBar();
-
         if (TextMeshComponent != null)
             TextMeshComponent.text = "";
 

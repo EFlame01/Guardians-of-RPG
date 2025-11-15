@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
+using System;
 
 /// <summary>
 /// BattleOverState is a class that extends the 
@@ -50,6 +51,7 @@ public class BattleOverState : BattleState
 
     public override void Exit()
     {
+        TextBoxBattle.KeepTextBoxOpened = false;
         if (Winner().Equals("ENEMY"))
             Player.Instance().BaseStats.SetHp((int)Mathf.Clamp((float)Player.Instance().BaseStats.FullHp * 0.2f, 1, Player.Instance().BaseStats.FullHp));
         NextState = null;
@@ -183,7 +185,8 @@ public class BattleOverState : BattleState
 
     private void AnnounceBattleResult()
     {
-        //TODO: find victory song to play
+        TextBoxBattle.KeepTextBoxOpened = true;
+
         if (_winner.Equals("PLAYER"))
             AudioManager.Instance.BlendMusic2(Units.Music.VICTORY_THEME);
 
@@ -225,9 +228,11 @@ public class BattleOverState : BattleState
             if (c.Type.Equals("ENEMY"))
                 enemies.Add(c);
         }
-        foreach (Character c in enemies)
-        {
-            NpcDataContainer.GetNpcData(c.Id).wonAgainstPlayer = flag;
+        try{
+            foreach (Character c in enemies)
+                NpcDataContainer.GetNpcData(c.Id).wonAgainstPlayer = flag;
+        }catch(Exception e){
+            Debug.LogWarning("NPCs were not documented in SetVictoryNPCFlag()... " + e.Message);
         }
     }
 

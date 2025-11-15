@@ -120,13 +120,15 @@ public class CharacterActionState : BattleState, IDialogue
 
     public void StartDialogue()
     {
+        TextBoxBattle.KeepTextBoxOpened = true;
         _startedDialogue = true;
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
         DialogueManager.Instance.CurrentStory.variablesState["text"] = _characterActionText;
         DialogueManager.Instance.TextBox = _narrationTextBox;
         // _narrationTextBox.gameObject.SetActive(true);
         // _narrationTextBox.OpenTextBox();
-        _narrationTextBox.StartNarration(_dialogueData);
+        // _narrationTextBox.StartNarration(_dialogueData);
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
     }
 
     private bool HasAction(Character character)
