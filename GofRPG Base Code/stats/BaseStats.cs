@@ -117,7 +117,8 @@ public class BaseStats
     /// </summary>
     public void RegenElx()
     {
-        SetElx(Elx + (int)(_regElx * Units.ELIXIR_REGEN_RATE));
+        int increase = Mathf.CeilToInt((_regElx * (float) Units.ELIXIR_REGEN_RATE));
+        SetElx(Elx + increase);
     }
 
     ///<summary>
