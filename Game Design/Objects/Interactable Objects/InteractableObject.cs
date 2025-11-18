@@ -69,7 +69,7 @@ public abstract class InteractableObject : MonoBehaviour
     /// </summary>
     protected void HandleInput()
     {
-        if (Select.action.ReadValue<float>() > 0f && CanInteract)
+        if (Select.action.ReadValue<float>() > 0f && CanInteract && GameManager.Instance.EnableButtons)
             InteractWithObject();
     }
 
