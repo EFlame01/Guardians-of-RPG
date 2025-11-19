@@ -65,7 +65,7 @@ public class FightObject : NPCObject
         if (CanInteract)
         {
             CanInteract = false;
-            if (NpcData.foughtPlayer || NpcData.wonAgainstPlayer)
+            if (NpcData.foughtPlayer && !NpcData.wonAgainstPlayer)
                 ConfrontPlayer3();
             else
                 StartCoroutine(ConfrontPlayer1());
@@ -100,7 +100,7 @@ public class FightObject : NPCObject
     /// <returns></returns>
     public IEnumerator ConfrontPlayer2()
     {
-        if (!NpcData.foughtPlayer)
+        if (!NpcData.foughtPlayer || NpcData.wonAgainstPlayer)
         {
             _confrontedPlayer = true;
             CanInteract = false;

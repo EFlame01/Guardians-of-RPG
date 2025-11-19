@@ -26,6 +26,7 @@ public class PlayerData
     public  int eva;
     public  int hp;
     public  int spd;
+    public int elx;
     public  double acc;
     public  double crt;
 
@@ -65,6 +66,7 @@ public class PlayerData
         eva = p.BaseStats.Eva;
         hp = p.BaseStats.Hp;
         spd = p.BaseStats.Spd;
+        elx = p.BaseStats.Elx;
         acc = p.BaseStats.Acc;
         crt = p.BaseStats.Crt;
 
@@ -97,7 +99,7 @@ public class PlayerData
         p.SetSex(sex);
         p.SetBattleMoves(battleMoves);
         p.MoveManager.AddToMovesLearned(movesLearned);
-        p.SetBaseStats(fullHP, atk, def, eva, hp, spd, acc, crt);
+        p.SetBaseStats(fullHP, atk, def, eva, hp, spd, elx, acc, crt);
         p.SetAbility(AbilityMaker.Instance.GetAbilityBasedOnName(abilityName));
         p.SetItem(ItemMaker.Instance.GetItemBasedOnName(equippedItemName));
         p.SetCurrentXP(currentXP);

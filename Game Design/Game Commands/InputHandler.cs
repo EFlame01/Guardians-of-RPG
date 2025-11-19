@@ -24,8 +24,10 @@ public class InputHandler : MonoBehaviour
     private Vector3 _targetPos;
     private Vector2 _velocity;
 
+
     private void Start()
     {
+        transform.localPosition = Vector3.zero;
         _rb2D = GetComponent<Rigidbody2D>();
         _speed = GameManager.Instance.PlayerSpeed;
         _targetPos = transform.position;

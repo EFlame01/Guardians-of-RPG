@@ -54,6 +54,26 @@ public class BaseStats
         _regElx = 5;
     }
 
+    public BaseStats(int atk, int def, int eva, int hp, int spd, int elx)
+    {
+        FullHp = hp;
+        Atk = atk;
+        Def = def;
+        Eva = eva;
+        Hp = hp;
+        Spd = spd;
+        Elx = elx;
+        Acc = Units.BASE_ACC;
+        Crt = Units.BASE_CRT;
+
+        _regAtk = atk;
+        _regDef = def;
+        _regEva = eva;
+        _regHp = hp;
+        _regSpd = spd;
+        _regElx = elx;
+    }
+
     //Getters and Setters
     public void SetAtk(int atk)
     {

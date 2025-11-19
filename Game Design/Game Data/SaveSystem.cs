@@ -301,6 +301,7 @@ public class SaveSystem : Singleton<SaveSystem>
         if(File.Exists(Application.persistentDataPath + Units.SETTINGS_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.SETTINGS_DATA_PATH);
         
+        Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
         File.WriteAllText(Application.persistentDataPath + Units.SETTINGS_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.SETTINGS_DATA_PATH);
     }
@@ -319,6 +320,33 @@ public class SaveSystem : Singleton<SaveSystem>
         DataEncoder.ClearData();
         SettingsData data = JsonUtility.FromJson<SettingsData>(json);
         data.LoadSettingsData();
+
+        return data;
+    }
+
+    public static void SaveDayNightCycleData()
+    {
+        DayNightCycleData data = new DayNightCycleData();
+        string json = JsonUtility.ToJson(data);
+        
+        if(File.Exists(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH))
+            File.Delete(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH);
+        
+        Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
+        File.WriteAllText(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH, json);
+        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.DAY_NIGHT_CYCLE_DATA_PATH);
+    }
+
+    public static DayNightCycleData LoadDayNightCycleData()
+    {
+        if(!File.Exists(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH))
+            return null;
+
+        DataEncoder.Instance.DecodeFile(Units.DAY_NIGHT_CYCLE_DATA_PATH);
+        string json = DataEncoder.GetData();
+        DataEncoder.ClearData();
+        DayNightCycleData data = JsonUtility.FromJson<DayNightCycleData>(json);
+        data.LoadDayNightCycleData();
 
         return data;
     }

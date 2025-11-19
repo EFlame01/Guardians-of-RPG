@@ -70,10 +70,9 @@ public class Character
         for (int i = 0; i < 4; i++)
             BattleMoves[i] = moves[i] != null ? MoveMaker.Instance.GetMoveBasedOnName(moves[i]) : null;
     }
-    public void SetBaseStats(int fullHp, int atk, int def, int eva, int hp, int spd, double acc, double crt)
+    public void SetBaseStats(int fullHp, int atk, int def, int eva, int hp, int spd, int elx, double acc, double crt)
     {
-        BaseStats = new BaseStats(atk, def, eva, hp, spd);
-        BaseStats.SetFullHp(fullHp);
+        BaseStats = new BaseStats(atk, def, eva, hp, spd, elx);
         BaseStats.SetAcc(acc);
         BaseStats.SetCrt(crt);
     }

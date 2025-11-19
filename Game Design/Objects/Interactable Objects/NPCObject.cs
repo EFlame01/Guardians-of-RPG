@@ -35,7 +35,10 @@ public class NPCObject : InteractableObject, IDialogue
         if (NpcData == null)
             NpcData = new NpcData(npc_ID, transform.position, flags, flagValues);
         else
-            transform.position = NpcData.Position;
+            transform.localPosition = NpcData.Position;
+
+        //Add NPC to NPC Container
+        NpcDataContainer.NpcDataList.Add(NpcData);
 
         if (NpcData.direction != null)
         {

@@ -163,7 +163,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = NarrationTextBox;
                     break;
                 case Units.CONFIRMATION:
-                    if (ConfirmationTextBox.gameObject.activeSelf || ConfirmationTextBox.IsClosed)
+                    if (!ConfirmationTextBox.gameObject.activeSelf || ConfirmationTextBox.IsClosed)
                     {
                         CloseRightTextBox(ConfirmationTextBox);
                         yield return new WaitForSeconds(0.4f);
@@ -174,7 +174,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = ConfirmationTextBox;
                     break;
                 case Units.DECISION:
-                    if (DecisionTextBox.gameObject.activeSelf || DecisionTextBox.IsClosed)
+                    if (!DecisionTextBox.gameObject.activeSelf || DecisionTextBox.IsClosed)
                     {
                         CloseRightTextBox(DecisionTextBox);
                         yield return new WaitForSeconds(0.4f);
@@ -357,7 +357,8 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     {
         while (!textBox.ClosedTextBox)
             yield return null;
-        textBox.gameObject.SetActive(false);
+        if(textBox != null)
+            textBox.gameObject.SetActive(false);
     }
 
     private void OpenNarrationForTextBox(TextBox textBox, TextBox referenceTextBox)

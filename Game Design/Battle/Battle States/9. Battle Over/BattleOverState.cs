@@ -208,7 +208,7 @@ public class BattleOverState : BattleState
     {
         if (_winner.Equals("PLAYER"))
         {
-            SetVictoryNPCFlag(true);
+            SetVictoryNPCFlag(false);
             if (BattleInformation.StoryFlagsIfWon != null && BattleInformation.StoryFlagsIfWon.Length > 0)
             {
                 foreach (string flagID in BattleInformation.StoryFlagsIfWon)
@@ -216,7 +216,7 @@ public class BattleOverState : BattleState
             }
         }
         else
-            SetVictoryNPCFlag(false);
+            SetVictoryNPCFlag(true);
     }
 
     private void SetVictoryNPCFlag(bool flag)
@@ -230,7 +230,16 @@ public class BattleOverState : BattleState
         }
         try{
             foreach (Character c in enemies)
-                NpcDataContainer.GetNpcData(c.Id).wonAgainstPlayer = flag;
+            {
+                NpcData data = NpcDataContainer.GetNpcData(c.Id);
+                if(data != null)
+                {
+                    data.foughtPlayer = true;
+                    data.wonAgainstPlayer = flag;
+                }
+                else
+                    Debug.LogWarning("NPC " + c.Id + " was not found!");
+            }
         }catch(Exception e){
             Debug.LogWarning("NPCs were not documented in SetVictoryNPCFlag()... " + e.Message);
         }

@@ -229,6 +229,7 @@ public class Intro : MonoBehaviour, IDialogue
             player.Archetype.BaseStats.Eva,
             player.Archetype.BaseStats.Hp,
             player.Archetype.BaseStats.Spd,
+            Units.BASE_ELX,
             Units.BASE_ACC,
             Units.BASE_CRT
         );

@@ -66,6 +66,7 @@ public class QuestState : CutSceneState, IDialogue
             if (Level.CanLevelUp())
             {
                 Level.LevelUpPlayer();
+                DialogueManager.Instance.CurrentStory.variablesState["levelUp"] = true;
                 DialogueManager.Instance.CurrentStory.variablesState["levelUpText"] = "You are now level " + Player.Instance().Level;
             }
 

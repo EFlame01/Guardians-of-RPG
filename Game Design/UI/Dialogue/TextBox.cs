@@ -26,7 +26,7 @@ public class TextBox : MonoBehaviour
     [SerializeField] protected bool DestroyTextBox = true;
     [SerializeField] private InputActionReference Select;
 
-    public bool IsClosed { get; private set; }
+    public bool IsClosed = true; //{ get; private set; }
     public bool ClosedTextBox { get; private set; }
 
     private DialogueData _dialogueData;
@@ -34,7 +34,6 @@ public class TextBox : MonoBehaviour
 
     public virtual void Start()
     {
-        IsClosed = true;
         ClosedTextBox = false;
         if (PlayOnStart)
             OpenTextBox();

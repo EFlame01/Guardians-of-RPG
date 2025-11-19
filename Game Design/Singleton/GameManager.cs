@@ -1,4 +1,5 @@
-﻿
+﻿using UnityEngine;
+
 public class GameManager : PersistentSingleton<GameManager>
 {
     public PlayerState PlayerState = PlayerState.NOT_MOVING;
@@ -17,6 +18,8 @@ public class GameManager : PersistentSingleton<GameManager>
     public string Leaning = "FEMALE";
 
     public int NumberOfDays = 0;
+    public bool StartDayNightCycle = false;
+    public int TimeOfDay = 0;
 
     protected override void Awake()
     {
@@ -51,6 +54,8 @@ public class GameManager : PersistentSingleton<GameManager>
         SaveSystem.SaveStoryFlagData();
         SaveSystem.SaveWellData();
         SaveSystem.SaveMedicalCenterData();
+        SaveSystem.SaveDayNightCycleData();
+        Debug.Log("Game Saved...");
     }
 
     public static void LoadGame()
@@ -63,6 +68,7 @@ public class GameManager : PersistentSingleton<GameManager>
         SaveSystem.LoadStoryFlagData();
         SaveSystem.LoadWellData();
         SaveSystem.LoadMedicalCenterData();
+        SaveSystem.LoadDayNightCycleData();
 
         SceneLoader.Instance.LoadScene(playerData.sceneName, TransitionType.FADE_TO_BLACK);
     }

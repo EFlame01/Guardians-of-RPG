@@ -77,6 +77,7 @@ public class InventoryMenu : MenuState
 
         SetUpInventory();
         itemDescriptionText.text = result;
+        
     }
 
     /// <summary>
@@ -92,7 +93,7 @@ public class InventoryMenu : MenuState
             SetUpInventory();
             itemDescriptionText.text = result;
             return;
-        }
+        }  
 
         discardMenuOptionWindow.maxAmount = Player.Instance().Inventory.ItemList[chosenItem.Name];
         discardMenuOptionWindow.gameObject.SetActive(true);
@@ -153,7 +154,6 @@ public class InventoryMenu : MenuState
     private void SetUpInventory()
     {
         Player player = Player.Instance();
-
         ClearContents();
         itemTypeText.text = itemType.ToString().Replace("_", " ");
 
@@ -186,6 +186,7 @@ public class InventoryMenu : MenuState
 
     private void ClearContents()
     {
+        chosenItem = null;
         itemTypeText.text = "";
         itemDescriptionText.text = "";
         itemNameText.text = "";
@@ -198,6 +199,9 @@ public class InventoryMenu : MenuState
     private string CanUseItem()
     {
         Player player = Player.Instance();
+        if(chosenItem == null)
+            return itemDescriptionText.text;
+        
         switch(itemType)
         {
             case ItemType.FOOD:
@@ -217,6 +221,9 @@ public class InventoryMenu : MenuState
 
     private string CanEquipItem()
     {
+        if(chosenItem == null)
+            return itemDescriptionText.text;
+        
         if(Player.Instance().Item != null)
             return "You are already holding an item. Unequip item from the Player Information section first.";
         else
@@ -225,6 +232,8 @@ public class InventoryMenu : MenuState
 
     private string CanDiscardItem()
     {
+        if(chosenItem == null)
+            return itemDescriptionText.text;
         if(chosenItem.Type.Equals(ItemType.KEY))
             return "I wouldn't discard this. It could be important.";
         else

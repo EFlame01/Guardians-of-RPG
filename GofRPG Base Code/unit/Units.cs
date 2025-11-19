@@ -50,6 +50,7 @@ public static class Units
     public const int SPD_INDEX = 4;
     public const int ELX_INDEX = 5;
 
+    public const int BASE_ELX = 5;
     public const double BASE_ACC = 100.0 / 100.0;
     public const double BASE_CRT = 5.0 / 100.0;
     public const double LOWEST_CRT = 125.0 / 10000.0;
@@ -210,14 +211,15 @@ public static class Units
         "/game_data/player_info/",
     };
 
-    public const string SETTINGS_DATA_PATH = "game_data/game_settings.rpg";
-    public const string PLAYER_DATA_PATH = "/game_data/player_info/player.rpg";
-    public const string INVENTORY_DATA_PATH = "/game_data/player_info/inventory.rpg";
-    public const string STORY_FLAG_DATA_PATH = "/game_data/story_flags.rpg";
-    public const string QUEST_DATA_PATH = "/game_data/quest.rpg";
-    public const string ITEM_DATA_PATH = "/game_data/items.rpg";
-    public const string NPC_DATA_PATH = "/game_data/npcs.rpg";
-    public const string WELL_DATA_PATH = "/game_data/wells.rpg";
-    public const string MEDICAL_CENTER_DATA_PATH = "/game_data/medical_centers.rpg";
-    public const string MAP_DATA_PATH = "/game_data/maps.rpg";
+    public const string SETTINGS_DATA_PATH = "//game_data/game_settings.rpg";
+    public const string PLAYER_DATA_PATH = "//game_data//player_info//player.rpg";
+    public const string INVENTORY_DATA_PATH = "//game_data//player_info//inventory.rpg";
+    public const string STORY_FLAG_DATA_PATH = "//game_data/story_flags.rpg";
+    public const string QUEST_DATA_PATH = "//game_data/quest.rpg";
+    public const string ITEM_DATA_PATH = "//game_data/items.rpg";
+    public const string NPC_DATA_PATH = "//game_data/npcs.rpg";
+    public const string WELL_DATA_PATH = "//game_data/wells.rpg";
+    public const string MEDICAL_CENTER_DATA_PATH = "//game_data/medical_centers.rpg";
+    public const string MAP_DATA_PATH = "//game_data/maps.rpg";
+    public const string DAY_NIGHT_CYCLE_DATA_PATH = "//game_data//day_night_cycle_.rpg";
 }

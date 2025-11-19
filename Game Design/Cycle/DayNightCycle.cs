@@ -11,24 +11,23 @@ using UnityEngine;
 public class DayNightCycle : PersistentSingleton<DayNightCycle>
 {
     //public static variables
-    public static int TimeOfDay { get; private set; }
     public static float Timer { get; private set; }
     public static float TimeRemaining { get; private set; }
 
     //private variables
-    private bool _timerStarted = false;
     private float _prevTime;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartTimer();
+        if(GameManager.Instance.StartDayNightCycle)
+            StartTimer();
     }
 
     // Update is called once per frame
     public void FixedUpdate()
     {
-        if (_timerStarted)
+        if (GameManager.Instance.StartDayNightCycle)
         {
             Timer += Time.fixedDeltaTime;
             TimeRemaining -= Time.fixedDeltaTime;
@@ -44,10 +43,9 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     public void StartTimer()
     {
         TimeRemaining = Units.TIME_PER_PART;
-        TimeOfDay = 0;
         Timer = 0;
         _prevTime = 0;
-        _timerStarted = true;
+        GameManager.Instance.StartDayNightCycle = true;
     }
 
     /// <summary>
@@ -55,7 +53,7 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     /// </summary>
     public void StopTimer()
     {
-        _timerStarted = false;
+        GameManager.Instance.StartDayNightCycle = false;
     }
 
     /// <summary>
@@ -63,7 +61,7 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     /// </summary>
     public void ResumeTimer()
     {
-        _timerStarted = true;
+        GameManager.Instance.StartDayNightCycle = true;
     }
 
     /// <summary>
@@ -75,10 +73,10 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     public void SetTimeOfDay(int timeOfDay, bool startTimer)
     {
         TimeRemaining = Units.TIME_PER_PART;
-        TimeOfDay = timeOfDay == -1 ? TimeOfDay : timeOfDay;
         Timer = 0;
         _prevTime = 0;
-        _timerStarted = startTimer;
+        GameManager.Instance.TimeOfDay = timeOfDay == -1 ? GameManager.Instance.TimeOfDay : timeOfDay;
+        GameManager.Instance.StartDayNightCycle = startTimer;
     }
 
     /// <summary>
@@ -86,7 +84,7 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     /// </summary>
     public void SetNewDay(int timeOfDay)
     {
-        TimeOfDay = timeOfDay == -1 ? Units.MORNING : timeOfDay;
+        GameManager.Instance.TimeOfDay = timeOfDay == -1 ? Units.MORNING : timeOfDay;
         WellDataContainer.IncrementWellDay();
         MedicalCenterDataContainer.ResetNumOfTimesUsed();
         GameManager.Instance.NumberOfDays++;
@@ -104,11 +102,11 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
         _prevTime = Timer;
         TimeRemaining = Units.TIME_PER_PART;
 
-        if (TimeOfDay + 1 > Units.NIGHT)
+        if (GameManager.Instance.TimeOfDay + 1 > Units.NIGHT)
         {
             SetNewDay(Units.MORNING);
         }
         else
-            TimeOfDay++;
+            GameManager.Instance.TimeOfDay++;
     }
 }

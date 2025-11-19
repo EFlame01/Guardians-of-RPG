@@ -74,13 +74,18 @@ public class StoryFlagManager
     public void LoadUpdatedFlagData()
     {
         foreach(StoryFlagData data in StoryFlagDatas)
-            FlagDictionary.Add
-            (
-                data.Id,
-                new StoryFlag
+        {
+            if(FlagDictionary.ContainsKey(data.Id))
+                FlagDictionary[data.Id] = new StoryFlag(data.Id, data.Chapter, data.Town, data.Description, data.Value);
+            else
+                FlagDictionary.Add
                 (
-                    data.Id, data.Chapter, data.Town, data.Description, data.Value
-                )
-            );
+                    data.Id,
+                    new StoryFlag
+                    (
+                        data.Id, data.Chapter, data.Town, data.Description, data.Value
+                    )
+                );
+        }
     }
 }

@@ -69,7 +69,6 @@ public class QuestManager
         List<QuestData> quests = new List<QuestData>();
         foreach(KeyValuePair<string, Quest> questInfo in QuestDictionary)
         {
-            Debug.Log(questInfo.Key);
             quests.Add(new QuestData(questInfo.Value));
         }
         QuestDatas = quests.ToArray();
