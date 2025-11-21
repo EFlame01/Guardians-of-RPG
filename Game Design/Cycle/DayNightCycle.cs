@@ -20,7 +20,7 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     // Start is called before the first frame update
     void Start()
     {
-        if(GameManager.Instance.StartDayNightCycle)
+        if (GameManager.Instance.StartDayNightCycle)
             StartTimer();
     }
 
