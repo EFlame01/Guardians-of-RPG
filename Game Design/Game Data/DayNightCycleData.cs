@@ -2,11 +2,11 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class DayNightCycleData 
+public class DayNightCycleData
 {
-    int TimeOfDay;
-    bool StartTimer;
-    int NumberOfDays;
+    public int TimeOfDay;
+    public bool StartTimer;
+    public int NumberOfDays;
 
     public DayNightCycleData()
     {
