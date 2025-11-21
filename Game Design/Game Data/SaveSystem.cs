@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -13,9 +14,9 @@ public class SaveSystem : Singleton<SaveSystem>
     /// </summary>
     public static void DeleteSavedData()
     {
-        foreach(string relativePath in Units.SAVE_DATA_PATHS)
+        foreach (string relativePath in Units.SAVE_DATA_PATHS)
         {
-            if(File.Exists(Application.persistentDataPath + relativePath))
+            if (File.Exists(Application.persistentDataPath + relativePath))
                 File.Delete(Application.persistentDataPath + relativePath);
         }
     }
@@ -27,10 +28,10 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         PlayerData data = new PlayerData();
         string json = JsonUtility.ToJson(data);
-        
-        if(File.Exists(Application.persistentDataPath + Units.PLAYER_DATA_PATH))
+
+        if (File.Exists(Application.persistentDataPath + Units.PLAYER_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.PLAYER_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.PLAYER_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.PLAYER_DATA_PATH);
     }
@@ -41,10 +42,10 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the player data</returns>
     public static PlayerData LoadPlayerData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.PLAYER_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.PLAYER_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.PLAYER_DATA_PATH);
+        DecodeFileSafely(Units.PLAYER_DATA_PATH);
         string json = DataEncoder.GetData();
         DataEncoder.ClearData();
         PlayerData data = JsonUtility.FromJson<PlayerData>(json);
@@ -60,10 +61,10 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         ItemDataContainer itemDataList = new ItemDataContainer();
         string json = JsonUtility.ToJson(itemDataList);
-        
-        if(File.Exists(Application.persistentDataPath + Units.ITEM_DATA_PATH))
+
+        if (File.Exists(Application.persistentDataPath + Units.ITEM_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.ITEM_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.ITEM_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.ITEM_DATA_PATH);
     }
@@ -74,13 +75,13 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the item data</returns>
     public static ItemDataContainer LoadItemData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.ITEM_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.ITEM_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.ITEM_DATA_PATH);
+        DecodeFileSafely(Units.ITEM_DATA_PATH);
         string json = DataEncoder.GetData();
         DataEncoder.ClearData();
-        
+
         ItemDataContainer data = JsonUtility.FromJson<ItemDataContainer>(json);
         data.LoadItemDataIntoGame();
         return data;
@@ -95,9 +96,9 @@ public class SaveSystem : Singleton<SaveSystem>
         qm.UpdateQuestData();
         string json = JsonUtility.ToJson(qm);
 
-        if(File.Exists(Application.persistentDataPath + Units.QUEST_DATA_PATH))
+        if (File.Exists(Application.persistentDataPath + Units.QUEST_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.QUEST_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.QUEST_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.QUEST_DATA_PATH);
     }
@@ -108,14 +109,14 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the quest data</returns>
     public static QuestManager LoadQuestData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.QUEST_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.QUEST_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.QUEST_DATA_PATH);
+        DecodeFileSafely(Units.QUEST_DATA_PATH);
         string json = DataEncoder.GetData();
         DataEncoder.ClearData();
         QuestManager data = JsonUtility.FromJson<QuestManager>(json);
-        
+
         data.LoadUpdatedQuestData();
         Player.Instance().SetQuestManager(data);
 
@@ -131,9 +132,9 @@ public class SaveSystem : Singleton<SaveSystem>
         inventory.UpdateInventoryData();
         string json = JsonUtility.ToJson(inventory);
 
-        if(File.Exists(Application.persistentDataPath + Units.INVENTORY_DATA_PATH))
+        if (File.Exists(Application.persistentDataPath + Units.INVENTORY_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.INVENTORY_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.INVENTORY_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.INVENTORY_DATA_PATH);
     }
@@ -144,14 +145,14 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the player's inventory data</returns>
     public static Inventory LoadInventoryData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.INVENTORY_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.INVENTORY_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.INVENTORY_DATA_PATH);
+        DecodeFileSafely(Units.INVENTORY_DATA_PATH);
         string json = DataEncoder.GetData();
         DataEncoder.ClearData();
         Inventory data = JsonUtility.FromJson<Inventory>(json);
-        
+
         data.LoadUpdatedInventoryData();
         Player.Instance().SetInventory(data);
         return data;
@@ -166,9 +167,9 @@ public class SaveSystem : Singleton<SaveSystem>
         storyFlagManager.UpdateFlagData();
         string json = JsonUtility.ToJson(storyFlagManager);
 
-        if(File.Exists(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH))
+        if (File.Exists(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.STORY_FLAG_DATA_PATH);
     }
@@ -179,13 +180,13 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the story flag data</returns>
     public static StoryFlagManager LoadStoryFlagData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.STORY_FLAG_DATA_PATH);
+        DecodeFileSafely(Units.STORY_FLAG_DATA_PATH);
         string json = DataEncoder.GetData();
         StoryFlagManager data = JsonUtility.FromJson<StoryFlagManager>(json);
-        
+
         data.LoadUpdatedFlagData();
         Player.Instance().SetStoryFlagManager(data);
         return data;
@@ -198,10 +199,10 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         NpcDataContainer npcDataList = new NpcDataContainer();
         string json = JsonUtility.ToJson(npcDataList);
-        
-        if(File.Exists(Application.persistentDataPath + Units.NPC_DATA_PATH))
+
+        if (File.Exists(Application.persistentDataPath + Units.NPC_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.NPC_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.NPC_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.NPC_DATA_PATH);
     }
@@ -212,15 +213,15 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the npc data</returns>
     public static NpcDataContainer LoadNpcData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.NPC_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.NPC_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.NPC_DATA_PATH);
+        DecodeFileSafely(Units.NPC_DATA_PATH);
         string json = DataEncoder.GetData();
-        
+
         NpcDataContainer data = JsonUtility.FromJson<NpcDataContainer>(json);
         data.LoadNpcDataIntoGame();
-        
+
         return data;
     }
 
@@ -231,10 +232,10 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         WellDataContainer wellDataList = new WellDataContainer();
         string json = JsonUtility.ToJson(wellDataList);
-        
-        if(File.Exists(Application.persistentDataPath + Units.WELL_DATA_PATH))
+
+        if (File.Exists(Application.persistentDataPath + Units.WELL_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.WELL_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.WELL_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.WELL_DATA_PATH);
     }
@@ -245,15 +246,15 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the well data</returns>
     public static WellDataContainer LoadWellData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.WELL_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.WELL_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.WELL_DATA_PATH);
+        DecodeFileSafely(Units.WELL_DATA_PATH);
         string json = DataEncoder.GetData();
-        
+
         WellDataContainer data = JsonUtility.FromJson<WellDataContainer>(json);
         data.LoadWellDataIntoGame();
-        
+
         return data;
     }
 
@@ -264,10 +265,10 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         MedicalCenterDataContainer wellDataList = new MedicalCenterDataContainer();
         string json = JsonUtility.ToJson(wellDataList);
-        
-        if(File.Exists(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH))
+
+        if (File.Exists(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH);
-        
+
         File.WriteAllText(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.MEDICAL_CENTER_DATA_PATH);
     }
@@ -278,15 +279,15 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the medical center data</returns>
     public static MedicalCenterDataContainer LoadMedicalCenterData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.MEDICAL_CENTER_DATA_PATH);
+        DecodeFileSafely(Units.MEDICAL_CENTER_DATA_PATH);
         string json = DataEncoder.GetData();
-        
+
         MedicalCenterDataContainer data = JsonUtility.FromJson<MedicalCenterDataContainer>(json);
         data.LoadMedicalCenterDataIntoGame();
-        
+
         return data;
     }
 
@@ -297,10 +298,10 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         SettingsData data = new SettingsData();
         string json = JsonUtility.ToJson(data);
-        
-        if(File.Exists(Application.persistentDataPath + Units.SETTINGS_DATA_PATH))
+
+        if (File.Exists(Application.persistentDataPath + Units.SETTINGS_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.SETTINGS_DATA_PATH);
-        
+
         Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
         File.WriteAllText(Application.persistentDataPath + Units.SETTINGS_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.SETTINGS_DATA_PATH);
@@ -312,10 +313,11 @@ public class SaveSystem : Singleton<SaveSystem>
     /// <returns>the settings data</returns>
     public static SettingsData LoadSettingsData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.SETTINGS_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.SETTINGS_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.SETTINGS_DATA_PATH);
+        DecodeFileSafely(Units.SETTINGS_DATA_PATH);
+
         string json = DataEncoder.GetData();
         DataEncoder.ClearData();
         SettingsData data = JsonUtility.FromJson<SettingsData>(json);
@@ -328,10 +330,10 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         DayNightCycleData data = new DayNightCycleData();
         string json = JsonUtility.ToJson(data);
-        
-        if(File.Exists(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH))
+
+        if (File.Exists(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH))
             File.Delete(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH);
-        
+
         Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
         File.WriteAllText(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH, json);
         DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.DAY_NIGHT_CYCLE_DATA_PATH);
@@ -339,15 +341,32 @@ public class SaveSystem : Singleton<SaveSystem>
 
     public static DayNightCycleData LoadDayNightCycleData()
     {
-        if(!File.Exists(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH))
+        if (!File.Exists(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH))
             return null;
 
-        DataEncoder.Instance.DecodeFile(Units.DAY_NIGHT_CYCLE_DATA_PATH);
+        DecodeFileSafely(Units.DAY_NIGHT_CYCLE_DATA_PATH);
+
         string json = DataEncoder.GetData();
         DataEncoder.ClearData();
         DayNightCycleData data = JsonUtility.FromJson<DayNightCycleData>(json);
         data.LoadDayNightCycleData();
 
         return data;
+    }
+
+    private static void DecodeFileSafely(string savedDataPath)
+    {
+        try
+        {
+            DataEncoder.Instance.DecodeFile(savedDataPath);
+        }
+        catch (Exception e)
+        {
+            if (e.Message.Contains("The input is not a valid Base-64 string as it contains a non-base 64 character"))
+            {
+                Debug.LogWarning("File is can not be decoded because it is not encoded.");
+                DataEncoder.Instance.EncodeFile(Application.persistentDataPath, savedDataPath);
+            }
+        }
     }
 }
