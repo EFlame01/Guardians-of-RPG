@@ -47,6 +47,26 @@ public class NpcDataContainer
         NpcDataList.Clear();
     }
 
+    public static void AddNpcData(NpcData data)
+    {
+        if(NpcDataList.Count == 0)
+        {
+            NpcDataList.Add(data);
+            return;
+        }
+
+        for(int i = 0; i < NpcDataList.Count; i++)
+        {
+            if(NpcDataList[i].ID == data.ID)
+            {
+                NpcDataList[i] = data;
+                return;
+            }
+        }
+
+        NpcDataList.Add(data);
+    }
+
     /// <summary>
     /// Loads NpcData retrieved into the
     /// NpcDataList for easy access.

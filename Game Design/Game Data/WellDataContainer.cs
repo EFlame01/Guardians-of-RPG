@@ -67,4 +67,24 @@ public class WellDataContainer
             data.DaysWithoutWater++;
         }
     }
+
+    public static void AddWellData(WellData data)
+    {
+        if(WellDataList.Count == 0)
+        {
+            WellDataList.Add(data);
+            return;
+        }
+
+        for(int i = 0; i < WellDataList.Count; i++)
+        {
+            if(WellDataList[i].ID == data.ID)
+            {
+                WellDataList[i] = data;
+                return;
+            }
+        }
+
+        WellDataList.Add(data);
+    }
 }
