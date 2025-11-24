@@ -45,9 +45,11 @@ public class DialogueState : CutSceneState, IDialogue
         if(Transform != null && TextBoxPrefab != null)
         {
             TextBoxPrefab.gameObject.transform.SetParent(Transform);
-            TextBoxPrefab.gameObject.SetActive(true);
-            TextBoxPrefab.OpenTextBox();
-            TextBoxPrefab.StartNarration(DialogueData);
+            // TextBoxPrefab.gameObject.SetActive(true);
+            // TextBoxPrefab.OpenTextBox();
+            // TextBoxPrefab.StartNarration(DialogueData);
+            DialogueManager.Instance.TextBox = TextBoxPrefab;
+            DialogueManager.Instance.DisplayNextDialogue(DialogueData);
         }
         else
             DialogueManager.Instance.DisplayNextDialogue(DialogueData);
