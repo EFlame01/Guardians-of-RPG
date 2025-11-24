@@ -97,8 +97,6 @@ public class QuestState : CutSceneState, IDialogue
                 DialogueManager.Instance.CurrentStory.variablesState["movesLearnedText"] = movesLearned;
                 DialogueManager.Instance.CurrentStory.variablesState["whereToFindMovesText"] = "You can find the moves you learned in your Move Set list.";
             }
-            else
-                DialogueManager.Instance.CurrentStory.variablesState["levelUp"] = false;
         }
         else
         {
@@ -163,6 +161,9 @@ public class QuestState : CutSceneState, IDialogue
             TextBoxPrefab.StartNarration(_dialogueData);
         }
         else
+        {
+            DialogueManager.Instance.NarrationTextBox.gameObject.SetActive(false);
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        }
     }
 }
