@@ -6,7 +6,7 @@ public class Level
 
     public static int DetermineXPForQuest()
     {
-        return (int)Mathf.Pow(Player.Instance().Level, 2);
+        return Player.Instance().Level * 2;
     }
 
     public static int DetermineXPForBattle(int level)
