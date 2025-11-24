@@ -26,7 +26,7 @@ public class LightCycle : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (SetTimer && GameManager.Instance.StartDayNightCycle)
+        if (SetTimer)
             SetLight();
     }
 
