@@ -222,4 +222,5 @@ public static class Units
     public const string MEDICAL_CENTER_DATA_PATH = "//game_data/medical_centers.rpg";
     public const string MAP_DATA_PATH = "//game_data/maps.rpg";
     public const string DAY_NIGHT_CYCLE_DATA_PATH = "//game_data//day_night_cycle_.rpg";
+    public const string CHAPTER_DATA_PATH = "//game_data//chapter.rpg";
 }

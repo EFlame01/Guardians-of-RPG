@@ -354,6 +354,34 @@ public class SaveSystem : Singleton<SaveSystem>
         return data;
     }
 
+    public static void SaveChapterData()
+    {
+        ChapterData data = new ChapterData();
+        string json = JsonUtility.ToJson(data);
+
+        if (File.Exists(Application.persistentDataPath + Units.CHAPTER_DATA_PATH))
+            File.Delete(Application.persistentDataPath + Units.CHAPTER_DATA_PATH);
+
+        Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
+        File.WriteAllText(Application.persistentDataPath + Units.CHAPTER_DATA_PATH, json);
+        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.CHAPTER_DATA_PATH);
+    }
+
+    public static ChapterData LoadChapterData()
+    {
+        if (!File.Exists(Application.persistentDataPath + Units.CHAPTER_DATA_PATH))
+            return null;
+
+        DecodeFileSafely(Units.CHAPTER_DATA_PATH);
+
+        string json = DataEncoder.GetData();
+        DataEncoder.ClearData();
+        ChapterData data = JsonUtility.FromJson<ChapterData>(json);
+        data.LoadChapterData();
+
+        return data;
+    }
+
     private static void DecodeFileSafely(string savedDataPath)
     {
         try

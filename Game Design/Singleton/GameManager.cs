@@ -55,6 +55,7 @@ public class GameManager : PersistentSingleton<GameManager>
         SaveSystem.SaveWellData();
         SaveSystem.SaveMedicalCenterData();
         SaveSystem.SaveDayNightCycleData();
+        SaveSystem.SaveChapterData();
         Debug.Log("Game Saved...");
     }
 
@@ -69,6 +70,7 @@ public class GameManager : PersistentSingleton<GameManager>
         SaveSystem.LoadWellData();
         SaveSystem.LoadMedicalCenterData();
         SaveSystem.LoadDayNightCycleData();
+        SaveSystem.LoadChapterData();
 
         SceneLoader.Instance.LoadScene(playerData.sceneName, TransitionType.FADE_TO_BLACK);
     }
