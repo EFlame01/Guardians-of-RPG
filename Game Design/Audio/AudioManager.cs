@@ -227,6 +227,8 @@ public class AudioManager : PersistentSingleton<AudioManager>
     /// </summary>
     public void ResumeMusic()
     {
+        if(_currentMusic == null)
+            return;
         Sound music = _audioDictionary[_currentMusic];
         _audioSource1.UnPause();
         StartCoroutine(StartFade(1f, 0f, music.Volume * GameManager.Instance.GameVolume, _audioSource1));
