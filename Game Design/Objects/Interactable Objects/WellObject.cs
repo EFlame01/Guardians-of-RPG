@@ -32,7 +32,8 @@ public class WellObject : InteractableObject, IDialogue
         _wellData ??= new WellData(WellID, 1, NumberOfWater);
         NumberOfWater = _wellData == null ? NumberOfWater : _wellData.NumberOfWater;
 
-        WellDataContainer.WellDataList.Add(_wellData);
+        // WellDataContainer.WellDataList.Add(_wellData);
+        WellDataContainer.AddWellData(_wellData);
     }
 
     // Update is called once per frame
