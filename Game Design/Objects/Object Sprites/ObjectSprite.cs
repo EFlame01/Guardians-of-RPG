@@ -7,13 +7,13 @@ using UnityEngine;
 public class ObjectSprite : MonoBehaviour
 {
     //Serialized variables
-    [SerializeField] private string _objectID;
+    [SerializeField] protected string _objectID;
     [SerializeField] private string _startAnimation;
 
     //private variables
     private Animator _animator;
 
-    public void Start()
+    public virtual void Start()
     {
         _animator = GetComponent<Animator>();
         if (_startAnimation != null)
