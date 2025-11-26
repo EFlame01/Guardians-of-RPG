@@ -93,14 +93,14 @@ public class Move
             newPower += Mathf.Ceil((float)(Power * Units.CRIT_DMG));
         if (epMultiplyer > 0)
             newPower += Power * epMultiplyer;
-        
-        if(rollDef <= 5)
-            targetDef -= (int)(Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG)));
-        if(rollDef <= 10)
+
+        if (rollDef <= 5)
+            targetDef -= (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG));
+        if (rollDef <= 10)
             targetDef += 0;
-        if(rollDef <= 15)
-            targetDef += (int)(Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG)));
-        if(rollDef == 20)
+        if (rollDef <= 15)
+            targetDef += (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG));
+        if (rollDef == 20)
             targetDef *= 2;
 
         userAtk = (int)(userAtk * newPower);
