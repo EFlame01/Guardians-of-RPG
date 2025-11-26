@@ -54,9 +54,9 @@ public class BaseStats
         _regElx = 5;
     }
 
-    public BaseStats(int atk, int def, int eva, int hp, int spd, int elx)
+    public BaseStats(int fullHp, int atk, int def, int eva, int hp, int spd, int elx)
     {
-        FullHp = hp;
+        FullHp = fullHp;
         Atk = atk;
         Def = def;
         Eva = eva;
@@ -135,9 +135,9 @@ public class BaseStats
     /// <c>Character</c> by the
     /// <c>Units.ELIXIR_REGEN_RATE</c>
     /// </summary>
-    public void RegenElx()
+    public void RegenElx(int averageElixirCost)
     {
-        int increase = Mathf.CeilToInt((_regElx * (float) Units.ELIXIR_REGEN_RATE));
+        int increase = Mathf.CeilToInt((averageElixirCost * (float)Units.ELIXIR_REGEN_RATE));
         SetElx(Elx + increase);
     }
 

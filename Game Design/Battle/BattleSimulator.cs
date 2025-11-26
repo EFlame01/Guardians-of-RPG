@@ -153,7 +153,7 @@ public class BattleSimulator : MonoBehaviour
     private void UpdateElixirPool()
     {
         //BattlePlayer
-        BattlePlayer.Character.BaseStats.RegenElx();
+        BattlePlayer.Character.BaseStats.RegenElx(BattlePlayer.Character.GetAverageElixirCost());
         BattlePlayer.UpdateHUD();
 
         //BattleAllies
@@ -161,7 +161,7 @@ public class BattleSimulator : MonoBehaviour
         {
             if (battleAlly.Character != null && battleAlly.Character.BaseStats.Hp > 0)
             {
-                battleAlly.Character.BaseStats.RegenElx();
+                battleAlly.Character.BaseStats.RegenElx(battleAlly.Character.GetAverageElixirCost());
                 battleAlly.UpdateHUD();
             }
         }
@@ -171,7 +171,7 @@ public class BattleSimulator : MonoBehaviour
         {
             if (battleEnemy.Character != null && battleEnemy.Character.BaseStats.Hp > 0)
             {
-                battleEnemy.Character.BaseStats.RegenElx();
+                battleEnemy.Character.BaseStats.RegenElx(battleEnemy.Character.GetAverageElixirCost());
                 battleEnemy.UpdateHUD();
             }
         }

@@ -72,7 +72,7 @@ public class Character
     }
     public void SetBaseStats(int fullHp, int atk, int def, int eva, int hp, int spd, int elx, double acc, double crt)
     {
-        BaseStats = new BaseStats(atk, def, eva, hp, spd, elx);
+        BaseStats = new BaseStats(fullHp, atk, def, eva, hp, spd, elx);
         BaseStats.SetAcc(acc);
         BaseStats.SetCrt(crt);
     }
@@ -83,5 +83,21 @@ public class Character
     public void SetItem(Item item)
     {
         Item ??= item;
+    }
+
+    public int GetAverageElixirCost()
+    {
+        int average = 0;
+        int totalMoves = 0;
+        foreach (Move move in BattleMoves)
+        {
+            if (move != null)
+            {
+                totalMoves++;
+                average += (int)move.EP;
+            }
+        }
+        average /= totalMoves;
+        return Mathf.Clamp(average, 1, 200);
     }
 }
