@@ -46,7 +46,10 @@ public class BattleOverState : BattleState
     public override void Update()
     {
         if (startedDialogue && DialogueManager.Instance.DialogueEnded)
+        {
+            TextBoxBattle.EndNarrationNow = true;
             NextState = Units.END_BATTLE;
+        }
     }
 
     public override void Exit()
@@ -228,19 +231,20 @@ public class BattleOverState : BattleState
             if (c.Type.Equals("ENEMY"))
                 enemies.Add(c);
         }
-        try{
+        try
+        {
             foreach (Character c in enemies)
             {
                 NpcData data = NpcDataContainer.GetNpcData(c.Id);
-                if(data != null)
+                if (data != null)
                 {
                     data.foughtPlayer = true;
                     data.wonAgainstPlayer = flag;
                 }
-                else
-                    Debug.LogWarning("NPC " + c.Id + " was not found!");
             }
-        }catch(Exception e){
+        }
+        catch (Exception e)
+        {
             Debug.LogWarning("NPCs were not documented in SetVictoryNPCFlag()... " + e.Message);
         }
     }
