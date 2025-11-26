@@ -16,9 +16,21 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         foreach (string relativePath in Units.SAVE_DATA_PATHS)
         {
-            if (File.Exists(Application.persistentDataPath + relativePath))
-                File.Delete(Application.persistentDataPath + relativePath);
+            DeleteDataSafely(relativePath);
         }
+
+        DeleteDataSafely(Units.SETTINGS_DATA_PATH);
+        DeleteDataSafely(Units.PLAYER_DATA_PATH);
+        DeleteDataSafely(Units.INVENTORY_DATA_PATH);
+        DeleteDataSafely(Units.STORY_FLAG_DATA_PATH);
+        DeleteDataSafely(Units.QUEST_DATA_PATH);
+        DeleteDataSafely(Units.ITEM_DATA_PATH);
+        DeleteDataSafely(Units.NPC_DATA_PATH);
+        DeleteDataSafely(Units.WELL_DATA_PATH);
+        DeleteDataSafely(Units.MEDICAL_CENTER_DATA_PATH);
+        DeleteDataSafely(Units.MAP_DATA_PATH);
+        DeleteDataSafely(Units.DAY_NIGHT_CYCLE_DATA_PATH);
+        DeleteDataSafely(Units.CHAPTER_DATA_PATH);
     }
 
     /// <summary>
@@ -49,9 +61,25 @@ public class SaveSystem : Singleton<SaveSystem>
         string json = DataEncoder.GetData();
         DataEncoder.ClearData();
         PlayerData data = JsonUtility.FromJson<PlayerData>(json);
-        data.LoadPlayerDataIntoGame();
+        if (data != null)
+            data.LoadPlayerDataIntoGame();
 
         return data;
+    }
+
+    public static void SavePlayerLocationData(string sceneName, string mapLocationName, Vector3 locationPosition)
+    {
+        PlayerData data = new PlayerData();
+        data.sceneName = sceneName;
+        data.mapLocationName = mapLocationName;
+        data.locationPosition = locationPosition;
+        string json = JsonUtility.ToJson(data);
+
+        if (File.Exists(Application.persistentDataPath + Units.PLAYER_DATA_PATH))
+            File.Delete(Application.persistentDataPath + Units.PLAYER_DATA_PATH);
+
+        File.WriteAllText(Application.persistentDataPath + Units.PLAYER_DATA_PATH, json);
+        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.PLAYER_DATA_PATH);
     }
 
     /// <summary>
@@ -395,6 +423,14 @@ public class SaveSystem : Singleton<SaveSystem>
                 Debug.LogWarning("File is can not be decoded because it is not encoded.");
                 DataEncoder.Instance.EncodeFile(Application.persistentDataPath, savedDataPath);
             }
+            else
+                Debug.LogError(e.Message);
         }
+    }
+
+    private static void DeleteDataSafely(string savedDataPath)
+    {
+        if (File.Exists(Application.persistentDataPath + savedDataPath))
+            File.Delete(Application.persistentDataPath + savedDataPath);
     }
 }

@@ -95,13 +95,15 @@ public class DataEncoder : Singleton<DataEncoder>
         }
         catch (Exception e)
         {
-            if(!e.Message.Contains("The input is not a valid Base-64 string as it contains a non-base 64 character"))
+            if (!e.Message.Contains("The input is not a valid Base-64 string as it contains a non-base 64 character"))
             {
                 Debug.LogWarning("WARNING: " + e.Message + "... Encoding and storing new files...");
                 EncodeAllFiles();
                 string encryptedData = File.ReadAllText(Application.persistentDataPath + path);
                 _data = AESDecryption(encryptedData);
             }
+            else
+                throw e;
         }
     }
 
