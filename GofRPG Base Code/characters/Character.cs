@@ -97,7 +97,8 @@ public class Character
                 average += (int)move.EP;
             }
         }
-        average /= totalMoves;
+
+        average = totalMoves > 0 ? (average / totalMoves) : 1;
         return Mathf.Clamp(average, 1, 200);
     }
 }
