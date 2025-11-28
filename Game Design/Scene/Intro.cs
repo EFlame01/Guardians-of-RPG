@@ -283,7 +283,6 @@ public class Intro : MonoBehaviour, IDialogue
     private void StartGame()
     {
         ActivateState(0);
-        SaveSystem.DeleteSavedData();
         ChapterScene.PartName = "Part 1: Grace Land";
         ChapterScene.ChapterName = "Chapter 1 - The Person and the Bear";
         ChapterScene.SceneName = "Forest 1";

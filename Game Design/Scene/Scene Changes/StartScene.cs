@@ -25,6 +25,7 @@ public class StartScene : MonoBehaviour
     public void OnStartButtonPressed()
     {
         AudioManager.Instance.StopCurrentMusic(false);
+        SaveSystem.DeleteSavedData();
         SceneLoader.Instance.LoadScene(nextSceneName, TransitionType.FADE_TO_BLACK);
     }
 
@@ -35,6 +36,7 @@ public class StartScene : MonoBehaviour
     /// </summary>
     public void OnContinueButtonPressed()
     {
+        AudioManager.Instance.StopCurrentMusic(false);
         GameManager.LoadGame();
     }
 }
