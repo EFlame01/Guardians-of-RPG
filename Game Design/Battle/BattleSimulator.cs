@@ -121,12 +121,15 @@ public class BattleSimulator : MonoBehaviour
         bool didPlayerWin = BattleSimStatus.DidPlayerWin;
         bool gameOverScreen = BattleSimStatus.GameOverScreenIfLost;
 
-        //Reset Elx
+        //Reset Elx and Stats
         Player.Instance().BaseStats.ResetStats();
 
         //Reset Health if HP = 0
         if (Player.Instance().BaseStats.Hp == 0)
             Player.Instance().BaseStats.ResetHealth();
+
+        TextBoxBattle.KeepTextBoxOpened = false;
+        TextBoxBattle.EndNarrationNow = true;
 
         //Take player back to original scene
         string sceneName = BattleSimStatus.SceneName;
