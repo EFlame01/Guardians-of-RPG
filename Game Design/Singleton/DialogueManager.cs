@@ -355,13 +355,14 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private IEnumerator DeactivateTextBox(TextBox textBox)
     {
-        if(textBox != null)
+        if (textBox != null)
         {
             while (!textBox.ClosedTextBox)
                 yield return null;
-            
+
             textBox.IsClosed = true;
-            textBox.gameObject.SetActive(false);
+            if (textBox.gameObject != null)
+                textBox.gameObject.SetActive(false);
         }
     }
 
@@ -370,7 +371,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         if (textBox != null && textBox.Equals(referenceTextBox) && textBox.IsClosed)
         {
             textBox.gameObject.SetActive(true);
-            if(textBox.gameObject.activeSelf)
+            if (textBox.gameObject.activeSelf)
                 textBox.OpenTextBox();
             else
                 StartCoroutine(ActivateTextBox(textBox));
@@ -379,9 +380,9 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private IEnumerator ActivateTextBox(TextBox textBox)
     {
-        if(textBox != null)
+        if (textBox != null)
         {
-            while(!textBox.gameObject.activeSelf)
+            while (!textBox.gameObject.activeSelf)
             {
                 textBox.gameObject.SetActive(true);
                 yield return null;
