@@ -131,6 +131,7 @@ public class BattleActionEffect : MonoBehaviour
             moveEffects = GetMoveEffects(Target);
             if (ActionSuccessful())
             {
+                TextBoxBattle.KeepTextBoxOpened = false;
                 TextBoxBattle.EndNarrationNow = true;
                 switch (_effect)
                 {
@@ -307,7 +308,6 @@ public class BattleActionEffect : MonoBehaviour
             if (ally.Character != null && ally.Character.Id.Equals(character.Id))
             {
                 ally.UpdateHUD();
-                return;
             }
         }
 
@@ -316,7 +316,6 @@ public class BattleActionEffect : MonoBehaviour
             if (enemy.Character != null && enemy.Character.Id.Equals(character.Id))
             {
                 enemy.UpdateHUD();
-                return;
             }
         }
     }

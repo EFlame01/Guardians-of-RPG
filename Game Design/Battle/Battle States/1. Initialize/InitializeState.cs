@@ -168,10 +168,10 @@ public class InitializeState : BattleState, IDialogue
 
     public void StartDialogue()
     {
+        TextBoxBattle.KeepTextBoxOpened = true;
+        TextBoxBattle.EndNarrationNow = false;
         DialogueManager.Instance.CurrentStory = new Story(DialogueData.InkJSON.text);
         DialogueManager.Instance.CurrentStory.variablesState["text"] = InitializeText;
-        // NarrationTextBox.OpenTextBox();
-        // NarrationTextBox.StartNarration(DialogueData);
         DialogueManager.Instance.TextBox = NarrationTextBox;
         DialogueManager.Instance.DisplayNextDialogue(DialogueData);
     }

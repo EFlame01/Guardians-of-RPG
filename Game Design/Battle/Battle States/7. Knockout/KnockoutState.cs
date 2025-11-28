@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Ink.Runtime;
 
 /// <summary>
@@ -37,17 +34,17 @@ public class KnockoutState : BattleState
 
     public override void Update()
     {
-        if(startedDialogue && DialogueManager.Instance.DialogueEnded)
+        if (startedDialogue && DialogueManager.Instance.DialogueEnded)
         {
-            if(BattleOver())
+            if (BattleOver())
                 NextState = Units.BATTLE_OVER_STATE;
             else
             {
                 //May need to check if prev state was character action or after round
                 NextState = "CHARACTER ACTION STATE";
-                if(PrevState.Equals(Units.CHARACTER_ACTION_STATE))
+                if (PrevState.Equals(Units.CHARACTER_ACTION_STATE))
                     NextState = Units.CHARACTER_ACTION_STATE;
-                else if(PrevState.Equals(Units.AFTER_ROUND_STATE))
+                else if (PrevState.Equals(Units.AFTER_ROUND_STATE))
                     NextState = Units.AFTER_ROUND_STATE;
             }
         }
@@ -62,9 +59,9 @@ public class KnockoutState : BattleState
     {
         text = "";
 
-        for(int i = 0; i < BattleSimStatus.RoundKnockOuts.Count; i++)
+        for (int i = 0; i < BattleSimStatus.RoundKnockOuts.Count; i++)
         {
-            if(i == 0)
+            if (i == 0)
                 text += BattleSimStatus.RoundKnockOuts[i].Name + " ";
             else if (i + 1 == BattleSimStatus.RoundKnockOuts.Count)
                 text += ", and " + BattleSimStatus.RoundKnockOuts[i].Name;
@@ -72,18 +69,20 @@ public class KnockoutState : BattleState
                 text += ", " + BattleSimStatus.RoundKnockOuts[i].Name + " ";
         }
 
-        if(BattleSimStatus.RoundKnockOuts.Count > 1)
+        if (BattleSimStatus.RoundKnockOuts.Count > 1)
             text += " are knocked out!";
-        if(BattleSimStatus.RoundKnockOuts.Count == 1)
+        if (BattleSimStatus.RoundKnockOuts.Count == 1)
             text += "is knocked out!";
     }
 
     private void StartDialogue()
     {
+        TextBoxBattle.KeepTextBoxOpened = true;
+        TextBoxBattle.EndNarrationNow = false;
         DialogueManager.Instance.CurrentStory = new Story(dialogueData.InkJSON.text);
         DialogueManager.Instance.CurrentStory.variablesState["text"] = text;
-        textBox.OpenTextBox();
-        textBox.StartNarration(dialogueData);
+        DialogueManager.Instance.TextBox = textBox;
+        DialogueManager.Instance.DisplayNextDialogue(dialogueData);
         startedDialogue = true;
     }
 }
