@@ -69,7 +69,7 @@ public class BaseStats
         _regAtk = atk;
         _regDef = def;
         _regEva = eva;
-        _regHp = hp;
+        _regHp = fullHp;
         _regSpd = spd;
         _regElx = elx;
     }
@@ -120,6 +120,7 @@ public class BaseStats
     {
         if (crt < Units.LOWEST_CRT)
             crt = Units.LOWEST_CRT;
+        Crt = crt;
     }
     public int GetFullElx()
     {
@@ -137,7 +138,7 @@ public class BaseStats
     /// </summary>
     public void RegenElx(int averageElixirCost)
     {
-        int increase = Mathf.CeilToInt((averageElixirCost * (float)Units.ELIXIR_REGEN_RATE));
+        int increase = Mathf.CeilToInt(averageElixirCost * (float)Units.ELIXIR_REGEN_RATE);
         SetElx(Elx + increase);
     }
 
@@ -193,7 +194,7 @@ public class BaseStats
 
     public void ResetHealth()
     {
-        int newHp = (int)((double)FullHp * 0.10);
+        int newHp = (int)(FullHp * 0.10);
         newHp = newHp == 0 ? 1 : newHp;
         SetHp(newHp);
     }
@@ -207,27 +208,39 @@ public class BaseStats
     ///<param name="name">the name of the stat</param>
     ///<param name="stage">the stage value between -6 and 6.</param>
     ///<returns>TRUE if the base stat was changed. FALSE if it wasn't. </returns>
-    public bool ChangeStat(string name, int stage)
+    public void ChangeStat(string name, int stage)
     {
-        return name switch
+        switch (name)
         {
-            "ATK" => ChangeStatHelper(Atk, _regAtk, _atkStage, stage),
-            "DEF" => ChangeStatHelper(Def, _regDef, _defStage, stage),
-            "EVA" => ChangeStatHelper(Eva, _regEva, _evaStage, stage),
-            "HP" => ChangeStatHelper(Hp, _regHp, _hpStage, stage),
-            "SPD" => ChangeStatHelper(Spd, _regSpd, _spdStage, stage),
-            "ACC" => ChangeStatHelper(Acc, Units.BASE_ACC, _accStage, stage),
-            "CRT" => ChangeStatHelper(Crt, Units.BASE_CRT, _crtStage, stage),
-            _ => false,
-        };
-
+            case "ATK":
+                SetAtk((int)ChangeStatHelper(Atk, _regAtk, _atkStage, stage));
+                break;
+            case "DEF":
+                SetDef((int)ChangeStatHelper(Def, _regDef, _defStage, stage));
+                break;
+            case "EVA":
+                SetEva((int)ChangeStatHelper(Eva, _regEva, _evaStage, stage));
+                break;
+            case "HP":
+                SetHp((int)ChangeStatHelper(Hp, _regHp, _hpStage, stage));
+                break;
+            case "SPD":
+                SetSpd((int)ChangeStatHelper(Spd, _regSpd, _spdStage, stage));
+                break;
+            case "ACC":
+                SetAcc(ChangeStatHelper(Acc, Acc, _accStage, stage));
+                break;
+            case "CRT":
+                SetCrt(ChangeStatHelper(Crt, Crt, _crtStage, stage));
+                break;
+        }
     }
 
     //helper method to the ChangeStat method
-    private bool ChangeStatHelper(double stat, double regStat, int statStage, int stage)
+    private double ChangeStatHelper(double stat, double regStat, int statStage, int stage)
     {
         if (statStage == 6 || statStage == -6)
-            return false;
+            return stat;
 
         stage = Mathf.Clamp(stage, -6, 6);
         statStage += stage;
@@ -278,6 +291,6 @@ public class BaseStats
         if (Hp > FullHp)
             FullHp = Hp;
 
-        return true;
+        return stat;
     }
 }
