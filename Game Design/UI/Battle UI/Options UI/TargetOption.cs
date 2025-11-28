@@ -35,7 +35,10 @@ public class TargetOption : MonoBehaviour
         else if (player.BattleStatus.ChosenItem != null)
             DetermineTargetForItem();
         else
+        {
             Debug.LogWarning("Chosen Move and Chosen Item are null");
+            Options.OnBackButtonPressed();
+        }
     }
 
     private void DetermineTargetForItem()
