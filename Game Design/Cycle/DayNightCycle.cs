@@ -27,11 +27,11 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     // Update is called once per frame
     public void FixedUpdate()
     {
-        if (GameManager.Instance.StartDayNightCycle)
-        {
-            Timer += Time.fixedDeltaTime;
-            TimeRemaining -= Time.fixedDeltaTime;
-        }
+        if (!GameManager.Instance.StartDayNightCycle)
+            return;
+
+        Timer += Time.fixedDeltaTime;
+        TimeRemaining -= Time.fixedDeltaTime;
 
         if ((int)Timer % (int)Units.TIME_PER_PART == 0)
             ChangeTimeOfDay();
