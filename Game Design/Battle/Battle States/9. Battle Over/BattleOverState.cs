@@ -148,6 +148,7 @@ public class BattleOverState : BattleState
         int oldLevel = Player.Instance().Level;
         int xp = 0;
         int bits = 0;
+        int numEnemies = 0;
         List<Item> itemHaul = new List<Item>();
 
         foreach (Character c in BattleSimStatus.Graveyard)
@@ -156,9 +157,11 @@ public class BattleOverState : BattleState
             {
                 xp += Level.DetermineXPForBattle(c.Level);
                 bits += c.Bits;
+                numEnemies++;
                 // if(Mathf.Random)
             }
         }
+        xp += Level.BonusXPForBattle(numEnemies);
         Level.GainXP(xp);
         Level.LevelUpPlayer();
         int newLevel = Player.Instance().Level;
@@ -189,6 +192,7 @@ public class BattleOverState : BattleState
     private void AnnounceBattleResult()
     {
         TextBoxBattle.KeepTextBoxOpened = true;
+        TextBoxBattle.EndNarrationNow = false;
 
         if (_winner.Equals("PLAYER"))
             AudioManager.Instance.BlendMusic2(Units.Music.VICTORY_THEME);

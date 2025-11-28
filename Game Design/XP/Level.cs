@@ -14,6 +14,12 @@ public class Level
         return (int)(2.5 * level);
     }
 
+    public static int BonusXPForBattle(int numEnemies)
+    {
+
+        return numEnemies > 1 ? (int)(2.5 * numEnemies) : 0;
+    }
+
     public static void GainXP(int xp)
     {
         Player.Instance().SetCurrentXP(Player.Instance().CurrXP + xp);
