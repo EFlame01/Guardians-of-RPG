@@ -48,12 +48,12 @@ public class ObjectSprite : MonoBehaviour
     /// This is used to play animations that ARE ON FIRE.
     /// This includes fire of any color.
     /// </summary>
-    public void FireAnimation(string animation)
+    public void FireAnimation(string fireAnimation)
     {
         if (_animator == null)
             return;
 
-        switch (animation)
+        switch (fireAnimation)
         {
             case "_fire":
                 _animator.Play(_objectID + "_fire");
