@@ -43,7 +43,22 @@ public class DataEncoder : Singleton<DataEncoder>
         {
             //update databases by first deleting old data in game
             if (relativePath.Contains("database") && Directory.Exists(Application.persistentDataPath + relativePath))
-                FileUtil.DeleteFileOrDirectory(Application.persistentDataPath + relativePath);
+            {
+                try
+                {
+                    File.Delete(Application.persistentDataPath + relativePath);
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.Contains("UnauthorizedAccessException"))
+                    {
+                        Debug.LogWarning("Unauthorized Access... need to use FileUtil...");
+#if UNITY_EDITOR
+                        FileUtil.DeleteFileOrDirectory(Application.persistentDataPath + relativePath);
+#endif
+                    }
+                }
+            }
 
             if (!Directory.Exists(Application.persistentDataPath + relativePath))
                 Directory.CreateDirectory(Application.persistentDataPath + relativePath);
