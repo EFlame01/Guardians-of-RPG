@@ -31,6 +31,9 @@ public class SaveSystem : Singleton<SaveSystem>
         DeleteDataSafely(Units.MAP_DATA_PATH);
         DeleteDataSafely(Units.DAY_NIGHT_CYCLE_DATA_PATH);
         DeleteDataSafely(Units.CHAPTER_DATA_PATH);
+        PlayerSpawn.PlayerPosition = new Vector3(0, 0, 0);
+
+        Debug.Log("Deleted Game Data");
     }
 
     /// <summary>

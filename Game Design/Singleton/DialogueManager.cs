@@ -221,11 +221,12 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         GameManager.Instance.EnableNarrationInputs = true;
     }
 
-    private void EndDialogue()
+    public void EndDialogue()
     {
         CurrentStory?.ResetState();
         CurrentStory = null;
-        _currentTextBox.EndNarration();
+        if (_currentTextBox != null)
+            _currentTextBox.EndNarration();
         _dialogueEnded = false;
         DialogueEnded = true;
         DialogueContinued = false;
@@ -277,6 +278,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         catch (Exception e)
         {
             Debug.LogWarning("WARNING: " + e.Message);
+            EndDialogue();
         }
     }
 

@@ -131,6 +131,39 @@ public class Intro : MonoBehaviour, IDialogue
         currentState = (int)story.variablesState["currentState"];
     }
 
+    private void OnNextButtonPressed()
+    {
+        switch (currentState)
+        {
+            case 0:
+                if (story != null && saveTheWorld.Length > 0 && saveTheWorld == "Yes")
+                {
+                    currentState = 1;
+                    Intro1();
+                }
+                break;
+            case 1:
+                currentState = 2;
+                Intro2();
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+        }
+    }
+
+    private void OnBackButtonPressed()
+    {
+
+    }
+
     /// <summary>
     /// Handles the first part of the introduction
     /// in the IntroScene. This part determines if
@@ -165,6 +198,11 @@ public class Intro : MonoBehaviour, IDialogue
     /// </summary>
     private void Intro3()
     {
+        if (sex == "")
+        {
+            Intro2();
+            return;
+        }
         ActivateState(3);
         player.SetSex(sex);
 
@@ -179,6 +217,11 @@ public class Intro : MonoBehaviour, IDialogue
     /// </summary>
     private void Intro4()
     {
+        if (playerClass == "")
+        {
+            Intro3();
+            return;
+        }
         switch (playerClass)
         {
             case "SWORDSMAN":
@@ -218,6 +261,11 @@ public class Intro : MonoBehaviour, IDialogue
     /// </summary>
     private void Intro5()
     {
+        if (archetype == "")
+        {
+            Intro4();
+            return;
+        }
         ActivateState(5);
         player = Player.Instance();
         player.SetArchetype(archetype);

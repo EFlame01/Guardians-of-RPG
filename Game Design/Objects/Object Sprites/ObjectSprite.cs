@@ -53,20 +53,22 @@ public class ObjectSprite : MonoBehaviour
         if (_animator == null)
             return;
 
-        switch (fireAnimation)
-        {
-            case "_fire":
-                _animator.Play(_objectID + "_fire");
-                break;
-            case "_smoke":
-                _animator.Play(_objectID + "_smoke");
-                break;
-            case "_none":
-                _animator.Play(_objectID + "_none");
-                break;
-            default:
-                _animator.Play(_objectID + "_fire");
-                break;
-        }
+        _animator.Play(_objectID + fireAnimation);
+
+        // switch (fireAnimation)
+        // {
+        //     case "_fire":
+        //         _animator.Play(_objectID + "_fire");
+        //         break;
+        //     case "_smoke":
+        //         _animator.Play(_objectID + "_smoke");
+        //         break;
+        //     case "_none":
+        //         _animator.Play(_objectID + "_none");
+        //         break;
+        //     default:
+        //         _animator.Play(_objectID + "_fire");
+        //         break;
+        // }
     }
 }

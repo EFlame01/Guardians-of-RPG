@@ -47,7 +47,8 @@ public class Character
     //Getters and Setters
     public void SetName(string name)
     {
-        Name = name ?? Name;
+        // Name = name ?? Name;
+        Name = name;
     }
     public void SetLevel(int level)
     {
@@ -59,7 +60,8 @@ public class Character
     }
     public void SetArchetype(string archetype)
     {
-        Archetype = archetype == null ? Archetype : Archetype.GetArchetype(archetype);
+        // Archetype = archetype == null ? Archetype : Archetype.GetArchetype(archetype);
+        Archetype = Archetype.GetArchetype(archetype);
     }
     public void SetSex(string sex)
     {

@@ -10,13 +10,13 @@
 public class Player : Character
 {
     private static Player _player;
-    public int CurrXP {get; private set;}
-    public int LimXP {get; private set;}
-    public Inventory Inventory {get; private set;}
-    public QuestManager QuestManager {get; private set;}
-    public MoveManager MoveManager {get; private set;}
-    public AbilityManager AbilityManager {get; private set;}
-    public StoryFlagManager StoryFlagManager {get; private set;}
+    public int CurrXP { get; private set; }
+    public int LimXP { get; private set; }
+    public Inventory Inventory { get; private set; }
+    public QuestManager QuestManager { get; private set; }
+    public MoveManager MoveManager { get; private set; }
+    public AbilityManager AbilityManager { get; private set; }
+    public StoryFlagManager StoryFlagManager { get; private set; }
 
     private Player()
     {
@@ -27,11 +27,9 @@ public class Player : Character
         Bits = 500;
         CurrXP = 0;
         LimXP = 1;
-        // Archetype = null;
-        // Sex = null;
-        Archetype = new RegularSwordsman();
+        Archetype = null;
         Sex = null;
-        BattleMoves = new Move[4]{ null, null, null, null};
+        BattleMoves = new Move[4] { null, null, null, null };
         BaseStats = new BaseStats(5, 5, 5, 5, 5);
         BattleStatus = new BattleStatus();
         Item = null;
@@ -46,13 +44,13 @@ public class Player : Character
     //Getters and Setters
     public void SetCurrentXP(int currXP)
     {
-        if(currXP < 0)
+        if (currXP < 0)
             currXP = 0;
         CurrXP = currXP;
     }
     public void SetLimitXP(int limXP)
     {
-        if(limXP < 1)
+        if (limXP < 1)
             limXP = 1;
         LimXP = limXP;
     }
@@ -89,7 +87,7 @@ public class Player : Character
     /// </summary>
     public void UnequipItemFromPlayer()
     {
-        if(Item == null)
+        if (Item == null)
             return;
 
         Inventory.ChangeItemAmount(Item.Name, 1);
@@ -103,19 +101,24 @@ public class Player : Character
     /// <returns></returns>
     public string MaleOrFemale()
     {
-        if(Sex == null)
+        if (Sex == null)
             SetSex("MALEFE");
-        
-        if(Sex.Equals("MALE"))
+
+        if (Sex.Equals("MALE"))
             return "MALE";
-        else if(Sex.Equals("FEMALE"))
+        else if (Sex.Equals("FEMALE"))
             return "FEMALE";
 
-        if(GameManager.Instance.Leaning.Equals("MALE"))
+        if (GameManager.Instance.Leaning.Equals("MALE"))
             return "MALE";
-        else if(GameManager.Instance.Leaning.Equals("FEMALE"))
+        else if (GameManager.Instance.Leaning.Equals("FEMALE"))
             return "FEMALE";
-        
+
         return null;
+    }
+
+    public void NullPlayer()
+    {
+        _player = null;
     }
 }
