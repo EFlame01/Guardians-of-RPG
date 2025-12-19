@@ -27,7 +27,7 @@ public class ButtonUI : MonoBehaviour
         EnableButton();
     }
 
-    public void Update()
+    public virtual void Update()
     {
         EnableButton();
     }
@@ -38,9 +38,9 @@ public class ButtonUI : MonoBehaviour
     /// </summary>
     private void EnableButton()
     {
-        if(UIButton == null)
+        if (UIButton == null)
             return;
-        if(_narrationButton)
+        if (_narrationButton)
             UIButton.interactable = GameManager.Instance.EnableNarrationInputs;
         else
             UIButton.interactable = GameManager.Instance.EnableButtons;
@@ -50,7 +50,7 @@ public class ButtonUI : MonoBehaviour
     /// Adds sound effect to button
     /// once it is clicked.
     /// </summary>
-    private void AddButtonSound()
+    protected void AddButtonSound()
     {
         UIButton?.onClick.AddListener(() => AudioManager.Instance.PlaySoundEffect(_soundEffect));
     }
