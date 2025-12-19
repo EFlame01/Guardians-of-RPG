@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +10,6 @@ using UnityEngine;
 /// </summary>
 public class SaveSystem : Singleton<SaveSystem>
 {
-
     /// <summary>
     /// Deletes all player data in the persistentDataPaths.
     /// </summary>
@@ -48,7 +49,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.PLAYER_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.PLAYER_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.PLAYER_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.PLAYER_DATA_PATH);
     }
 
     /// <summary>
@@ -82,7 +83,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.PLAYER_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.PLAYER_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.PLAYER_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.PLAYER_DATA_PATH);
     }
 
     /// <summary>
@@ -97,7 +98,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.ITEM_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.ITEM_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.ITEM_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.ITEM_DATA_PATH);
     }
 
     /// <summary>
@@ -131,7 +132,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.QUEST_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.QUEST_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.QUEST_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.QUEST_DATA_PATH);
     }
 
     /// <summary>
@@ -167,7 +168,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.INVENTORY_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.INVENTORY_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.INVENTORY_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.INVENTORY_DATA_PATH);
     }
 
     /// <summary>
@@ -202,7 +203,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.STORY_FLAG_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.STORY_FLAG_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.STORY_FLAG_DATA_PATH);
     }
 
     /// <summary>
@@ -235,7 +236,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.NPC_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.NPC_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.NPC_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.NPC_DATA_PATH);
     }
 
     /// <summary>
@@ -268,7 +269,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.WELL_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.WELL_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.WELL_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.WELL_DATA_PATH);
     }
 
     /// <summary>
@@ -301,7 +302,7 @@ public class SaveSystem : Singleton<SaveSystem>
             File.Delete(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH);
 
         File.WriteAllText(Application.persistentDataPath + Units.MEDICAL_CENTER_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.MEDICAL_CENTER_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.MEDICAL_CENTER_DATA_PATH);
     }
 
     /// <summary>
@@ -335,7 +336,7 @@ public class SaveSystem : Singleton<SaveSystem>
 
         Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
         File.WriteAllText(Application.persistentDataPath + Units.SETTINGS_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.SETTINGS_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.SETTINGS_DATA_PATH);
     }
 
     /// <summary>
@@ -367,7 +368,7 @@ public class SaveSystem : Singleton<SaveSystem>
 
         Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
         File.WriteAllText(Application.persistentDataPath + Units.DAY_NIGHT_CYCLE_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.DAY_NIGHT_CYCLE_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.DAY_NIGHT_CYCLE_DATA_PATH);
     }
 
     public static DayNightCycleData LoadDayNightCycleData()
@@ -395,7 +396,7 @@ public class SaveSystem : Singleton<SaveSystem>
 
         Directory.CreateDirectory(Application.persistentDataPath + "//game_data");
         File.WriteAllText(Application.persistentDataPath + Units.CHAPTER_DATA_PATH, json);
-        DataEncoder.Instance.EncodeFile(Application.persistentDataPath, Units.CHAPTER_DATA_PATH);
+        DataEncoder.Instance.EncodeAnyFile(Application.persistentDataPath, Units.CHAPTER_DATA_PATH);
     }
 
     public static ChapterData LoadChapterData()
@@ -417,17 +418,11 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         try
         {
-            DataEncoder.Instance.DecodeFile(savedDataPath);
+            DataEncoder.Instance.DecodePersistentDataFile(savedDataPath);
         }
         catch (Exception e)
         {
-            if (e.Message.Contains("The input is not a valid Base-64 string as it contains a non-base 64 character"))
-            {
-                Debug.LogWarning("File is can not be decoded because it is not encoded.");
-                DataEncoder.Instance.EncodeFile(Application.persistentDataPath, savedDataPath);
-            }
-            else
-                Debug.LogError(e.Message);
+            Debug.LogError(e.Message);
         }
     }
 
