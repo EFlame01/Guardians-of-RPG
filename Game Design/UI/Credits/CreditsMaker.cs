@@ -54,7 +54,7 @@ public class CreditsMaker : MonoBehaviour
 
     public void OnPlayAgainButtonPressed()
     {
-        GameManager.SaveGame();
+        GameManager.Instance.SaveGameData();
         SceneLoader.Instance.LoadScene("Start Scene", TransitionType.FADE_TO_BLACK);
     }
 
