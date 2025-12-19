@@ -8,7 +8,7 @@ public class NPCPathFinder : MonoBehaviour
 {
     //Serialized variables
     [SerializeField] private WayPoint[] _wayPoints;
-    [SerializeField] protected float _speed;
+    [SerializeField] protected float _speed = 1.5f;
     [SerializeField] protected float _waitTime;
     [SerializeField] private PlayerSprite _npcSprite;
 
