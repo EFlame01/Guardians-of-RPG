@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,34 +13,34 @@ using UnityEngine.SceneManagement;
 public class PlayerData
 {
     //DEFAULT CHARACTER INFORMATION
-    public  string name;
-    public  int level;
-    public  int gold;
-    public  string archetypeName;
-    public  string sex;
+    public string name;
+    public int level;
+    public int gold;
+    public string archetypeName;
+    public string sex;
 
-    public  string[] battleMoves = new string[4];
-    
-    public  int fullHP;
-    public  int atk;
-    public  int def;
-    public  int eva;
-    public  int hp;
-    public  int spd;
+    public string[] battleMoves = new string[4];
+
+    public int fullHP;
+    public int atk;
+    public int def;
+    public int eva;
+    public int hp;
+    public int spd;
     public int elx;
-    public  double acc;
-    public  double crt;
+    public double acc;
+    public double crt;
 
-    public  string abilityName;
-    
-    public  string equippedItemName;
+    public string abilityName;
+
+    public string equippedItemName;
 
     //PLAYER INFORMATION
-    public  int currentXP;
-    public  int limitXP;
+    public int currentXP;
+    public int limitXP;
 
-    public  string[] movesLearned;
-    public  string[] abilityNames;
+    public string[] movesLearned;
+    // public string[] abilityNames;
     // public  string[,] inventory;
 
     public string sceneName;
@@ -56,10 +57,10 @@ public class PlayerData
         gold = p.Bits;
         archetypeName = p.Archetype.ArchetypeName;
         sex = p.Sex;
-        
-        for(int i = 0; i < battleMoves.Length; i++)
-            battleMoves[i] = p.BattleMoves[i] ? .Name;
-        
+
+        for (int i = 0; i < battleMoves.Length; i++)
+            battleMoves[i] = p.BattleMoves[i]?.Name;
+
         fullHP = p.BaseStats.FullHp;
         atk = p.BaseStats.Atk;
         def = p.BaseStats.Def;
@@ -70,14 +71,14 @@ public class PlayerData
         acc = p.BaseStats.Acc;
         crt = p.BaseStats.Crt;
 
-        abilityName = p.Ability ? .Name;
-        equippedItemName = p.Item ? .Name;
+        abilityName = p.Ability?.Name;
+        equippedItemName = p.Item?.Name;
 
         currentXP = p.CurrXP;
         limitXP = p.LimXP;
 
         movesLearned = MoveManager.MoveDictionary.Keys.ToArray();
-        abilityNames = AbilityManager.AbilityDictionary.Keys.ToArray();
+        // abilityNames = AbilityManager.AbilityDictionary.Keys.ToArray();
 
         sceneName = SceneManager.GetActiveScene().name;
         mapLocationName = MapLocation.GetCurrentMapLocation();
@@ -104,7 +105,7 @@ public class PlayerData
         p.SetItem(ItemMaker.Instance.GetItemBasedOnName(equippedItemName));
         p.SetCurrentXP(currentXP);
         p.SetLimitXP(limitXP);
-        p.AbilityManager.AddAbilitiesToList(abilityNames);
+        // p.AbilityManager.AddAbilitiesToList(abilityNames);
         PlayerSpawn.PlayerPosition = locationPosition;
 
         MapLocation.SetCurrentMapLocation(mapLocationName);
