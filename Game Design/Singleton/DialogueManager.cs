@@ -14,7 +14,7 @@ using Ink.Runtime;
 public class DialogueManager : PersistentSingleton<DialogueManager>
 {
     //Serialized variables
-    public TextBox TextBox; //{get; private set;}
+    public TextBox TextBox;
     public TextBoxConfirmation ConfirmationTextBox;
     public TextBoxDecision DecisionTextBox;
     public TextBox NarrationTextBox;
