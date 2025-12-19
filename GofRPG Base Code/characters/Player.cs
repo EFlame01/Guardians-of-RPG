@@ -121,4 +121,10 @@ public class Player : Character
     {
         _player = null;
     }
+
+    public void CreateNewInstance()
+    {
+        _player = null;
+        Instance();
+    }
 }
