@@ -191,6 +191,7 @@ public static class Units
         "/database/health_boost_effects.csv",
         "/database/immunity_effects.csv",
         "/database/items.csv",
+        "/database/map.csv",
         "/database/moves.csv",
         "/database/negation_effects.csv",
         "/database/priority_moves.csv",
@@ -207,20 +208,20 @@ public static class Units
     public static string[] SAVE_DATA_PATHS =
     {
         "/database",
-        "/game_data/",
-        "/game_data/player_info/",
+        "/game_data",
+        "/game_data/player_info",
     };
 
-    public const string SETTINGS_DATA_PATH = "//game_data/game_settings.rpg";
-    public const string PLAYER_DATA_PATH = "//game_data//player_info//player.rpg";
-    public const string INVENTORY_DATA_PATH = "//game_data//player_info//inventory.rpg";
-    public const string STORY_FLAG_DATA_PATH = "//game_data/story_flags.rpg";
-    public const string QUEST_DATA_PATH = "//game_data/quest.rpg";
-    public const string ITEM_DATA_PATH = "//game_data/items.rpg";
-    public const string NPC_DATA_PATH = "//game_data/npcs.rpg";
-    public const string WELL_DATA_PATH = "//game_data/wells.rpg";
-    public const string MEDICAL_CENTER_DATA_PATH = "//game_data/medical_centers.rpg";
-    public const string MAP_DATA_PATH = "//game_data/maps.rpg";
-    public const string DAY_NIGHT_CYCLE_DATA_PATH = "//game_data//day_night_cycle_.rpg";
-    public const string CHAPTER_DATA_PATH = "//game_data//chapter.rpg";
+    public const string SETTINGS_DATA_PATH = "/game_data/game_settings.rpg";
+    public const string PLAYER_DATA_PATH = "/game_data/player_info/player.rpg";
+    public const string INVENTORY_DATA_PATH = "/game_data/player_info/inventory.rpg";
+    public const string STORY_FLAG_DATA_PATH = "/game_data/story_flags.rpg";
+    public const string QUEST_DATA_PATH = "/game_data/quest.rpg";
+    public const string ITEM_DATA_PATH = "/game_data/items.rpg";
+    public const string NPC_DATA_PATH = "/game_data/npcs.rpg";
+    public const string WELL_DATA_PATH = "/game_data/wells.rpg";
+    public const string MEDICAL_CENTER_DATA_PATH = "/game_data/medical_centers.rpg";
+    public const string MAP_DATA_PATH = "/game_data/maps.rpg";
+    public const string DAY_NIGHT_CYCLE_DATA_PATH = "/game_data/day_night_cycle_.rpg";
+    public const string CHAPTER_DATA_PATH = "/game_data/chapter.rpg";
 }
