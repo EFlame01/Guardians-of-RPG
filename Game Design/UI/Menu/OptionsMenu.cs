@@ -31,7 +31,7 @@ public class OptionsMenu : MenuState
     /// </summary>
     public void OnVolumeSliderChange()
     {
-        int volumeVal = (int) (volumeSlider.slider.value);
+        int volumeVal = (int)(volumeSlider.slider.value);
         volumeValueText.text = volumeVal.ToString();
         GameManager.Instance.GameVolume = (float)(volumeVal / 100f);
         AudioManager.Instance.AdjustVolume();
@@ -53,7 +53,8 @@ public class OptionsMenu : MenuState
     public void OnSaveButtonPressed()
     {
         //TODO: optional - ask if they are sure they want to save progress
-        GameManager.SaveGame();
+        // GameManager.SaveGame();
+        GameManager.Instance.SaveGameData();
     }
 
     /// <summary>
@@ -67,8 +68,8 @@ public class OptionsMenu : MenuState
 
     private void SetUpOptions()
     {
-        int volumeVal = (int) (GameManager.Instance.GameVolume * 100);
-        
+        int volumeVal = (int)(GameManager.Instance.GameVolume * 100);
+
         sfxOn.SetActive(GameManager.Instance.GameSFX);
         sfxOff.SetActive(!GameManager.Instance.GameSFX);
 
