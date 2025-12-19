@@ -9,20 +9,20 @@ using UnityEngine;
 /// </summary>
 public class StoryFlagManager
 {
-    public static Dictionary<string, StoryFlag> FlagDictionary {get; private set;}
+    public static Dictionary<string, StoryFlag> FlagDictionary { get; private set; }
     public StoryFlagData[] StoryFlagDatas;
 
     //Constructor
     public StoryFlagManager()
     {
-        FlagDictionary  = new Dictionary<string, StoryFlag>();
+        FlagDictionary = new Dictionary<string, StoryFlag>();
         AddAllStoryFlags();
     }
 
     public void AddAllStoryFlags()
     {
         StoryFlag[] storyFlags = StoryFlagMaker.Instance.GetAllStoryFlags();
-        foreach(StoryFlag flag in storyFlags)
+        foreach (StoryFlag flag in storyFlags)
             FlagDictionary.Add(flag.Id, flag);
     }
 
@@ -34,7 +34,7 @@ public class StoryFlagManager
     public void AddFlag(string flagID)
     {
         StoryFlag flag = StoryFlagMaker.Instance.GetStoryFlag(flagID);
-        if(flag != null && !FlagDictionary.ContainsKey(flagID))
+        if (flag != null && !FlagDictionary.ContainsKey(flagID))
             FlagDictionary.Add(flagID, flag);
     }
 
@@ -46,10 +46,10 @@ public class StoryFlagManager
     /// <param name="value">the value needed to update flag</param>
     public void UpdateFlag(string id, bool value)
     {
-        if(id == null || id.Length <= 0)
+        if (id == null || id.Length <= 0)
             return;
-        
-        if(!FlagDictionary.ContainsKey(id))
+
+        if (!FlagDictionary.ContainsKey(id))
             AddFlag(id);
         FlagDictionary[id].Value = value;
     }
@@ -59,8 +59,8 @@ public class StoryFlagManager
     /// </summary>
     public void UpdateFlagData()
     {
-        List<StoryFlagData>storyFlags = new List<StoryFlagData>();
-        foreach(KeyValuePair<string, StoryFlag> storyFlagInfo in FlagDictionary)
+        List<StoryFlagData> storyFlags = new List<StoryFlagData>();
+        foreach (KeyValuePair<string, StoryFlag> storyFlagInfo in FlagDictionary)
         {
             storyFlags.Add(new StoryFlagData(storyFlagInfo.Value));
         }
@@ -73,9 +73,9 @@ public class StoryFlagManager
     /// </summary>
     public void LoadUpdatedFlagData()
     {
-        foreach(StoryFlagData data in StoryFlagDatas)
+        foreach (StoryFlagData data in StoryFlagDatas)
         {
-            if(FlagDictionary.ContainsKey(data.Id))
+            if (FlagDictionary.ContainsKey(data.Id))
                 FlagDictionary[data.Id] = new StoryFlag(data.Id, data.Chapter, data.Town, data.Description, data.Value);
             else
                 FlagDictionary.Add
