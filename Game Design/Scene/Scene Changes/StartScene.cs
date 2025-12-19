@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,35 +9,88 @@ using UnityEngine.UI;
 public class StartScene : MonoBehaviour
 {
     //Serialized variables
+    [SerializeField] private TextMeshProUGUI usernameText;
     [SerializeField] private string nextSceneName;
-    [SerializeField] private Button continueButton;
-    [SerializeField] private GameObject windowsSettingsPrefab;
+    [SerializeField] private Button logoutButton;
+    [SerializeField] private Button loginButton;
+    [SerializeField] private Button signUpButton;
+    [SerializeField] private Button playButton;
+    [SerializeField] private GameObject signUpPrefab;
+    [SerializeField] private GameObject loginPrefab;
+    [SerializeField] private GameObject optionPrefab;
+    [SerializeField] private GameObject creditsPrefab;
+    [SerializeField] private GameObject guestPrefab;
+
+    public static string Username;
+    public static bool UpdatedUsername;
 
     public void Start()
     {
-        if (SaveSystem.LoadPlayerData() == null)
-            continueButton.interactable = false;
+        playButton.interactable = GameManager.Instance.GameDataPresent();
+        UpdateStartMenuPage();
     }
 
-    /// <summary>
-    /// Starts the game by taking you
-    /// to the IntroScene.
-    /// </summary>
-    public void OnStartButtonPressed()
+    public void Update()
     {
-        AudioManager.Instance.StopCurrentMusic(false);
-        SaveSystem.DeleteSavedData();
-        SceneLoader.Instance.LoadScene(nextSceneName, TransitionType.FADE_TO_BLACK);
+        UpdateStartMenuPage();
+        playButton.interactable = GameManager.Instance.GameDataPresent();
     }
 
-    /// <summary>
-    /// Uses the GameManager to load your
-    /// saved data and take you to where
-    /// you left off in the game.
-    /// </summary>
-    public void OnContinueButtonPressed()
+    public void OnSignUpButtonPressed()
     {
-        AudioManager.Instance.StopCurrentMusic(false);
-        GameManager.LoadGame();
+        Instantiate(signUpPrefab, null);
+    }
+
+    public void OnLoginButtonPressed()
+    {
+        Instantiate(loginPrefab, null);
+    }
+
+    public void OnLogoutButtonPressed()
+    {
+        GameManager.Instance.Logout();
+        Username = null;
+        UpdatedUsername = false;
+    }
+
+    public void OnOptionButtonPressed()
+    {
+        Instantiate(optionPrefab, null);
+    }
+
+    public void OnCreditsButtonPressed()
+    {
+        Instantiate(creditsPrefab, null);
+    }
+
+    public void OnPlayButtonPressed()
+    {
+
+        // SceneLoader.Instance.LoadScene(null, TransitionType.FADE_TO_BLACK);
+        GameManager.Instance.LoadGame();
+    }
+
+    public void OnPlayAsGuestPressed()
+    {
+        Instantiate(guestPrefab, null);
+    }
+
+    private void UpdateStartMenuPage()
+    {
+        UpdatedUsername = false;
+        if (Username != null)
+        {
+            usernameText.text = Username;
+            logoutButton.gameObject.SetActive(true);
+            loginButton.gameObject.SetActive(false);
+            signUpButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            usernameText.text = "[No Account]";
+            logoutButton.gameObject.SetActive(false);
+            loginButton.gameObject.SetActive(true);
+            signUpButton.gameObject.SetActive(true);
+        }
     }
 }
