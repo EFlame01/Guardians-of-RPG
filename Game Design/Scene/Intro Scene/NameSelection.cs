@@ -35,7 +35,6 @@ public class NameSelection : MonoBehaviour
         if (IntroScene.PlayerName.Length > 0 && ContainsLetter())
         {
             IntroScene.CurrentStory.variablesState["stateStatus"] = "next";
-            Debug.Log("Name selected...");
         }
         else
             IntroScene.CurrentStory.variablesState["stateStatus"] = "";
