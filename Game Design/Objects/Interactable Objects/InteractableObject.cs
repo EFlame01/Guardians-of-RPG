@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Experimental.Rendering.Universal;
+
 
 /// <summary>
 /// InteractableObject is a class that is designed
@@ -11,7 +11,7 @@ using UnityEngine.Experimental.Rendering.Universal;
 public abstract class InteractableObject : MonoBehaviour
 {
     //Serialized variables
-    [SerializeField] protected Light2D _myLight2D;
+    [SerializeField] protected UnityEngine.Rendering.Universal.Light2D _myLight2D;
     [SerializeField] protected InputActionReference Select;
     [SerializeField] private SpriteRenderer _sprite;
 
