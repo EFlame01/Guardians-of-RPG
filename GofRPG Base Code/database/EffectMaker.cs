@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// EffectMaker is a class that parses through
@@ -22,27 +23,28 @@ public class EffectMaker : Singleton<EffectMaker>
     /// </summary>
     /// <param name="name">Name of the effect</param>
     /// <returns>an array of <c>Effect</c> objects or <c>null</c> if the effects could not be found.</returns>
-   public Effect[] GetEffectsBasedOnName(string name)
+    public Effect[] GetEffectsBasedOnName(string name)
     {
-        if(name == null) 
+        if (name == null)
             return null;
-        
+
         List<Effect> listOfEffects = new List<Effect>();
         Effect effect;
         string[] foundEffects;
         string[] mainAttributes;
         string[] additionalAttributes;
 
-        DataEncoder.Instance.DecodeFile(_effectPath);
+        // DataEncoder.Instance.DecodePersistentDataFile(_effectPath);
+        DataEncoder.Instance.GetStreamingAssetsFile(_effectPath);
         foundEffects = DataEncoder.Instance.GetRowsOfData(name);
         DataEncoder.ClearData();
 
-        foreach(string foundEffect in foundEffects)
+        foreach (string foundEffect in foundEffects)
         {
             effect = null;
             mainAttributes = foundEffect.Split(',');
 
-            switch(mainAttributes[3])
+            switch (mainAttributes[3])
             {
                 case "ANNOUNCE":
                     effect = new AnnounceEffect
@@ -56,9 +58,10 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "HEALTH_BOOST":
-                    DataEncoder.Instance.DecodeFile(_healthBoostEffectPath);
+                    // DataEncoder.Instance.DecodePersistentDataFile(_healthBoostEffectPath);
+                    DataEncoder.Instance.GetStreamingAssetsFile(_healthBoostEffectPath);
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-                    
+
                     effect = new HealthBoostEffect
                     (
                         mainAttributes[0],
@@ -71,7 +74,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "IMMUNITY":
-                    DataEncoder.Instance.DecodeFile(_immunityEffectPath);
+                    // DataEncoder.Instance.DecodePersistentDataFile(_immunityEffectPath);
+                    DataEncoder.Instance.GetStreamingAssetsFile(_immunityEffectPath);
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
 
                     effect = new ImmunityEffect
@@ -86,9 +90,10 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "NEGATION":
-                    DataEncoder.Instance.DecodeFile(_negationEffectPath);
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');;
-                    
+                    // DataEncoder.Instance.DecodePersistentDataFile(_negationEffectPath);
+                    DataEncoder.Instance.GetStreamingAssetsFile(_negationEffectPath);
+                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(','); ;
+
                     effect = new NegationEffect
                     (
                         mainAttributes[0],
@@ -101,9 +106,10 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "RECHARGE":
-                    DataEncoder.Instance.DecodeFile(_rechargeEffectPath);
+                    // DataEncoder.Instance.DecodePersistentDataFile(_rechargeEffectPath);
+                    DataEncoder.Instance.GetStreamingAssetsFile(_rechargeEffectPath);
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-                    
+
                     effect = new RechargeEffect
                     (
                         mainAttributes[0],
@@ -116,9 +122,10 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "RECOIL":
-                    DataEncoder.Instance.DecodeFile(_recoilEffectPath);
+                    // DataEncoder.Instance.DecodePersistentDataFile(_recoilEffectPath);
+                    DataEncoder.Instance.GetStreamingAssetsFile(_recoilEffectPath);
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-                    
+
                     effect = new RecoilEffect
                     (
                         mainAttributes[0],
@@ -142,9 +149,10 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "STAT_CHANGE":
-                    DataEncoder.Instance.DecodeFile(_statChangeEffectPath);
+                    // DataEncoder.Instance.DecodePersistentDataFile(_statChangeEffectPath);
+                    DataEncoder.Instance.GetStreamingAssetsFile(_statChangeEffectPath);
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-                    
+
                     effect = new StatChangeEffect
                     (
                         mainAttributes[0],
@@ -158,9 +166,10 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "STATUS_CONDITION":
-                    DataEncoder.Instance.DecodeFile(_statusConditionEffectPath);
+                    // DataEncoder.Instance.DecodePersistentDataFile(_statusConditionEffectPath);
+                    DataEncoder.Instance.GetStreamingAssetsFile(_statusConditionEffectPath);
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-                    
+
                     effect = new StatusConditionEffect
                     (
                         foundEffect.Split(',')[0],
@@ -185,7 +194,7 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
             }
 
-            if(effect != null)
+            if (effect != null)
                 listOfEffects.Add(effect);
         }
 
