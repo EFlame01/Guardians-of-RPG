@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// </summary>
 public class AbilityManager
 {
-    public static Dictionary<string, Ability> AbilityDictionary {get; private set;}
+    public static Dictionary<string, Ability> AbilityDictionary { get; private set; }
 
     //Constructor
     public AbilityManager()
@@ -21,25 +21,34 @@ public class AbilityManager
     /// <param name="ability">ability that will be added to list.</param>
     /// <returns><c>TRUE</c> if the ability was added successfully.
     /// <c>FALSE</c> if otherwise.</returns>
-    public bool AddAbilityToList(string abilityName)
+    public bool AddAbilityToList(Ability ability)
     {
-        Ability ability = AbilityMaker.Instance.GetAbilityBasedOnName(abilityName);
-        
-        if(AbilityDictionary.ContainsKey(ability.Name))
+        if (AbilityDictionary.ContainsKey(ability.Name))
             return false;
-        
+
         AbilityDictionary.Add(ability.Name, ability);
         return true;
     }
-    
-    public bool AddAbilitiesToList(string[] abilityNames)
+
+    public bool AddAbilitiesToList(Ability[] abilities)
     {
-        foreach(string abilityName in abilityNames)
-            if(!AddAbilityToList(abilityName))
+        foreach (Ability ability in abilities)
+            if (!AddAbilityToList(ability))
                 return false;
         return true;
     }
-    
+
+    public bool AddAbilitiesToList(string[] abilities)
+    {
+        foreach (string abilityName in abilities)
+        {
+            Ability ability = AbilityMaker.Instance.GetAbilityBasedOnName(abilityName);
+            if (!AddAbilityToList(ability))
+                return false;
+        }
+        return true;
+    }
+
     /// <summary>
     /// Equips the <c>Player</c> with the <paramref name="ability"/>.
     /// </summary>
@@ -48,12 +57,12 @@ public class AbilityManager
     /// <c>FALSE</c> if otherwise.</returns>
     public bool EquipAbilityToPlayer(Ability ability)
     {
-        if(ability == null)
+        if (ability == null)
             return false;
-        
-        if(!AbilityDictionary.ContainsKey(ability.Name))
+
+        if (!AbilityDictionary.ContainsKey(ability.Name))
             return false;
-        
+
         Player.Instance().SetAbility(ability);
         return true;
     }
