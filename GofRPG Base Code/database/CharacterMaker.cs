@@ -16,7 +16,8 @@ public class CharacterMaker : Singleton<CharacterMaker>
 
         Character character = null;
         string[] characterAttributes;
-        DataEncoder.Instance.DecodeFile(_characterDatabasePath);
+        // DataEncoder.Instance.DecodePersistentDataFile(_characterDatabasePath);
+        DataEncoder.Instance.GetStreamingAssetsFile(_characterDatabasePath);
         characterAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 
