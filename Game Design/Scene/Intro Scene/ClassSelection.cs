@@ -36,6 +36,5 @@ public class ClassSelection : MonoBehaviour
         IntroScene.ClassName = className;
         IntroScene.CurrentStory.variablesState["class"] = className;
         IntroScene.CurrentStory.variablesState["stateStatus"] = "next";
-        Debug.Log("Class selected...");
     }
 }

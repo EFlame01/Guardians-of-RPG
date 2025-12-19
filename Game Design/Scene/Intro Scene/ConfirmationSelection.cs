@@ -45,6 +45,6 @@ public class ConfirmationSelection : MonoBehaviour
         spdStatText.text = archetype.BaseStats.Spd.ToString();
         hpStatText.text = archetype.BaseStats.FullHp.ToString();
 
-        playerImage.sprite = player.MaleOrFemale().Equals("MALE") ? maleSprite : femaleSprite;
+        playerImage.sprite = IntroScene.SexName.Equals("MALE") || (IntroScene.SexName.Equals("MALEFE") && GameManager.Instance.Leaning.Equals("MALE")) ? maleSprite : femaleSprite;
     }
 }

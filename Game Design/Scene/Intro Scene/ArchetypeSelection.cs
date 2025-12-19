@@ -35,7 +35,6 @@ public class ArchetypeSelection : MonoBehaviour
 
         IntroScene.ArchetypeName = archetypeName;
         IntroScene.CurrentStory.variablesState["stateStatus"] = "next";
-        Debug.Log("Archetype selected...");
     }
 
     private void ClearText()

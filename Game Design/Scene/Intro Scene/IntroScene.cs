@@ -31,14 +31,10 @@ public class IntroScene : MonoBehaviour
 
     public void OnNextButtonPressed()
     {
-        Debug.Log("OnNextButtonPressed()...");
         if (CurrentStory == null)
             return;
 
         CurrentState = (int)CurrentStory.variablesState["currentState"];
-        string stateStatus = CurrentStory.variablesState["stateStatus"].ToString();
-
-        Debug.Log(CurrentState + " " + stateStatus);
 
         if (DialogueManager.Instance.DialogueEnded)
         {
@@ -87,8 +83,6 @@ public class IntroScene : MonoBehaviour
 
     public void OnBackButtonPressed()
     {
-        Debug.Log("OnBackButtonPressed()...");
-
         if (CurrentStory == null)
             return;
 
@@ -143,7 +137,6 @@ public class IntroScene : MonoBehaviour
     {
         SexName = sex;
         CurrentStory.variablesState["stateStatus"] = "next";
-        Debug.Log("Sex selected...");
     }
 
     private void SetIntroUI(int uiIndex)
@@ -181,7 +174,6 @@ public class IntroScene : MonoBehaviour
 
     private void StartDialogue()
     {
-        Debug.Log("Starting Dialogue..." + CurrentState);
         DialogueManager.Instance.DisplayNextDialogue(introDialogueData);
         CurrentStory = DialogueManager.Instance.CurrentStory;
     }
@@ -222,7 +214,7 @@ public class IntroScene : MonoBehaviour
     private void StartGame()
     {
         ChapterScene.PartName = "Part 1: Grace Land";
-        ChapterScene.ChapterName = "Chapter 1 - The Person and the Bear";
+        ChapterScene.ChapterName = "Chapter 1 - " + PlayerName + " and the Bear";
         ChapterScene.SceneName = "Forest 1";
         SceneLoader.Instance.LoadScene("Chapter Scene", TransitionType.FADE_TO_BLACK);
     }
