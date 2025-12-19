@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 /// <summary>
 /// QuestMaker is a class that parses through
 /// the data to create <c>Quest</c> objects for
@@ -17,13 +19,14 @@ public class QuestMaker : Singleton<QuestMaker>
     /// <returns>the quest object</returns>
     public Quest GetQuestByID(string id)
     {
-        if(name == null) 
+        if (name == null)
             return null;
-        
+
         Quest quest;
         string[] questAttributes;
 
-        DataEncoder.Instance.DecodeFile(_questDataPath);
+        // DataEncoder.Instance.DecodePersistentDataFile(_questDataPath);
+        DataEncoder.Instance.GetStreamingAssetsFile(_questDataPath);
         questAttributes = DataEncoder.Instance.GetRowOfData(id).Split(',');
         DataEncoder.ClearData();
 

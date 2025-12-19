@@ -27,7 +27,8 @@ public class MoveMaker : Singleton<MoveMaker>
 
         string[] mainAttributes;
 
-        DataEncoder.Instance.DecodeFile(_moveDatabasePath);
+        // DataEncoder.Instance.DecodePersistentDataFile(_moveDatabasePath);
+        DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
         mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 
@@ -48,7 +49,8 @@ public class MoveMaker : Singleton<MoveMaker>
         string[] moveListData;
         List<Move> listOfMoves = new List<Move>();
 
-        DataEncoder.Instance.DecodeFile(_moveDatabasePath);
+        // DataEncoder.Instance.DecodePersistentDataFile(_moveDatabasePath);
+        DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
         moveListData = DataEncoder.Instance.GetRowsOfData();
         DataEncoder.ClearData();
         foreach (string moveData in moveListData)
@@ -101,7 +103,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 );
                 break;
             case "PRIORITY":
-                DataEncoder.Instance.DecodeFile(_priorityMoveDatabasePath);
+                // DataEncoder.Instance.DecodePersistentDataFile(_priorityMoveDatabasePath);
+                DataEncoder.Instance.GetStreamingAssetsFile(_priorityMoveDatabasePath);
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new PriorityMove
@@ -149,7 +152,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 );
                 break;
             case "PROTECT":
-                DataEncoder.Instance.DecodeFile(_protectMoveDatabasePath);
+                // DataEncoder.Instance.DecodePersistentDataFile(_protectMoveDatabasePath);
+                DataEncoder.Instance.GetStreamingAssetsFile(_protectMoveDatabasePath);
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new ProtectMove
@@ -182,7 +186,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 );
                 break;
             case "STAT_CHANGING":
-                DataEncoder.Instance.DecodeFile(_statChangingMoveDatabasePath);
+                // DataEncoder.Instance.DecodePersistentDataFile(_statChangingMoveDatabasePath);
+                DataEncoder.Instance.GetStreamingAssetsFile(_statChangingMoveDatabasePath);
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new StatChangingMove
@@ -202,7 +207,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 );
                 break;
             case "STATUS_CHANGING":
-                DataEncoder.Instance.DecodeFile(_statusChangingMoveDatabasePath);
+                // DataEncoder.Instance.DecodePersistentDataFile(_statusChangingMoveDatabasePath);
+                DataEncoder.Instance.GetStreamingAssetsFile(_statusChangingMoveDatabasePath);
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new StatusChangingMove

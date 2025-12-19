@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// StoryFlagMaker is a class that parses through
@@ -18,12 +19,13 @@ public class StoryFlagMaker : Singleton<StoryFlagMaker>
     /// <returns>the story flag.</returns>
     public StoryFlag GetStoryFlag(string id)
     {
-        if(name == null) 
+        if (name == null)
             return null;
-        
+
         string[] flagAttributes;
 
-        DataEncoder.Instance.DecodeFile(_storyFlagDataPath1);
+        // DataEncoder.Instance.DecodePersistentDataFile(_storyFlagDataPath1);
+        DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
         flagAttributes = DataEncoder.Instance.GetRowOfData(id).Split(',');
         DataEncoder.ClearData();
 
@@ -39,20 +41,21 @@ public class StoryFlagMaker : Singleton<StoryFlagMaker>
 
     public StoryFlag[] GetAllStoryFlags()
     {
-        if(name == null) 
+        if (name == null)
             return null;
-        
+
         List<StoryFlag> storyFlags = new List<StoryFlag>();
         string[] flags;
         string[] flagAttributes;
 
-        DataEncoder.Instance.DecodeFile(_storyFlagDataPath1);
+        // DataEncoder.Instance.DecodePersistentDataFile(_storyFlagDataPath1);
+        DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
         flags = DataEncoder.Instance.GetRowsOfData();
         DataEncoder.ClearData();
 
-        foreach(string flag in flags)
+        foreach (string flag in flags)
         {
-            if(flag.Trim().Length <= 0)
+            if (flag.Trim().Length <= 0)
                 break;
             flagAttributes = flag.Split(',');
             storyFlags.Add

@@ -21,15 +21,16 @@ public class MapDescMaker : Singleton<MapDescMaker>
     /// <returns>the <c>LocationInformation</c> struct or <c>null</c> if an ability could not be found.</returns>
     public LocationInformation GetLocationInformationBasedOnID(string id)
     {
-        if(id == null) 
+        if (id == null)
             return null;
-        
+
         string[] mainAttributes;
 
-        DataEncoder.Instance.DecodeFile(_mapDataPath);
+        // DataEncoder.Instance.DecodePersistentDataFile(_mapDataPath);
+        DataEncoder.Instance.GetStreamingAssetsFile(_mapDataPath);
         mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
-        
+
         return new LocationInformation
         (
             mainAttributes[1],
@@ -43,13 +44,13 @@ public class MapDescMaker : Singleton<MapDescMaker>
 
     public LocationInformation GetLocationInformationTEST(string id)
     {
-        if(id == null) 
+        if (id == null)
             return null;
 
         _data = System.IO.File.ReadAllText(Application.streamingAssetsPath + _mapDataPath);
 
         string[] mainAttributes = GetRowOfData(id).Split(',');
-        
+
         return new LocationInformation
         (
             mainAttributes[1],
@@ -72,9 +73,9 @@ public class MapDescMaker : Singleton<MapDescMaker>
 
     public string GetRowOfData(string id)
     {
-        foreach(string row in _data.Split('\n'))
+        foreach (string row in _data.Split('\n'))
         {
-            if(row.Contains(id))
+            if (row.Contains(id))
                 return row;
         }
         return null;

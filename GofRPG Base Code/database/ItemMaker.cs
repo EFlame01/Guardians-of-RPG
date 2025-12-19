@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 /// <summary>
 /// ItemMaker is a class that parses through
@@ -14,19 +15,20 @@ public class ItemMaker : Singleton<ItemMaker>
     /// </summary>
     /// <param name="name">Name of the object</param>
     /// <returns>the <c>Item</c> objects or <c>null</c> if the item could not be found.</returns>
-   public Item GetItemBasedOnName(string name)
+    public Item GetItemBasedOnName(string name)
     {
-        if(name == null) 
+        if (name == null)
             return null;
 
         Item item = null;
         string[] itemAttributes;
 
-        DataEncoder.Instance.DecodeFile(_itemDatabasePath);
+        // DataEncoder.Instance.DecodePersistentDataFile(_itemDatabasePath);
+        DataEncoder.Instance.GetStreamingAssetsFile(_itemDatabasePath);
         itemAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 
-        switch(itemAttributes[3])
+        switch (itemAttributes[3])
         {
             case "FOOD":
                 item = new FoodItem
