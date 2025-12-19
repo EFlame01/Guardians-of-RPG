@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 ///<summary>
 /// MoveManager is a class that organizes
@@ -6,8 +7,8 @@ using System.Collections.Generic;
 ///</sumamry>
 public class MoveManager
 {
-    public static Dictionary<string, Move> MoveDictionary {get; private set;}
-    
+    public static Dictionary<string, Move> MoveDictionary { get; private set; }
+
     //Constructor
     public MoveManager()
     {
@@ -29,15 +30,15 @@ public class MoveManager
     {
         Move move = MoveMaker.Instance.GetMoveBasedOnName(moveName);
 
-        if(!MoveDictionary.ContainsKey(moveName))
+        if (!MoveDictionary.ContainsKey(moveName))
             MoveDictionary.Add(moveName, move);
     }
     public void AddToMovesLearned(string[] moveNames)
     {
-        foreach(string moveName in moveNames)
+        foreach (string moveName in moveNames)
             AddToMovesLearned(moveName);
     }
-   
+
     /// <summary>
     /// Adds move to BattleMoves
     /// slot if there is space for one based on the 
@@ -46,16 +47,18 @@ public class MoveManager
     /// <param name="moveName">name of the move</param>
     public void AddToBattleMoves(string moveName)
     {
-        if(MoveExistsInBattleSlot(moveName))
+        if (MoveExistsInBattleSlot(moveName))
             return;
-        
+
         int index = FindAvailableIndex();
 
-        if(index < 0)
+        if (index < 0)
             return;
 
-        if(MoveDictionary.ContainsKey(moveName))
+        if (MoveDictionary.ContainsKey(moveName))
             Player.Instance().BattleMoves[index] = MoveDictionary[moveName];
+        else
+            Player.Instance().BattleMoves[index] = MoveMaker.Instance.GetMoveBasedOnName(moveName);
     }
 
     /// <summary>
@@ -70,9 +73,9 @@ public class MoveManager
     public int TotalBattleMoves()
     {
         int total = 0;
-        foreach(Move move in Player.Instance().BattleMoves)
+        foreach (Move move in Player.Instance().BattleMoves)
         {
-            if(move != null)
+            if (move != null)
                 total++;
         }
 
@@ -83,12 +86,12 @@ public class MoveManager
     {
         Player player = Player.Instance();
         int index = 0;
-        
-        foreach(Move move in player.BattleMoves)
+
+        foreach (Move move in player.BattleMoves)
         {
-            if(move != null && move.Name == name)
+            if (move != null && move.Name == name)
                 break;
-            index ++;
+            index++;
         }
 
         player.BattleMoves[index] = null;
@@ -103,8 +106,8 @@ public class MoveManager
     public bool MoveExistsInBattleSlot(string moveName)
     {
         Move[] moves = Player.Instance().BattleMoves;
-        foreach(Move move in moves)
-            if(move != null && move.Name == moveName)
+        foreach (Move move in moves)
+            if (move != null && move.Name == moveName)
                 return true;
         return false;
     }
@@ -117,9 +120,9 @@ public class MoveManager
     private int FindAvailableIndex()
     {
         Move[] moves = Player.Instance().BattleMoves;
-        for(int i = 0; i < moves.Length; i++)
+        for (int i = 0; i < moves.Length; i++)
         {
-            if(moves[i] == null)
+            if (moves[i] == null || moves[i].Name.Length <= 0)
                 return i;
         }
         return -1;
