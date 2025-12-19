@@ -25,10 +25,13 @@ public class DataEncoder : Singleton<DataEncoder>
         return _data;
     }
 
-    protected override void Awake()
+    void Start()
     {
-        base.Awake();
-        EncodeAllFiles();
+        // if (!GameManager.Instance.encodedStreamingAssetsData)
+        // {
+        //     EncodeDatabaseFiles();
+        //     GameManager.Instance.SetEncodedStreamingAssetsVariable();
+        // }
     }
 
     /// <summary>
@@ -36,37 +39,39 @@ public class DataEncoder : Singleton<DataEncoder>
     /// streamingAssetsPath and places it in
     /// the persistentDataPath to use.
     /// </summary>
-    public void EncodeAllFiles()
+    public void EncodeDatabaseFiles()
     {
-        //create direcories for encoded files
-        foreach (string relativePath in Units.SAVE_DATA_PATHS)
+
+        int databaseIndex = 0;
+        string saveDataPath = Units.SAVE_DATA_PATHS[databaseIndex];
+
+        //if directory for databases already exists, delete old data inside
+        if (Directory.Exists(Application.persistentDataPath + saveDataPath))
         {
-            //update databases by first deleting old data in game
-            if (relativePath.Contains("database") && Directory.Exists(Application.persistentDataPath + relativePath))
+            try
             {
-                try
+                Debug.Log("Deleting paths... " + Application.persistentDataPath + saveDataPath);
+                File.Delete(Application.persistentDataPath + saveDataPath);
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("UnauthorizedAccessException"))
                 {
-                    File.Delete(Application.persistentDataPath + relativePath);
-                }
-                catch (Exception e)
-                {
-                    if (e.Message.Contains("UnauthorizedAccessException"))
-                    {
-                        Debug.LogWarning("Unauthorized Access... need to use FileUtil...");
+                    Debug.LogWarning("Unauthorized Access... need to use FileUtil...");
 #if UNITY_EDITOR
-                        FileUtil.DeleteFileOrDirectory(Application.persistentDataPath + relativePath);
+                    FileUtil.DeleteFileOrDirectory(Application.persistentDataPath + saveDataPath);
 #endif
-                    }
                 }
             }
-
-            if (!Directory.Exists(Application.persistentDataPath + relativePath))
-                Directory.CreateDirectory(Application.persistentDataPath + relativePath);
         }
 
+        //if directory does not exist, create directory
+        if (!Directory.Exists(Application.persistentDataPath + saveDataPath))
+            Directory.CreateDirectory(Application.persistentDataPath + saveDataPath);
+
         //encode files from streamingAssetsPath to persistentDataPath
-        foreach (string relativePath in Units.DATABASE_PATHS)
-            EncodeFile(Application.streamingAssetsPath, relativePath);
+        foreach (string databasePath in Units.DATABASE_PATHS)
+            EncodeAnyFile(Application.streamingAssetsPath, databasePath);
     }
 
     /// <summary>
@@ -77,18 +82,21 @@ public class DataEncoder : Singleton<DataEncoder>
     /// </summary>
     /// <param name="dataPath">the directory used the place all the files</param>
     /// <param name="relativePath">the file and extension name</param>
-    public void EncodeFile(string dataPath, string relativePath)
+    public void EncodeAnyFile(string dataPath, string relativePath)
     {
-        //take data from combined path
-        StartCoroutine(PullFileData(dataPath + relativePath));
+        Debug.Log("Encoding Paths: " + dataPath + relativePath);
 
-        if (File.Exists(dataPath + relativePath))
+        //take data from combined path
+        // StartCoroutine(PullFileData(dataPath + relativePath));
+        if (dataPath.Contains(Application.persistentDataPath))
             _data = File.ReadAllText(dataPath + relativePath);
+        else
+            StartCoroutine(PullFileData(dataPath + relativePath));
 
         string encryptedData = AESEncryption(_data);
 
         //write data inside persistent data path
-        if (File.Exists(dataPath + relativePath))
+        if (File.Exists(Application.persistentDataPath + relativePath))
             File.Delete(Application.persistentDataPath + relativePath);
 
         File.WriteAllText(Application.persistentDataPath + relativePath, encryptedData);
@@ -100,40 +108,50 @@ public class DataEncoder : Singleton<DataEncoder>
     /// it inside the <c>_data</c> variable.
     /// </summary>
     /// <param name="path">relative path inside persistentDataPath</param>
-    public void DecodeFile(string path)
+    public void DecodePersistentDataFile(string path)
     {
         //take data from persistent assets path
         try
         {
-            string encryptedData = File.ReadAllText(Application.persistentDataPath + path);
-            _data = AESDecryption(encryptedData);
+            if (File.Exists(Application.persistentDataPath + path))
+            {
+                string encryptedData = File.ReadAllText(Application.persistentDataPath + path);
+                _data = AESDecryption(encryptedData);
+            }
+            else
+                Debug.LogWarning("WARNING: The file/location you are trying to decode: " + path + " does not exist...");
         }
         catch (Exception e)
         {
-            if (!e.Message.Contains("The input is not a valid Base-64 string as it contains a non-base 64 character"))
+            if (e.Message.Contains("The input is not a valid Base-64 string as it contains a non-base 64 character"))
             {
-                Debug.LogWarning("WARNING: " + e.Message + "... Encoding and storing new files...");
-                EncodeAllFiles();
-                string encryptedData = File.ReadAllText(Application.persistentDataPath + path);
-                _data = AESDecryption(encryptedData);
+                //This means file is not encoded and cannot be decoded.
+                Debug.LogWarning("The file/location you wanted to decode: " + path + " was already dencoded...");
+                _data = File.ReadAllText(Application.persistentDataPath + path);
+                EncodeAnyFile(Application.persistentDataPath, path);
             }
             else
                 throw e;
         }
     }
 
-    /// <summary>
-    /// Decodes a particular file in the persistentDataPath
-    /// location based on the <paramref name="path"/> and stores
-    /// it inside the <c>_data</c> variable. This also restores
-    /// the previously encrypted file.
-    /// </summary>
-    /// <param name="path">relative path inside persistentDataPath</param>
-    public void DecodeAndRestoreFile(string path)
+    public void GetStreamingAssetsFile(string path)
     {
-        string encryptedData = File.ReadAllText(Application.persistentDataPath + path);
-        _data = AESDecryption(encryptedData);
-        File.WriteAllText(Application.persistentDataPath + path, _data);
+        try
+        {
+            if (File.Exists(Application.streamingAssetsPath + path))
+            {
+                _data = File.ReadAllText(Application.streamingAssetsPath + path);
+                // Debug.Log(_data);
+            }
+            else
+                Debug.LogWarning("file: " + Application.streamingAssetsPath + path + " does not exist!");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
+            _data = null;
+        }
     }
 
     /// <summary>
@@ -164,7 +182,7 @@ public class DataEncoder : Singleton<DataEncoder>
 
         foreach (string row in _data.Split('\n'))
         {
-            if (row.Contains(id))
+            if (row.Contains(id)) //TODO: change to row.Equals(id) and see what happens.
                 rows.Add(row);
         }
 
@@ -208,15 +226,26 @@ public class DataEncoder : Singleton<DataEncoder>
     {
         if (filePath.Contains("://"))
         {
-            UnityWebRequest webRequest = new UnityWebRequest(filePath);
-            yield return webRequest;
+            UnityWebRequest webRequest = UnityWebRequest.Get(filePath);
+            yield return webRequest.SendWebRequest();
+
             if (webRequest.result != UnityWebRequest.Result.Success)
-                Debug.Log(webRequest.error);
+            {
+                Debug.LogError("ERROR WHEN GETTING DATA: " + webRequest.error);
+                _data = null;
+            }
             else
+            {
                 _data = webRequest.downloadHandler.text;
+                Debug.Log(webRequest.downloadHandler.text);
+            }
         }
         else
-            _data = File.ReadAllText(filePath);
+        {
+            Debug.LogWarning("Using non webgl method of reading data path " + filePath);
+            if (File.Exists(filePath))
+                _data = File.ReadAllText(filePath);
+        }
     }
 
     /// <summary>
