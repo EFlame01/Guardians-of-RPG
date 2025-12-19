@@ -97,9 +97,17 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             //this means we have not started dialogue yet
             if (!_dialogueEnded)
             {
-                CurrentStory = new Story(_dialogueData.InkJSON.text);
-                CurrentStory.onError += HandleStoryError;
-                SetUpDialogueVariables();
+                try
+                {
+                    CurrentStory = new Story(_dialogueData.InkJSON.text);
+                    CurrentStory.onError += HandleStoryError;
+                    SetUpDialogueVariables();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning("WARNING: " + e.Message);
+                    return;
+                }
             }
 
             //this means we have started dialogue and it has ended
@@ -457,11 +465,9 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void HandleStoryError(string message, Ink.ErrorType type)
     {
-        // 'type' is an enum (Error, Warning)
         if (type == Ink.ErrorType.Error)
         {
             Debug.LogError($"Ink Error: {message}");
-            // Handle fatal errors, such as stopping the game or resetting the story state.
         }
         else if (type == Ink.ErrorType.Warning)
         {
