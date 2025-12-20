@@ -58,7 +58,7 @@ public class MoveSetMenu : MenuState
         Player player = Player.Instance();
         string results = CanRemoveMove();
 
-        if(player.MoveManager.TotalBattleMoves() > 1)
+        if (player.MoveManager.TotalBattleMoves() > 1)
             player.MoveManager.RemoveBattleMove(chosenBattleMove.Name);
 
         SetUpMoveSets();
@@ -77,9 +77,9 @@ public class MoveSetMenu : MenuState
         Player player = Player.Instance();
         string results = CanAddMove();
 
-        if(player.MoveManager.TotalBattleMoves() < 4)
+        if (player.MoveManager.TotalBattleMoves() < 4)
             player.MoveManager.AddToBattleMoves(chosenMoveLearned.Name);
-        
+
         SetUpMoveSets();
         moveDescText.text = results;
     }
@@ -89,7 +89,7 @@ public class MoveSetMenu : MenuState
         Player player = Player.Instance();
         chosenBattleMove = null;
         chosenMoveLearned = null;
-        moveNameText.text  = "";
+        moveNameText.text = "";
         moveTypeText.text = "";
         movePowerText.text = "0.00";
         moveAccText.text = "0.00";
@@ -98,14 +98,14 @@ public class MoveSetMenu : MenuState
 
         ClearMoves();
 
-        foreach(Move battleMove in player.BattleMoves)
+        foreach (Move battleMove in player.BattleMoves)
         {
-            if(battleMove != null)
+            if (battleMove != null)
             {
                 Button battleMovesButton = Instantiate(battleMoveButtonPrefab, battleMovesLayout);
                 TextMeshProUGUI battleMoveName = battleMovesButton.GetComponentInChildren<TextMeshProUGUI>();
                 battleMoveName.text = battleMove.Name;
-                battleMovesButton.onClick.AddListener(() => 
+                battleMovesButton.onClick.AddListener(() =>
                 {
                     chosenBattleMove = battleMove;
                     chosenMoveLearned = null;
@@ -114,7 +114,7 @@ public class MoveSetMenu : MenuState
             }
         }
 
-        foreach(KeyValuePair<string, Move> moveInfo in MoveManager.MoveDictionary)
+        foreach (KeyValuePair<string, Move> moveInfo in MoveManager.MoveDictionary)
         {
             Button moveLearnedButton = Instantiate(moveLearnedButtonPrefab, movesLearnedLayout);
             TextMeshProUGUI moveLearnedName = moveLearnedButton.GetComponentInChildren<TextMeshProUGUI>();
@@ -131,11 +131,13 @@ public class MoveSetMenu : MenuState
     private void DisplayMoveInformation()
     {
         Move chosenMove = chosenBattleMove ?? chosenMoveLearned;
-        
-        if(chosenMove == null)
+
+        if (chosenMove == null)
             return;
-        
-        moveNameText.text  = chosenMove.Name;
+
+        Debug.Log(chosenMove.Name + " selected");
+
+        moveNameText.text = chosenMove.Name;
         moveTypeText.text = chosenMove.Type.ToString();
         movePowerText.text = chosenMove.Power.ToString();
         moveAccText.text = chosenMove.Accuracy.ToString();
@@ -145,11 +147,11 @@ public class MoveSetMenu : MenuState
 
     private void ClearMoves()
     {
-        foreach(Transform child in battleMovesLayout)
+        foreach (Transform child in battleMovesLayout)
         {
             Destroy(child.gameObject);
         }
-        foreach(Transform child in movesLearnedLayout)
+        foreach (Transform child in movesLearnedLayout)
         {
             Destroy(child.gameObject);
         }
@@ -157,14 +159,14 @@ public class MoveSetMenu : MenuState
 
     private string CanRemoveMove()
     {
-        if(Player.Instance().MoveManager.TotalBattleMoves() > 1)
+        if (Player.Instance().MoveManager.TotalBattleMoves() > 1)
             return chosenBattleMove.Name + " was removed from the Battle Moves slot!";
         return "You need at least one move in the Battle Moves slot...";
     }
 
     private string CanAddMove()
     {
-        if(Player.Instance().MoveManager.TotalBattleMoves() < 4)
+        if (Player.Instance().MoveManager.TotalBattleMoves() < 4)
             return chosenMoveLearned.Name + " was added to the Battle Moves slot!";
         return "You have no room in your Battle Moves slot. Try removing a move in the list first.";
     }
