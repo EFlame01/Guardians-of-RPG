@@ -166,7 +166,7 @@ public class PlayerDataCloud
 
         for (int i = 0; i < BattleMoves.Length; i++)
         {
-            if (BattleMoves[i] != null)
+            if (BattleMoves[i] != null && BattleMoves[i].Length > 0)
                 player.MoveManager.AddToBattleMoves(BattleMoves[i]);
         }
         for (int i = 0; i < MovesLearned.Length; i++)
