@@ -28,7 +28,8 @@ public class MoveMaker : Singleton<MoveMaker>
         string[] mainAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_moveDatabasePath);
-        DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_moveDatabasePath));
         mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 
@@ -50,7 +51,8 @@ public class MoveMaker : Singleton<MoveMaker>
         List<Move> listOfMoves = new List<Move>();
 
         // DataEncoder.Instance.DecodePersistentDataFile(_moveDatabasePath);
-        DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_moveDatabasePath));
         moveListData = DataEncoder.Instance.GetRowsOfData();
         DataEncoder.ClearData();
         foreach (string moveData in moveListData)
@@ -104,7 +106,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 break;
             case "PRIORITY":
                 // DataEncoder.Instance.DecodePersistentDataFile(_priorityMoveDatabasePath);
-                DataEncoder.Instance.GetStreamingAssetsFile(_priorityMoveDatabasePath);
+                // DataEncoder.Instance.GetStreamingAssetsFile(_priorityMoveDatabasePath);
+                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_priorityMoveDatabasePath));
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new PriorityMove
@@ -153,7 +156,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 break;
             case "PROTECT":
                 // DataEncoder.Instance.DecodePersistentDataFile(_protectMoveDatabasePath);
-                DataEncoder.Instance.GetStreamingAssetsFile(_protectMoveDatabasePath);
+                // DataEncoder.Instance.GetStreamingAssetsFile(_protectMoveDatabasePath);
+                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_protectMoveDatabasePath));
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new ProtectMove
@@ -187,7 +191,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 break;
             case "STAT_CHANGING":
                 // DataEncoder.Instance.DecodePersistentDataFile(_statChangingMoveDatabasePath);
-                DataEncoder.Instance.GetStreamingAssetsFile(_statChangingMoveDatabasePath);
+                // DataEncoder.Instance.GetStreamingAssetsFile(_statChangingMoveDatabasePath);
+                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statChangingMoveDatabasePath));
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new StatChangingMove
@@ -208,7 +213,8 @@ public class MoveMaker : Singleton<MoveMaker>
                 break;
             case "STATUS_CHANGING":
                 // DataEncoder.Instance.DecodePersistentDataFile(_statusChangingMoveDatabasePath);
-                DataEncoder.Instance.GetStreamingAssetsFile(_statusChangingMoveDatabasePath);
+                // DataEncoder.Instance.GetStreamingAssetsFile(_statusChangingMoveDatabasePath);
+                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statusChangingMoveDatabasePath));
                 additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
                 DataEncoder.ClearData();
                 move = new StatusChangingMove

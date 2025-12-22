@@ -26,7 +26,8 @@ public class QuestMaker : Singleton<QuestMaker>
         string[] questAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_questDataPath);
-        DataEncoder.Instance.GetStreamingAssetsFile(_questDataPath);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_questDataPath);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_questDataPath));
         questAttributes = DataEncoder.Instance.GetRowOfData(id).Split(',');
         DataEncoder.ClearData();
 

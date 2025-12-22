@@ -142,7 +142,7 @@ public class DataEncoder : Singleton<DataEncoder>
             if (File.Exists(Application.streamingAssetsPath + path))
             {
                 _data = File.ReadAllText(Application.streamingAssetsPath + path);
-                // Debug.Log(_data);
+                Debug.Log("Retrieved data for " + path);
             }
             else
                 Debug.LogWarning("file: " + Application.streamingAssetsPath + path + " does not exist!");
@@ -151,6 +151,26 @@ public class DataEncoder : Singleton<DataEncoder>
         {
             Debug.LogError(e.Message);
             _data = null;
+        }
+    }
+
+    public IEnumerator GetStreamingAssetsFileWebGL(string path)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(Application.streamingAssetsPath + path);
+
+        yield return www.SendWebRequest();
+
+        switch (www.result)
+        {
+            case UnityWebRequest.Result.Success:
+                _data = www.downloadHandler.text;
+                break;
+            case UnityWebRequest.Result.ConnectionError:
+            case UnityWebRequest.Result.DataProcessingError:
+            case UnityWebRequest.Result.ProtocolError:
+                Debug.LogError("ERROR: " + www.error);
+                _data = null;
+                break;
         }
     }
 

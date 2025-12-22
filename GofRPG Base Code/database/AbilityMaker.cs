@@ -23,7 +23,8 @@ public class AbilityMaker : Singleton<AbilityMaker>
         string[] mainAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_abilityDataPath);
-        DataEncoder.Instance.GetStreamingAssetsFile(_abilityDataPath);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_abilityDataPath);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_abilityDataPath));
         mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 

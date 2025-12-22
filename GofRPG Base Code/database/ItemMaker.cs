@@ -24,7 +24,8 @@ public class ItemMaker : Singleton<ItemMaker>
         string[] itemAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_itemDatabasePath);
-        DataEncoder.Instance.GetStreamingAssetsFile(_itemDatabasePath);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_itemDatabasePath);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_itemDatabasePath));
         itemAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 

@@ -27,7 +27,8 @@ public class MapDescMaker : Singleton<MapDescMaker>
         string[] mainAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_mapDataPath);
-        DataEncoder.Instance.GetStreamingAssetsFile(_mapDataPath);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_mapDataPath);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_mapDataPath));
         mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
         DataEncoder.ClearData();
 

@@ -25,7 +25,8 @@ public class StoryFlagMaker : Singleton<StoryFlagMaker>
         string[] flagAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_storyFlagDataPath1);
-        DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_storyFlagDataPath1));
         flagAttributes = DataEncoder.Instance.GetRowOfData(id).Split(',');
         DataEncoder.ClearData();
 
@@ -49,7 +50,8 @@ public class StoryFlagMaker : Singleton<StoryFlagMaker>
         string[] flagAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_storyFlagDataPath1);
-        DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_storyFlagDataPath1));
         flags = DataEncoder.Instance.GetRowsOfData();
         DataEncoder.ClearData();
 

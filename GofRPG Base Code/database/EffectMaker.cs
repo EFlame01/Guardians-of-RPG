@@ -35,7 +35,8 @@ public class EffectMaker : Singleton<EffectMaker>
         string[] additionalAttributes;
 
         // DataEncoder.Instance.DecodePersistentDataFile(_effectPath);
-        DataEncoder.Instance.GetStreamingAssetsFile(_effectPath);
+        // DataEncoder.Instance.GetStreamingAssetsFile(_effectPath);
+        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_effectPath));
         foundEffects = DataEncoder.Instance.GetRowsOfData(name);
         DataEncoder.ClearData();
 
@@ -59,7 +60,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
                 case "HEALTH_BOOST":
                     // DataEncoder.Instance.DecodePersistentDataFile(_healthBoostEffectPath);
-                    DataEncoder.Instance.GetStreamingAssetsFile(_healthBoostEffectPath);
+                    // DataEncoder.Instance.GetStreamingAssetsFile(_healthBoostEffectPath);
+                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_healthBoostEffectPath));
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
 
                     effect = new HealthBoostEffect
@@ -75,7 +77,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
                 case "IMMUNITY":
                     // DataEncoder.Instance.DecodePersistentDataFile(_immunityEffectPath);
-                    DataEncoder.Instance.GetStreamingAssetsFile(_immunityEffectPath);
+                    // DataEncoder.Instance.GetStreamingAssetsFile(_immunityEffectPath);
+                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_immunityEffectPath));
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
 
                     effect = new ImmunityEffect
@@ -91,7 +94,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
                 case "NEGATION":
                     // DataEncoder.Instance.DecodePersistentDataFile(_negationEffectPath);
-                    DataEncoder.Instance.GetStreamingAssetsFile(_negationEffectPath);
+                    // DataEncoder.Instance.GetStreamingAssetsFile(_negationEffectPath);
+                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_negationEffectPath));
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(','); ;
 
                     effect = new NegationEffect
@@ -107,7 +111,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
                 case "RECHARGE":
                     // DataEncoder.Instance.DecodePersistentDataFile(_rechargeEffectPath);
-                    DataEncoder.Instance.GetStreamingAssetsFile(_rechargeEffectPath);
+                    // DataEncoder.Instance.GetStreamingAssetsFile(_rechargeEffectPath);
+                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_rechargeEffectPath));
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
 
                     effect = new RechargeEffect
@@ -123,7 +128,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
                 case "RECOIL":
                     // DataEncoder.Instance.DecodePersistentDataFile(_recoilEffectPath);
-                    DataEncoder.Instance.GetStreamingAssetsFile(_recoilEffectPath);
+                    // DataEncoder.Instance.GetStreamingAssetsFile(_recoilEffectPath);
+                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_recoilEffectPath));
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
 
                     effect = new RecoilEffect
@@ -150,7 +156,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
                 case "STAT_CHANGE":
                     // DataEncoder.Instance.DecodePersistentDataFile(_statChangeEffectPath);
-                    DataEncoder.Instance.GetStreamingAssetsFile(_statChangeEffectPath);
+                    // DataEncoder.Instance.GetStreamingAssetsFile(_statChangeEffectPath);
+                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statChangeEffectPath));
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
 
                     effect = new StatChangeEffect
@@ -167,7 +174,8 @@ public class EffectMaker : Singleton<EffectMaker>
                     break;
                 case "STATUS_CONDITION":
                     // DataEncoder.Instance.DecodePersistentDataFile(_statusConditionEffectPath);
-                    DataEncoder.Instance.GetStreamingAssetsFile(_statusConditionEffectPath);
+                    // DataEncoder.Instance.GetStreamingAssetsFile(_statusConditionEffectPath);
+                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statusConditionEffectPath));
                     additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
 
                     effect = new StatusConditionEffect
