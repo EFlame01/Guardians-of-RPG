@@ -272,4 +272,13 @@ public class SceneLoader : Singleton<SceneLoader>
         foreach (TransitionTexture transTexture in _transTexturesList)
             _textureDictionary[transTexture.Type] = transTexture.Texture;
     }
+
+    private IEnumerator LoadingScreen(string nameOfScene)
+    {
+        //TODO: Animation.Play(Units.LOADING_ANIMATION);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nameOfScene);
+        while (!asyncLoad.isDone)
+            yield return null;
+        //TODO: Animation.Play("NONE");
+    }
 }
