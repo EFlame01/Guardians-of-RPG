@@ -51,14 +51,13 @@ public class QuestMenu : MenuState
     private void SetUpQuestLayout()
     {
         ClearContents();
-        Player player = Player.Instance();
-        foreach(KeyValuePair<string, Quest> questInfo in QuestManager.QuestDictionary)
+        foreach (KeyValuePair<string, Quest> questInfo in QuestManager.QuestDictionary)
         {
-            if(questStatusTab.Equals("ALL"))
+            if (questStatusTab.Equals("ALL"))
                 InstantiateQuestWidget(questInfo.Value);
-            else if(questStatusTab.Equals("COMPLETED") && questInfo.Value.Completed)
+            else if (questStatusTab.Equals("COMPLETED") && questInfo.Value.Completed)
                 InstantiateQuestWidget(questInfo.Value);
-            else if(questStatusTab.Equals("INCOMPLETED") && !questInfo.Value.Completed)
+            else if (questStatusTab.Equals("INCOMPLETED") && !questInfo.Value.Completed)
                 InstantiateQuestWidget(questInfo.Value);
         }
     }
@@ -77,7 +76,7 @@ public class QuestMenu : MenuState
 
     private void ClearContents()
     {
-        foreach(Transform child in questListLayout)
+        foreach (Transform child in questListLayout)
         {
             Destroy(child.gameObject);
         }
