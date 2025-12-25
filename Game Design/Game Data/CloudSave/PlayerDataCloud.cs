@@ -112,7 +112,6 @@ public class PlayerDataCloud
         CurrentXP = player.CurrXP;
         LimitXP = player.LimXP;
 
-        PlayerSceneName = SceneManager.GetActiveScene().ToString();
         MapLocationName = MapLocation.GetCurrentMapLocation();
         LocationPosition = PlayerSpawn.PlayerPosition;
 
