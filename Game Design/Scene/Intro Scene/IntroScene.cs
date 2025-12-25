@@ -1,10 +1,12 @@
 using UnityEngine;
 using Ink.Runtime;
+using UnityEngine.InputSystem;
 
 public class IntroScene : MonoBehaviour
 {
     //Serialized variables
     [SerializeField] private DialogueData introDialogueData;
+    [SerializeField] private InputActionReference Select;
     [SerializeField] private GameObject[] introUIs;
 
     //private variables
@@ -27,6 +29,16 @@ public class IntroScene : MonoBehaviour
         player = Player.Instance();
         DeactivateGameObjects();
         StartDialogue();
+    }
+
+    public virtual void Update()
+    {
+        if (Select.action.ReadValue<float>() <= 0f)
+            return;
+        // if (!_textBoxOpened)
+        //     return;
+        if (GameManager.Instance.EnableNarrationInputs)
+            OnNextButtonPressed();
     }
 
     public void OnNextButtonPressed()
@@ -180,10 +192,13 @@ public class IntroScene : MonoBehaviour
 
     private void SetUpPlayerInformation()
     {
+        Ability ability = AbilityMaker.Instance.GetAbilityBasedOnName("Empyrean Binary");
         Move[] moves = MoveMaker.Instance.GetLevelUpMoves(player.Level, ArchetypeName, ClassName);
+
         player.SetName(PlayerName);
         player.SetSex(SexName);
         player.SetArchetype(ArchetypeName);
+        player.SetAbility(ability);
         player.SetBaseStats(
             player.Archetype.BaseStats.FullHp,
             player.Archetype.BaseStats.Atk,
@@ -195,9 +210,13 @@ public class IntroScene : MonoBehaviour
             Units.BASE_ACC,
             Units.BASE_CRT
         );
-
         foreach (Move move in moves)
-            player.MoveManager.AddMove(move.Name);
+            player.MoveManager.AddMove(move);
+
+        player.StoryFlagManager.AddAllStoryFlags();
+
+        TimeTracker.Instance().SetTotalSavedPlayTime(0);
+        TimeTracker.Instance().StartTime();
     }
 
     private void RemovePlayerInformation()

@@ -33,7 +33,7 @@ public class Player : Character
         BaseStats = new BaseStats(5, 5, 5, 5, 5);
         BattleStatus = new BattleStatus();
         Item = null;
-        Ability = AbilityMaker.Instance.GetAbilityBasedOnName("Empyrean Binary");
+        Ability = null;
         Inventory = new Inventory();
         QuestManager = new QuestManager();
         MoveManager = new MoveManager();

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class PlayerDataCloud
@@ -111,6 +112,7 @@ public class PlayerDataCloud
         CurrentXP = player.CurrXP;
         LimitXP = player.LimXP;
 
+        PlayerSceneName = SceneManager.GetActiveScene().ToString();
         MapLocationName = MapLocation.GetCurrentMapLocation();
         LocationPosition = PlayerSpawn.PlayerPosition;
 
@@ -148,13 +150,9 @@ public class PlayerDataCloud
 
         // WellDataList
         WellDataContainer = new WellDataContainer();
-
-        // Time Data
-        // TimeTracker.Instance().EndTime();
-        // TotalSavedPlayTime = TimeTracker.Instance().TotalSavedPlayTime;
     }
 
-    public void LoadPlayerData()
+    public void LoadData()
     {
         Player player = Player.Instance();
 
@@ -166,24 +164,31 @@ public class PlayerDataCloud
 
         for (int i = 0; i < BattleMoves.Length; i++)
         {
-            if (BattleMoves[i] != null && BattleMoves[i].Length > 0)
+            string moveName = BattleMoves[i];
+            if (!string.IsNullOrEmpty(moveName))
             {
-                Debug.Log(BattleMoves[i]);
-                player.MoveManager.AddToBattleMoves(BattleMoves[i]);
+                Move move = MoveMaker.Instance.GetMoveBasedOnName(moveName);
+                player.BattleMoves[i] = move;
             }
         }
         for (int i = 0; i < MovesLearned.Length; i++)
         {
-            if (MovesLearned[i] != null && MovesLearned[i].Length > 0)
-                player.MoveManager.AddToMovesLearned(MovesLearned[i]);
+            string moveName = MovesLearned[i];
+            if (!string.IsNullOrEmpty(moveName))
+            {
+                Move move = MoveMaker.Instance.GetMoveBasedOnName(moveName);
+                MoveManager.MoveDictionary.Add(moveName, move);
+            }
         }
 
         player.SetBaseStats(FullHp, Atk, Def, Eva, Hp, Spd, Elx, Acc, Crt);
 
-        player.SetAbility(AbilityMaker.Instance.GetAbilityBasedOnName(AbilityName));
+        Ability ability = AbilityMaker.Instance.GetAbilityBasedOnName(AbilityName);
+        player.SetAbility(ability);
         player.AbilityManager.AddAbilitiesToList(AbilityList);
 
-        player.SetItem(ItemMaker.Instance.GetItemBasedOnName(EquippedItem));
+        Item item = ItemMaker.Instance.GetItemBasedOnName(EquippedItem);
+        player.SetItem(item);
 
         player.SetCurrentXP(CurrentXP);
         player.SetLimitXP(LimitXP);

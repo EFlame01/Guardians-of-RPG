@@ -1,5 +1,3 @@
-using System;
-using UnityEngine;
 
 /// <summary>
 /// CharacterMaker is a class that parses through
@@ -7,21 +5,15 @@ using UnityEngine;
 /// </summary>
 public class CharacterMaker : Singleton<CharacterMaker>
 {
-    private readonly string _characterDatabasePath = "/database/characters.csv";
+    private const int CHARACTER_INDEX = 2;
 
     public Character GetCharacterBasedOnName(string name)
     {
-        if (name == null)
+        if (string.IsNullOrEmpty(name))
             return null;
 
-        Character character = null;
-        string[] characterAttributes;
-        // DataEncoder.Instance.DecodePersistentDataFile(_characterDatabasePath);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_characterDatabasePath);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_characterDatabasePath));
-        characterAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-        DataEncoder.ClearData();
-
+        Character character;
+        string[] characterAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[CHARACTER_INDEX], name).Split(',');
         Move[] moveArray =
         {
             MoveMaker.Instance.GetMoveBasedOnName(characterAttributes[7]),
@@ -57,10 +49,6 @@ public class CharacterMaker : Singleton<CharacterMaker>
         {
             character.BaseStats.LevelUpStats(character.Archetype.ChooseStatBoostRandomly());
         }
-
-        //TODO: Test. Delete Later
-        // character.BattleStatus.StatusConditions["BURN"] = new Burn();
-        // character.BattleStatus.StatusConditions["POISON"] = new Poison(1);
 
         return character;
     }

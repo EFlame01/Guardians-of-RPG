@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
 using UnityEngine;
 
 /// <summary>

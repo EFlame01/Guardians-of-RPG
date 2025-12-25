@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Unity.Services.Core;
+using UnityEngine.SceneManagement;
 
 public class GameManager : PersistentSingleton<GameManager>
 {
@@ -27,7 +28,6 @@ public class GameManager : PersistentSingleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        SaveSystem.LoadSettingsData();
     }
 
     private void Update()
@@ -38,7 +38,7 @@ public class GameManager : PersistentSingleton<GameManager>
     public void LoadGame()
     {
         GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
-        data.PlayerData.LoadPlayerData();
+        data.PlayerData.LoadData();
         string sceneName = data.PlayerData.PlayerSceneName.Equals("Start Scene") ? "Intro" : data.PlayerData.PlayerSceneName;
         SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
     }
@@ -105,11 +105,17 @@ public class GameManager : PersistentSingleton<GameManager>
             return true;
     }
 
-    // public double GetPlayTime()
-    // {
-    //     GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
-    //     return data.PlayerData.TotalSavedPlayTime;
-    // }
+    public void SavePlayerLocationData()
+    {
+        GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
+        PlayerDataCloud playerData = data.PlayerData;
+        // public string PlayerSceneName;
+        // public string MapLocationName;
+        // public Vector3 LocationPosition;
+        playerData.PlayerSceneName = SceneManager.GetActiveScene().ToString();
+        playerData.MapLocationName = MapLocation.GetCurrentMapLocation();
+        playerData.LocationPosition = PlayerSpawn.PlayerPosition;
+    }
 
     private void CheckToEnableButtons()
     {

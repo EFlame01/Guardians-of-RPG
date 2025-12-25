@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 ///<summary>
 /// MoveManager is a class that organizes
@@ -15,10 +14,10 @@ public class MoveManager
         MoveDictionary = new Dictionary<string, Move>();
     }
 
-    public void AddMove(string moveName)
+    public void AddMove(Move move)
     {
-        AddToMovesLearned(moveName);
-        AddToBattleMoves(moveName);
+        AddToMovesLearned(move);
+        AddToBattleMoves(move);
     }
 
     /// <summary>
@@ -26,17 +25,12 @@ public class MoveManager
     /// <paramref name="moveName"/>.
     /// </summary>
     /// <param name="moveName">name of the move</param>
-    public void AddToMovesLearned(string moveName)
+    public void AddToMovesLearned(Move move)
     {
-        Move move = MoveMaker.Instance.GetMoveBasedOnName(moveName);
-
-        if (!MoveDictionary.ContainsKey(moveName))
-            MoveDictionary.Add(moveName, move);
-    }
-    public void AddToMovesLearned(string[] moveNames)
-    {
-        foreach (string moveName in moveNames)
-            AddToMovesLearned(moveName);
+        // AddMovesLearned(moveName);
+        if (MoveDictionary.ContainsKey(move.Name))
+            return;
+        MoveDictionary.Add(move.Name, move);
     }
 
     /// <summary>
@@ -45,9 +39,9 @@ public class MoveManager
     /// <paramref name="moveName"/>.
     /// </summary>
     /// <param name="moveName">name of the move</param>
-    public void AddToBattleMoves(string moveName)
+    public void AddToBattleMoves(Move move)
     {
-        if (MoveExistsInBattleSlot(moveName))
+        if (MoveExistsInBattleSlot(move.Name))
             return;
 
         int index = FindAvailableIndex();
@@ -55,10 +49,10 @@ public class MoveManager
         if (index < 0)
             return;
 
-        if (MoveDictionary.ContainsKey(moveName))
-            Player.Instance().BattleMoves[index] = MoveDictionary[moveName];
+        if (MoveDictionary.ContainsKey(move.Name))
+            Player.Instance().BattleMoves[index] = MoveDictionary[move.Name];
         else
-            Player.Instance().BattleMoves[index] = MoveMaker.Instance.GetMoveBasedOnName(moveName);
+            Player.Instance().BattleMoves[index] = move;
     }
 
     /// <summary>

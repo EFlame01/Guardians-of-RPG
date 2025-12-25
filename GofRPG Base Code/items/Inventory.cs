@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 ///<summary>
 /// This is a class that allows the <c>Player</c>

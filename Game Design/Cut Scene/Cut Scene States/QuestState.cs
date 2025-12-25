@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 
@@ -70,7 +67,8 @@ public class QuestState : CutSceneState, IDialogue
                 DialogueManager.Instance.CurrentStory.variablesState["levelUpText"] = "You are now level " + Player.Instance().Level;
             }
 
-            Move[] moves = Level.DetermineLearnedMoves();
+            Move[] moves = MoveMaker.Instance.GetLevelUpMoves(Player.Instance().Level, Player.Instance().Archetype.ArchetypeName, Player.Instance().Archetype.ClassName);
+
             if (moves != null && moves.Length > 0)
             {
                 string movesLearned = "You learned ";
@@ -78,13 +76,13 @@ public class QuestState : CutSceneState, IDialogue
                 if (moves.Length == 1)
                 {
                     movesLearned += moves[0].Name;
-                    Player.Instance().MoveManager.AddMove(moves[0].Name);
+                    Player.Instance().MoveManager.AddMove(moves[0]);
                 }
                 else
                 {
                     for (int i = 0; i < moves.Length; i++)
                     {
-                        Player.Instance().MoveManager.AddMove(moves[i].Name);
+                        Player.Instance().MoveManager.AddMove(moves[i]);
 
                         if (i + 1 >= moves.Length)
                             movesLearned += "and " + moves[i].Name;
@@ -97,6 +95,7 @@ public class QuestState : CutSceneState, IDialogue
                 DialogueManager.Instance.CurrentStory.variablesState["movesLearnedText"] = movesLearned;
                 DialogueManager.Instance.CurrentStory.variablesState["whereToFindMovesText"] = "You can find the moves you learned in your Move Set list.";
             }
+
         }
         else
         {
@@ -115,7 +114,8 @@ public class QuestState : CutSceneState, IDialogue
     private void AssignQuest()
     {
         Player player = Player.Instance();
-        bool questAssigned = player.QuestManager.AddQuest(questID);
+        player.QuestManager.AddQuest(questID);
+        bool questAssigned = QuestManager.QuestDictionary.ContainsKey(questID);
         if (questAssigned)
         {
             Debug.Log("QuestID " + questID + " does exist. Assigning to player");
@@ -124,7 +124,6 @@ public class QuestState : CutSceneState, IDialogue
             DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
             DialogueManager.Instance.CurrentStory.variablesState["assignment"] = quest.Category.Equals("TODO") ? "objective" : "Quest Card";
             DialogueManager.Instance.CurrentStory.variablesState["quest"] = QuestManager.QuestDictionary[questID].Description;
-
         }
         else
         {

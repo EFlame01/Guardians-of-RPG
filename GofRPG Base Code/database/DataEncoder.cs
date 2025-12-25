@@ -156,21 +156,29 @@ public class DataEncoder : Singleton<DataEncoder>
 
     public IEnumerator GetStreamingAssetsFileWebGL(string path)
     {
-        UnityWebRequest www = UnityWebRequest.Get(Application.streamingAssetsPath + path);
-
-        yield return www.SendWebRequest();
-
-        switch (www.result)
+        if (Application.streamingAssetsPath.Contains("://"))
         {
-            case UnityWebRequest.Result.Success:
-                _data = www.downloadHandler.text;
-                break;
-            case UnityWebRequest.Result.ConnectionError:
-            case UnityWebRequest.Result.DataProcessingError:
-            case UnityWebRequest.Result.ProtocolError:
-                Debug.LogError("ERROR: " + www.error);
-                _data = null;
-                break;
+            UnityWebRequest www = UnityWebRequest.Get(Application.streamingAssetsPath + path);
+
+            yield return www.SendWebRequest();
+
+            switch (www.result)
+            {
+                case UnityWebRequest.Result.Success:
+                    _data = www.downloadHandler.text;
+                    break;
+                case UnityWebRequest.Result.ConnectionError:
+                case UnityWebRequest.Result.DataProcessingError:
+                case UnityWebRequest.Result.ProtocolError:
+                    Debug.LogError("ERROR: " + www.error);
+                    _data = null;
+                    break;
+            }
+        }
+        else
+        {
+            GetStreamingAssetsFile(path);
+            yield return null;
         }
     }
 

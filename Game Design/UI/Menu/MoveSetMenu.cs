@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -78,7 +77,7 @@ public class MoveSetMenu : MenuState
         string results = CanAddMove();
 
         if (player.MoveManager.TotalBattleMoves() < 4)
-            player.MoveManager.AddToBattleMoves(chosenMoveLearned.Name);
+            player.MoveManager.AddToBattleMoves(chosenMoveLearned);
 
         SetUpMoveSets();
         moveDescText.text = results;

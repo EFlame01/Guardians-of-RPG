@@ -67,16 +67,6 @@ public class Character
     {
         Sex = sex ?? "MALEFE";
     }
-    public void SetBattleMoves(string[] moves)
-    {
-        for (int i = 0; i < 4; i++)
-            BattleMoves[i] = moves[i] != null ? MoveMaker.Instance.GetMoveBasedOnName(moves[i]) : null;
-    }
-    public void SetBattleMoves(Move[] moves)
-    {
-        for (int i = 0; i < 4; i++)
-            BattleMoves[i] = moves[i] != null ? moves[i] : null;
-    }
     public void SetBaseStats(int fullHp, int atk, int def, int eva, int hp, int spd, int elx, double acc, double crt)
     {
         BaseStats = new BaseStats(fullHp, atk, def, eva, hp, spd, elx);

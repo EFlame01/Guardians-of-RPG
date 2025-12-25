@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
@@ -37,10 +36,7 @@ public class BattleOverState : BattleState
 
     public override void Enter()
     {
-        GetText();
-        GetLevelUpText();
-        UpdateFlagForWin();
-        AnnounceBattleResult();
+        InitBattleOverProcedure();
     }
 
     public override void Update()
@@ -180,7 +176,7 @@ public class BattleOverState : BattleState
                 if (!MoveManager.MoveDictionary.ContainsKey(move.Name))
                 {
                     texts.Add("You learned " + move.Name + "!");
-                    Player.Instance().MoveManager.AddMove(move.Name);
+                    Player.Instance().MoveManager.AddMove(move);
                 }
             }
         }
@@ -251,6 +247,14 @@ public class BattleOverState : BattleState
         {
             Debug.LogWarning("NPCs were not documented in SetVictoryNPCFlag()... " + e.Message);
         }
+    }
+
+    public void InitBattleOverProcedure()
+    {
+        GetText();
+        GetLevelUpText();
+        UpdateFlagForWin();
+        AnnounceBattleResult();
     }
 
 }

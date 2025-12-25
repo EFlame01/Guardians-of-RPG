@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
 
 /// <summary>
 /// StoryFlagManager is a class that is 
@@ -16,7 +14,6 @@ public class StoryFlagManager
     public StoryFlagManager()
     {
         FlagDictionary = new Dictionary<string, StoryFlag>();
-        AddAllStoryFlags();
     }
 
     public void AddAllStoryFlags()

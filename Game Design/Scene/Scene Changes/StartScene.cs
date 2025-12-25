@@ -66,7 +66,6 @@ public class StartScene : MonoBehaviour
     public void OnPlayButtonPressed()
     {
 
-        // SceneLoader.Instance.LoadScene(null, TransitionType.FADE_TO_BLACK);
         GameManager.Instance.LoadGame();
     }
 

@@ -67,13 +67,15 @@ public class BattleSimulator : MonoBehaviour
         {
             Debug.LogWarning("WARNING: " + e.ToString());
         }
-        BattleStateMachine.StartState(InitializeState);
         BattleSimStatus.AssignStatusGameObjects(BurnSymbol, FrozenSymbol, PetrifiedSymbol, PoisonSymbol, SleepSymbol, StunSymbol);
+        BattleStateMachine.StartState(InitializeState);
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (BattleStateMachine.CurrentState == null)
+            return;
         BattleStateMachine.CurrentState.Update();
         CheckState(BattleStateMachine.CurrentState.NextState);
     }
@@ -104,7 +106,6 @@ public class BattleSimulator : MonoBehaviour
                 BattleStateMachine.ChangeState(AfterRoundState);
                 break;
             case "BATTLE OVER STATE":
-                // BattleOverState = new BattleOverState((PlayerHUD)BattlePlayer.CharacterHUD, DialogueData, NarrationTextBox);
                 BattleStateMachine.ChangeState(BattleOverState);
                 break;
             case "END BATTLE":

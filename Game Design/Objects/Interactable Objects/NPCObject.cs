@@ -111,7 +111,7 @@ public class NPCObject : InteractableObject, IDialogue
         //      Find out where PlayerState is changing to NOT_MOVING
         //      Before the NPC talks to the player
         GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-        while (!DialogueManager.Instance.DialogueEnded)
+        while (!DialogueManager.Instance.DialogueEnded && DialogueManager.Instance.TextBox)
             yield return null;
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }

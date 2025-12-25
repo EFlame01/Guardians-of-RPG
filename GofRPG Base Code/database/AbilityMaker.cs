@@ -1,6 +1,4 @@
 
-using UnityEngine;
-
 /// <summary>
 /// AbilityMaker is a class that parses through
 /// the data to create <c>Ability</c> objects for
@@ -8,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class AbilityMaker : Singleton<AbilityMaker>
 {
-    private readonly string _abilityDataPath = "/database/abilities.csv";
+    private const int ABILITY_INDEX = 0;
 
     /// <summary>
     /// Gets and returns an ability based on the <paramref name="name"/>.
@@ -20,20 +18,17 @@ public class AbilityMaker : Singleton<AbilityMaker>
         if (string.IsNullOrEmpty(name))
             return null;
 
-        string[] mainAttributes;
+        string[] abilityAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[ABILITY_INDEX], name).Split(',');
 
-        // DataEncoder.Instance.DecodePersistentDataFile(_abilityDataPath);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_abilityDataPath);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_abilityDataPath));
-        mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-        DataEncoder.ClearData();
+        if (abilityAttributes == null)
+            return null;
 
         return new Ability
         (
-            mainAttributes[0],
-            mainAttributes[1],
-            EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0]),
-            mainAttributes[2].Split('~')
+            abilityAttributes[0],
+            abilityAttributes[1],
+            EffectMaker.Instance.GetEffectsBasedOnName(abilityAttributes[0]),
+            abilityAttributes[2].Split('~')
         );
     }
 }

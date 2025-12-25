@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -50,7 +49,8 @@ public class InventoryMenu : MenuState
     /// <param name="type"></param>
     public void OnButtonTypePressed(string type)
     {
-        itemType = type switch{
+        itemType = type switch
+        {
             "FOOD" => ItemType.FOOD,
             "HEALING" => ItemType.HEALING,
             "KEY" => ItemType.KEY,
@@ -72,12 +72,12 @@ public class InventoryMenu : MenuState
         Player player = Player.Instance();
         string result = CanEquipItem();
 
-        if(result.Equals("You've equiped the " + chosenItem.Name + "!"))
+        if (result.Equals("You've equiped the " + chosenItem.Name + "!"))
             player.Inventory.EquipItem(chosenItem.Name);
 
         SetUpInventory();
         itemDescriptionText.text = result;
-        
+
     }
 
     /// <summary>
@@ -88,12 +88,12 @@ public class InventoryMenu : MenuState
     public void OnDiscardButtonPressed()
     {
         string result = CanDiscardItem();
-        if(result.Equals("I wouldn't discard this. It could be important."))
+        if (result.Equals("I wouldn't discard this. It could be important."))
         {
             SetUpInventory();
             itemDescriptionText.text = result;
             return;
-        }  
+        }
 
         discardMenuOptionWindow.maxAmount = Player.Instance().Inventory.ItemList[chosenItem.Name];
         discardMenuOptionWindow.gameObject.SetActive(true);
@@ -115,7 +115,7 @@ public class InventoryMenu : MenuState
     public void OnUseButtonPressed()
     {
         string result = CanUseItem();
-        if(result.Equals("It won't have any effect."))
+        if (result.Equals("It won't have any effect."))
         {
             SetUpInventory();
             itemDescriptionText.text = result;
@@ -131,19 +131,19 @@ public class InventoryMenu : MenuState
 
     private void CheckButtons()
     {
-        if(chosenItem == null)
+        if (chosenItem == null)
         {
             discardButton.interactable = false;
             equipButton.interactable = false;
             useButton.interactable = false;
         }
-        else if(chosenItem != null && chosenItem.Type.Equals(ItemType.KEY))
+        else if (chosenItem != null && chosenItem.Type.Equals(ItemType.KEY))
         {
             discardButton.interactable = true;
             equipButton.interactable = false;
             useButton.interactable = false;
         }
-        else if(chosenItem != null && !chosenItem.Type.Equals(ItemType.KEY))
+        else if (chosenItem != null && !chosenItem.Type.Equals(ItemType.KEY))
         {
             discardButton.interactable = true;
             equipButton.interactable = true;
@@ -157,10 +157,10 @@ public class InventoryMenu : MenuState
         ClearContents();
         itemTypeText.text = itemType.ToString().Replace("_", " ");
 
-        foreach(KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
+        foreach (KeyValuePair<string, int> itemInfo in player.Inventory.ItemList)
         {
             Item i = ItemMaker.Instance.GetItemBasedOnName(itemInfo.Key);
-            if(i != null && i.Type.Equals(itemType) && itemInfo.Value > 0)
+            if (i != null && i.Type.Equals(itemType) && itemInfo.Value > 0)
             {
                 Button button = Instantiate(itemButtonObjectPrefab, listLayout);
                 TextMeshProUGUI itemNameText = button.GetComponentsInChildren<TextMeshProUGUI>()[0];
@@ -171,7 +171,7 @@ public class InventoryMenu : MenuState
 
                 button.onClick.AddListener(() =>
                 {
-                   SetItem(i); 
+                    SetItem(i);
                 });
             }
         }
@@ -190,7 +190,7 @@ public class InventoryMenu : MenuState
         itemTypeText.text = "";
         itemDescriptionText.text = "";
         itemNameText.text = "";
-        foreach(Transform child in listLayout)
+        foreach (Transform child in listLayout)
         {
             Destroy(child.gameObject);
         }
@@ -199,19 +199,19 @@ public class InventoryMenu : MenuState
     private string CanUseItem()
     {
         Player player = Player.Instance();
-        if(chosenItem == null)
+        if (chosenItem == null)
             return itemDescriptionText.text;
-        
-        switch(itemType)
+
+        switch (itemType)
         {
             case ItemType.FOOD:
-                if(player.BaseStats.Hp < player.BaseStats.FullHp)
+                if (player.BaseStats.Hp < player.BaseStats.FullHp)
                     return "Your health was restored.";
                 else
                     return "It won't have any effect.";
             case ItemType.MEDICAL:
-                MedicalItem medicalItem = (MedicalItem) chosenItem;
-                if(player.BaseStats.Hp < player.BaseStats.FullHp && (medicalItem._healAmount > 0 || medicalItem._healAmount < 0))
+                MedicalItem medicalItem = (MedicalItem)chosenItem;
+                if (player.BaseStats.Hp < player.BaseStats.FullHp && (medicalItem._healAmount > 0 || medicalItem._healAmount < 0))
                     return "Your health was restored.";
                 return medicalItem.CanCureStatusConditions(player) ? "Your status condition was healed." : "It won't have any effect.";
             default:
@@ -221,10 +221,10 @@ public class InventoryMenu : MenuState
 
     private string CanEquipItem()
     {
-        if(chosenItem == null)
+        if (chosenItem == null)
             return itemDescriptionText.text;
-        
-        if(Player.Instance().Item != null)
+
+        if (Player.Instance().Item != null)
             return "You are already holding an item. Unequip item from the Player Information section first.";
         else
             return "You've equiped the " + chosenItem.Name + "!";
@@ -232,9 +232,9 @@ public class InventoryMenu : MenuState
 
     private string CanDiscardItem()
     {
-        if(chosenItem == null)
+        if (chosenItem == null)
             return itemDescriptionText.text;
-        if(chosenItem.Type.Equals(ItemType.KEY))
+        if (chosenItem.Type.Equals(ItemType.KEY))
             return "I wouldn't discard this. It could be important.";
         else
             return "You've discarded the " + chosenItem.Name + "!";

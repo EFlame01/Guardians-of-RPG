@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class SavePlayerPositionState : CutSceneState
@@ -10,7 +9,7 @@ public class SavePlayerPositionState : CutSceneState
     public override void Enter()
     {
         base.Enter();
-        SaveSystem.SavePlayerLocationData(sceneName, mapLocationName, playerPosition);
+        GameManager.Instance.SavePlayerLocationData();
         Exit();
     }
 }

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using Ink.Runtime;
-using TMPro.Examples;
 using UnityEngine;
 
 /// <summary>
@@ -70,8 +67,9 @@ public class WellObject : InteractableObject, IDialogue
 
     private void GetWater()
     {
-        _dialogueData = GetWaterDialogueData;
         _water = ItemMaker.Instance.GetItemBasedOnName("Water");
+        _dialogueData = GetWaterDialogueData;
+
         DialogueManager.Instance.SetItemName(_water.Name);
         DialogueManager.Instance.SetPluralName(_water.PluralName);
         DialogueManager.Instance.SetItemType("FOOD");

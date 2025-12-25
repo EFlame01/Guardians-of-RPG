@@ -49,6 +49,7 @@ public class Level
     public static Move[] DetermineLearnedMoves()
     {
         Player player = Player.Instance();
+
         Move[] moves = MoveMaker.Instance.GetLevelUpMoves(player.Level, player.Archetype.ArchetypeName, player.Archetype.ClassName);
         List<Move> learnedMoves = new List<Move>();
 
@@ -60,17 +61,5 @@ public class Level
                 learnedMoves.Add(move);
 
         return learnedMoves.ToArray();
-    }
-
-    public static void AddLearnedMoves()
-    {
-        Player player = Player.Instance();
-        Move[] moves = MoveMaker.Instance.GetLevelUpMoves(player.Level, player.Archetype.ArchetypeName, player.Archetype.ClassName);
-
-        if (moves.Length <= 0)
-            return;
-
-        foreach (Move move in moves)
-            player.MoveManager.AddMove(move.Name);
     }
 }

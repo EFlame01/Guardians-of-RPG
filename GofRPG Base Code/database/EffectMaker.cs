@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// EffectMaker is a class that parses through
@@ -9,14 +8,14 @@ using UnityEngine;
 /// </summary>
 public class EffectMaker : Singleton<EffectMaker>
 {
-    private readonly string _effectPath = "/database/effects.csv";
-    private readonly string _healthBoostEffectPath = "/database/health_boost_effects.csv";
-    private readonly string _immunityEffectPath = "/database/immunity_effects.csv";
-    private readonly string _rechargeEffectPath = "/database/recharge_effects.csv";
-    private readonly string _recoilEffectPath = "/database/recoil_effects.csv";
-    private readonly string _negationEffectPath = "/database/negation_effects.csv";
-    private readonly string _statChangeEffectPath = "/database/stat_change_effects.csv";
-    private readonly string _statusConditionEffectPath = "/database/status_condition_effects.csv";
+    private const int EFFECT_INDEX = 3;
+    private const int HEALTH_EFFECT_INDEX = 4;
+    private const int IMMUNITY_EFFECT_INDEX = 5;
+    private const int RECHARGE_EFFECT_INDEX = 0; //TODO: Create document and thus index for recharge effect
+    private const int RECOIL_EFFECT_INDEX = 13;
+    private const int NEGATION_EFFECT_INDEX = 9;
+    private const int STAT_CHANGE_EFFECT_INDEX = 14;
+    private const int STATUS_CONDITION_EFFECT_INDEX = 17;
 
     /// <summary>
     /// Gets and returns the effects based on the <paramref name="name"/>.
@@ -25,25 +24,20 @@ public class EffectMaker : Singleton<EffectMaker>
     /// <returns>an array of <c>Effect</c> objects or <c>null</c> if the effects could not be found.</returns>
     public Effect[] GetEffectsBasedOnName(string name)
     {
-        if (name == null)
+        if (string.IsNullOrEmpty(name))
             return null;
 
-        List<Effect> listOfEffects = new List<Effect>();
+        List<Effect> listOfEffects = new();
         Effect effect;
-        string[] foundEffects;
         string[] mainAttributes;
         string[] additionalAttributes;
 
-        // DataEncoder.Instance.DecodePersistentDataFile(_effectPath);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_effectPath);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_effectPath));
-        foundEffects = DataEncoder.Instance.GetRowsOfData(name);
-        DataEncoder.ClearData();
+        string[] effects = DataRetriever.Instance.SplitDataBasedOnID(DataRetriever.Instance.Database[EFFECT_INDEX], name);
 
-        foreach (string foundEffect in foundEffects)
+        foreach (string effectAttributes in effects)
         {
             effect = null;
-            mainAttributes = foundEffect.Split(',');
+            mainAttributes = effectAttributes.Split(',');
 
             switch (mainAttributes[3])
             {
@@ -59,10 +53,7 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "HEALTH_BOOST":
-                    // DataEncoder.Instance.DecodePersistentDataFile(_healthBoostEffectPath);
-                    // DataEncoder.Instance.GetStreamingAssetsFile(_healthBoostEffectPath);
-                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_healthBoostEffectPath));
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
+                    additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[HEALTH_EFFECT_INDEX], name).Split(',');
 
                     effect = new HealthBoostEffect
                     (
@@ -76,10 +67,7 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "IMMUNITY":
-                    // DataEncoder.Instance.DecodePersistentDataFile(_immunityEffectPath);
-                    // DataEncoder.Instance.GetStreamingAssetsFile(_immunityEffectPath);
-                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_immunityEffectPath));
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
+                    additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[IMMUNITY_EFFECT_INDEX], name).Split(',');
 
                     effect = new ImmunityEffect
                     (
@@ -93,10 +81,7 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "NEGATION":
-                    // DataEncoder.Instance.DecodePersistentDataFile(_negationEffectPath);
-                    // DataEncoder.Instance.GetStreamingAssetsFile(_negationEffectPath);
-                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_negationEffectPath));
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(','); ;
+                    additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[NEGATION_EFFECT_INDEX], name).Split(','); ;
 
                     effect = new NegationEffect
                     (
@@ -110,10 +95,7 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "RECHARGE":
-                    // DataEncoder.Instance.DecodePersistentDataFile(_rechargeEffectPath);
-                    // DataEncoder.Instance.GetStreamingAssetsFile(_rechargeEffectPath);
-                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_rechargeEffectPath));
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
+                    additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[RECHARGE_EFFECT_INDEX], name).Split(',');
 
                     effect = new RechargeEffect
                     (
@@ -127,10 +109,7 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "RECOIL":
-                    // DataEncoder.Instance.DecodePersistentDataFile(_recoilEffectPath);
-                    // DataEncoder.Instance.GetStreamingAssetsFile(_recoilEffectPath);
-                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_recoilEffectPath));
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
+                    additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[RECOIL_EFFECT_INDEX], name).Split(',');
 
                     effect = new RecoilEffect
                     (
@@ -155,10 +134,7 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "STAT_CHANGE":
-                    // DataEncoder.Instance.DecodePersistentDataFile(_statChangeEffectPath);
-                    // DataEncoder.Instance.GetStreamingAssetsFile(_statChangeEffectPath);
-                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statChangeEffectPath));
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
+                    additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STAT_CHANGE_EFFECT_INDEX], name).Split(',');
 
                     effect = new StatChangeEffect
                     (
@@ -173,19 +149,16 @@ public class EffectMaker : Singleton<EffectMaker>
                     );
                     break;
                 case "STATUS_CONDITION":
-                    // DataEncoder.Instance.DecodePersistentDataFile(_statusConditionEffectPath);
-                    // DataEncoder.Instance.GetStreamingAssetsFile(_statusConditionEffectPath);
-                    StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statusConditionEffectPath));
-                    additionalAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
+                    additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STATUS_CONDITION_EFFECT_INDEX], name).Split(',');
 
                     effect = new StatusConditionEffect
                     (
-                        foundEffect.Split(',')[0],
-                        foundEffect.Split(',')[1],
-                        Effect.GetEffectOrigin(foundEffect.Split(',')[2]),
-                        Effect.GetEffectType(foundEffect.Split(',')[3]),
-                        Move.ConvertToMoveTarget(foundEffect.Split(',')[4]),
-                        double.Parse(foundEffect.Split(',')[5]),
+                        mainAttributes[0],
+                        mainAttributes[1],
+                        Effect.GetEffectOrigin(mainAttributes[2]),
+                        Effect.GetEffectType(mainAttributes[3]),
+                        Move.ConvertToMoveTarget(mainAttributes[4]),
+                        double.Parse(mainAttributes[5]),
                         StatusCondition.GenerateStatusCondition
                         (
                             additionalAttributes[2],

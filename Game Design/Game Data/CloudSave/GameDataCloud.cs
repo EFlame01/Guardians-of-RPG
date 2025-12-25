@@ -1,4 +1,3 @@
-
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -47,26 +46,4 @@ public class GameDataCloud
         //returning data in form of GameDataCloud object
         return this;
     }
-
-    public void LoadGameData(GameDataCloud gameData)
-    {
-        //Update GameDataCloud
-        Username = gameData.Username;
-        Password = gameData.Password;
-        PlayerData = gameData.PlayerData;
-        GameSFX = gameData.GameSFX;
-        GameVolume = gameData.GameVolume;
-        GameTextSpeed = gameData.GameTextSpeed;
-        EnableTouchPad = gameData.EnableTouchPad;
-
-        //Update GameManager
-        GameManager.Instance.GameSFX = GameSFX;
-        GameManager.Instance.GameVolume = GameVolume;
-        GameManager.Instance.GameTextSpeed = GameTextSpeed;
-        GameManager.Instance.EnableTouchPad = EnableTouchPad;
-
-        //TODO: Load Player Data
-        PlayerData.LoadPlayerData();
-    }
-
 }

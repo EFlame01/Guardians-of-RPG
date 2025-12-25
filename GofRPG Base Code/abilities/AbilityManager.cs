@@ -30,23 +30,13 @@ public class AbilityManager
         return true;
     }
 
-    public bool AddAbilitiesToList(Ability[] abilities)
-    {
-        foreach (Ability ability in abilities)
-            if (!AddAbilityToList(ability))
-                return false;
-        return true;
-    }
-
-    public bool AddAbilitiesToList(string[] abilities)
+    public void AddAbilitiesToList(string[] abilities)
     {
         foreach (string abilityName in abilities)
         {
             Ability ability = AbilityMaker.Instance.GetAbilityBasedOnName(abilityName);
-            if (!AddAbilityToList(ability))
-                return false;
+            AddAbilityToList(ability);
         }
-        return true;
     }
 
     /// <summary>

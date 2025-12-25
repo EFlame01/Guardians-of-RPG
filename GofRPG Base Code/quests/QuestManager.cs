@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
 
 /// <summary>
 /// QuestManager is a class that manages
@@ -13,7 +10,7 @@ public class QuestManager
     public static Dictionary<string, Quest> QuestDictionary = new Dictionary<string, Quest>();
 
     public QuestData[] QuestDatas;
-    
+
     //Constructor
     public QuestManager()
     {
@@ -27,20 +24,13 @@ public class QuestManager
     /// <param name="quest">the quest to be added to the list.</param>
     /// <returns><c>TRUE</c> if the quest was added successfully.
     /// <c>FALSE</c> if otherwise.</returns>
-    public bool AddQuest(string id)
+    public void AddQuest(string id)
     {
-        if(id == null)
-            return false;
-        if(QuestDictionary.ContainsKey(id))
-            return false;
-        
-        Quest quest = QuestMaker.Instance.GetQuestByID(id);
-        
-        if(quest == null)
-            return false;
-        
-        QuestDictionary.Add(id, quest);
-        return true;
+        if (!string.IsNullOrEmpty(id) && !QuestDictionary.ContainsKey(id))
+        {
+            Quest quest = QuestMaker.Instance.GetQuestByID(id);
+            QuestDictionary.Add(id, quest);
+        }
     }
 
     /// <summary>
@@ -51,9 +41,9 @@ public class QuestManager
     /// <c>FALSE</c> if otherwise.</returns>
     public bool MarkQuestCompleted(string id)
     {
-        if(id == null)
+        if (id == null)
             return false;
-        if(!QuestDictionary.ContainsKey(id))
+        if (!QuestDictionary.ContainsKey(id))
             return false;
 
         Quest completedQuest = QuestDictionary[id];
@@ -67,7 +57,7 @@ public class QuestManager
     public void UpdateQuestData()
     {
         List<QuestData> quests = new List<QuestData>();
-        foreach(KeyValuePair<string, Quest> questInfo in QuestDictionary)
+        foreach (KeyValuePair<string, Quest> questInfo in QuestDictionary)
         {
             quests.Add(new QuestData(questInfo.Value));
         }
@@ -80,7 +70,7 @@ public class QuestManager
     /// </summary>
     public void LoadUpdatedQuestData()
     {
-        foreach(QuestData questData in QuestDatas)
+        foreach (QuestData questData in QuestDatas)
             QuestDictionary.Add(questData.Id, new Quest(questData.Id, questData.Category, questData.Type, questData.Name, questData.Description, questData.Completed));
     }
 }

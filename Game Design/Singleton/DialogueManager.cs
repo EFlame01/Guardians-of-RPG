@@ -370,9 +370,17 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             while (!textBox.ClosedTextBox)
                 yield return null;
 
-            textBox.IsClosed = true;
-            if (textBox.gameObject != null)
-                textBox.gameObject.SetActive(false);
+            try
+            {
+                textBox.IsClosed = true;
+                if (textBox.gameObject != null)
+                    textBox.gameObject.SetActive(false);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("WARNING: " + e.Message);
+                EndDialogue();
+            }
         }
     }
 

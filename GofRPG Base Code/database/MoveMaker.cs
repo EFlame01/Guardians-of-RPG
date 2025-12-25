@@ -9,11 +9,11 @@ using UnityEngine;
 /// </summary>
 public class MoveMaker : Singleton<MoveMaker>
 {
-    private readonly string _moveDatabasePath = "/database/moves.csv";
-    private readonly string _priorityMoveDatabasePath = "/database/priority_moves.csv";
-    private readonly string _protectMoveDatabasePath = "/database/protect_moves.csv";
-    private readonly string _statChangingMoveDatabasePath = "/database/stat_changing_moves.csv";
-    private readonly string _statusChangingMoveDatabasePath = "/database/status_condition_effects.csv";
+    private const int MOVE_INDEX = 8;
+    private const int PRIORITY_MOVE_INDEX = 10;
+    private const int PROTECT_MOVE_INDEX = 11;
+    private const int STAT_CHANGING_MOVE_INDEX = 15;
+    private const int STATUS_CHANGING_MOVE_INDEX = 16;
 
     /// <summary>
     /// Gets and returns the <c>Move</c> object based on the <paramref name="name"/>.
@@ -22,18 +22,12 @@ public class MoveMaker : Singleton<MoveMaker>
     /// <returns>the <c>Move</c> objects or <c>null</c> if the move could not be found.</returns>
     public Move GetMoveBasedOnName(string name)
     {
-        if (name == null)
+        if (string.IsNullOrEmpty(name))
             return null;
 
-        string[] mainAttributes;
+        string[] moveAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[MOVE_INDEX], name).Split(',');
 
-        // DataEncoder.Instance.DecodePersistentDataFile(_moveDatabasePath);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_moveDatabasePath));
-        mainAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-        DataEncoder.ClearData();
-
-        return GetMove(mainAttributes, mainAttributes[5]);
+        return GetMove(moveAttributes, moveAttributes[5]);
     }
 
     /// <summary>
@@ -48,22 +42,23 @@ public class MoveMaker : Singleton<MoveMaker>
     public Move[] GetLevelUpMoves(int level, string archetype, string classtype)
     {
         string[] moveListData;
-        List<Move> listOfMoves = new List<Move>();
+        List<Move> listOfMoves = new();
 
-        // DataEncoder.Instance.DecodePersistentDataFile(_moveDatabasePath);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_moveDatabasePath);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_moveDatabasePath));
-        moveListData = DataEncoder.Instance.GetRowsOfData();
-        DataEncoder.ClearData();
+        moveListData = DataRetriever.Instance.SplitDataBasedOnRow(DataRetriever.Instance.Database[MOVE_INDEX]);
         foreach (string moveData in moveListData)
         {
             try
             {
-                if (moveData != null && moveData.Length > 0)
+                if (string.IsNullOrEmpty(moveData))
+                    return null;
+
+                string[] moveAttributes = moveData.Split(',');
+
+                if (int.Parse(moveAttributes[7]) <= level && (moveAttributes[8].Equals(archetype) || moveAttributes[8].Equals(classtype)))
                 {
-                    string[] moveAttributes = moveData.Split(',');
-                    if (int.Parse(moveAttributes[7]) <= level && (moveAttributes[8].Equals(archetype) || moveAttributes[8].Equals(classtype)))
-                        listOfMoves.Add(GetMove(moveAttributes, moveAttributes[5]));
+                    Move move = GetMove(moveAttributes, moveAttributes[5]);
+                    if (move != null)
+                        listOfMoves.Add(move);
                 }
             }
             catch (Exception e)
@@ -72,17 +67,18 @@ public class MoveMaker : Singleton<MoveMaker>
                 return listOfMoves.ToArray();
             }
         }
+
         return listOfMoves.ToArray();
     }
 
     /// <summary>
     /// Helper function that retrieves move based on the 
-    /// <paramref name="mainAttributes"/> and <paramref name="moveType"/>
+    /// <paramref name="moveAttributes"/> and <paramref name="moveType"/>
     /// </summary>
-    /// <param name="mainAttributes">list of attributes the move has</param>
+    /// <param name="moveAttributes">list of attributes the move has</param>
     /// <param name="moveType">the type of move it is</param>
     /// <returns>the <c>Move</c> object or null if no move was found</returns>
-    private Move GetMove(string[] mainAttributes, string moveType)
+    private Move GetMove(string[] moveAttributes, string moveType)
     {
         Move move = null;
         string[] additionalAttributes;
@@ -92,85 +88,79 @@ public class MoveMaker : Singleton<MoveMaker>
             case "REGULAR":
                 move = new RegularMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[2]),
-                    double.Parse(mainAttributes[4]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveTarget(mainAttributes[3]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0])
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[2]),
+                    double.Parse(moveAttributes[4]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveTarget(moveAttributes[3]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
             case "PRIORITY":
-                // DataEncoder.Instance.DecodePersistentDataFile(_priorityMoveDatabasePath);
-                // DataEncoder.Instance.GetStreamingAssetsFile(_priorityMoveDatabasePath);
-                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_priorityMoveDatabasePath));
-                additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
-                DataEncoder.ClearData();
+                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[PRIORITY_MOVE_INDEX], moveAttributes[0]).Split(',');
+
                 move = new PriorityMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[2]),
-                    double.Parse(mainAttributes[4]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveTarget(mainAttributes[3]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0]),
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[2]),
+                    double.Parse(moveAttributes[4]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveTarget(moveAttributes[3]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
                     int.Parse(additionalAttributes[1])
                 );
                 break;
             case "HEALING":
                 move = new HealingMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[2]),
-                    double.Parse(mainAttributes[4]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveTarget(mainAttributes[3]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0])
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[2]),
+                    double.Parse(moveAttributes[4]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveTarget(moveAttributes[3]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
             case "KNOCK_OUT":
                 move = new KnockoutMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[4]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveTarget(mainAttributes[3]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0])
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[4]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveTarget(moveAttributes[3]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
             case "PROTECT":
-                // DataEncoder.Instance.DecodePersistentDataFile(_protectMoveDatabasePath);
-                // DataEncoder.Instance.GetStreamingAssetsFile(_protectMoveDatabasePath);
-                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_protectMoveDatabasePath));
-                additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
-                DataEncoder.ClearData();
+                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[PROTECT_MOVE_INDEX], moveAttributes[0]).Split(',');
+
                 move = new ProtectMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[2]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveTarget(mainAttributes[3]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0]),
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[2]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveTarget(moveAttributes[3]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
                     additionalAttributes[1],
                     int.Parse(additionalAttributes[2])
                 );
@@ -178,57 +168,51 @@ public class MoveMaker : Singleton<MoveMaker>
             case "COUNTER":
                 move = new CounterMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[2]),
-                    double.Parse(mainAttributes[4]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0])
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[2]),
+                    double.Parse(moveAttributes[4]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
             case "STAT_CHANGING":
-                // DataEncoder.Instance.DecodePersistentDataFile(_statChangingMoveDatabasePath);
-                // DataEncoder.Instance.GetStreamingAssetsFile(_statChangingMoveDatabasePath);
-                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statChangingMoveDatabasePath));
-                additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
-                DataEncoder.ClearData();
+                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STAT_CHANGING_MOVE_INDEX], moveAttributes[0]).Split(',');
+
                 move = new StatChangingMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[2]),
-                    double.Parse(mainAttributes[4]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveTarget(mainAttributes[3]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0]),
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[2]),
+                    double.Parse(moveAttributes[4]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveTarget(moveAttributes[3]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
                     additionalAttributes[1].Split('~'),
                     Array.ConvertAll(additionalAttributes[2].Split('~'), int.Parse)
                 );
                 break;
             case "STATUS_CHANGING":
-                // DataEncoder.Instance.DecodePersistentDataFile(_statusChangingMoveDatabasePath);
-                // DataEncoder.Instance.GetStreamingAssetsFile(_statusChangingMoveDatabasePath);
-                StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_statusChangingMoveDatabasePath));
-                additionalAttributes = DataEncoder.Instance.GetRowOfData(mainAttributes[0]).Split(',');
-                DataEncoder.ClearData();
+                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STATUS_CHANGING_MOVE_INDEX], moveAttributes[0]).Split(',');
+
                 move = new StatusChangingMove
                 (
-                    mainAttributes[0],
-                    mainAttributes[1].Replace('~', ','),
-                    double.Parse(mainAttributes[2]),
-                    double.Parse(mainAttributes[4]),
-                    mainAttributes[8],
-                    int.Parse(mainAttributes[7]),
-                    Move.ConvertToMoveTarget(mainAttributes[3]),
-                    Move.ConvertToMoveType(mainAttributes[5]),
-                    double.Parse(mainAttributes[9]),
-                    EffectMaker.Instance.GetEffectsBasedOnName(mainAttributes[0]),
+                    moveAttributes[0],
+                    moveAttributes[1].Replace('~', ','),
+                    double.Parse(moveAttributes[2]),
+                    double.Parse(moveAttributes[4]),
+                    moveAttributes[8],
+                    int.Parse(moveAttributes[7]),
+                    Move.ConvertToMoveTarget(moveAttributes[3]),
+                    Move.ConvertToMoveType(moveAttributes[5]),
+                    double.Parse(moveAttributes[9]),
+                    EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
                     StatusCondition.GenerateStatusCondition
                     (
                         additionalAttributes[1],
@@ -249,4 +233,5 @@ public class MoveMaker : Singleton<MoveMaker>
         }
         return move;
     }
+
 }

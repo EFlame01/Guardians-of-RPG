@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 
@@ -10,7 +9,7 @@ using Ink.Runtime;
 /// it finds inside the object and place them
 /// in their inventory.
 /// </summary>
-public class ItemObject : InteractableObject, IDialogue
+public class ItemObject : InteractableObject
 {
     //public variables
     [System.Serializable]
@@ -82,12 +81,12 @@ public class ItemObject : InteractableObject, IDialogue
     {
         int typesOfItems = 0;
         Item[] items = new Item[_items.Length];
+
         foreach (ItemObjectStruct i in _items)
         {
             Item item = ItemMaker.Instance.GetItemBasedOnName(i.itemName);
             PlaceItemsInBag(item, i.itemAmount);
-            items[typesOfItems] = item;
-            typesOfItems++;
+            items[typesOfItems++] = item;
         }
 
         if (typesOfItems == 1)
@@ -128,21 +127,6 @@ public class ItemObject : InteractableObject, IDialogue
     {
         int trueAmount = Mathf.Max(1, amount);
         Player.Instance().Inventory.AddItem(item.Name, trueAmount);
-    }
-
-    /// <summary>
-    /// Converts the <c>Items</c> variable into a list
-    /// of items.
-    /// </summary>
-    /// <returns>an array of type <c>Item</c></returns>
-    private Item[] ConvertListToItems()
-    {
-        List<Item> list = new List<Item>();
-
-        foreach (ItemObjectStruct item in _items)
-            list.Add(ItemMaker.Instance.GetItemBasedOnName(item.itemName));
-
-        return list.ToArray();
     }
 
     private void OnCollisionEnter2D(Collision2D collider2D)

@@ -98,11 +98,11 @@ public class PlayerData
         p.SetBits(gold);
         p.SetArchetype(archetypeName);
         p.SetSex(sex);
-        p.SetBattleMoves(battleMoves);
-        p.MoveManager.AddToMovesLearned(movesLearned);
+        // p.SetBattleMoves(battleMoves);
+        // p.MoveManager.AddToMovesLearned(movesLearned);
         p.SetBaseStats(fullHP, atk, def, eva, hp, spd, elx, acc, crt);
-        p.SetAbility(AbilityMaker.Instance.GetAbilityBasedOnName(abilityName));
-        p.SetItem(ItemMaker.Instance.GetItemBasedOnName(equippedItemName));
+        // p.SetAbility(AbilityMaker.Instance.GetAbilityBasedOnName(abilityName));
+        // p.SetItem(ItemMaker.Instance.GetItemBasedOnName(equippedItemName));
         p.SetCurrentXP(currentXP);
         p.SetLimitXP(limitXP);
         // p.AbilityManager.AddAbilitiesToList(abilityNames);

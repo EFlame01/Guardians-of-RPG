@@ -76,32 +76,31 @@ public class InitializeState : BattleState, IDialogue
 
     private void SetUpBattleCharacter(BattleCharacter battleCharacter, BattleCharacterData battleCharacterData)
     {
-        if (battleCharacterData == null)
+        if (battleCharacterData != null)
         {
-            battleCharacter.gameObject.SetActive(false);
-            return;
-        }
+            numberOfCharacters++;
 
-        numberOfCharacters++;
+            if (battleCharacterData.IsPlayer)
+            {
+                battleCharacter.Character = Player.Instance();
+                battleCharacter.AnimationPosition = battleCharacterData.GetPlayerAnimationPosition();
+            }
+            else
+            {
+                battleCharacter.Character = CharacterMaker.Instance.GetCharacterBasedOnName(battleCharacterData.CharacterData);
+                battleCharacter.AnimationPosition = battleCharacterData.CharacterAnimationPosition;
+            }
 
-        if (battleCharacterData.IsPlayer)
-        {
-            battleCharacter.Character = Player.Instance();
-            battleCharacter.AnimationPosition = battleCharacterData.GetPlayerAnimationPosition();
+            if (battleCharacter.Character.Type.Equals("ALLY"))
+                BattleSimStatus.Allies.Add(battleCharacter.Character);
+            else if (battleCharacter.Character.Type.Equals("ENEMY"))
+                BattleSimStatus.Enemies.Add(battleCharacter.Character);
+
+            battleCharacter.RuntimeAnimatorController = battleCharacterData.CharacterAnimator;
+            battleCharacter.InitializeBattleCharacter();
         }
         else
-        {
-            battleCharacter.Character = CharacterMaker.Instance.GetCharacterBasedOnName(battleCharacterData.CharacterData);
-            battleCharacter.AnimationPosition = battleCharacterData.CharacterAnimationPosition;
-        }
-
-        if (battleCharacter.Character.Type.Equals("ALLY"))
-            BattleSimStatus.Allies.Add(battleCharacter.Character);
-        else if (battleCharacter.Character.Type.Equals("ENEMY"))
-            BattleSimStatus.Enemies.Add(battleCharacter.Character);
-
-        battleCharacter.RuntimeAnimatorController = battleCharacterData.CharacterAnimator;
-        battleCharacter.InitializeBattleCharacter();
+            battleCharacter.gameObject.SetActive(false);
     }
 
     private void SetUpCameraSize()

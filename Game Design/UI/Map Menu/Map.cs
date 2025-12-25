@@ -1,11 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.UI;
 using TMPro;
-using TMPro.Examples;
-using System;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -80,16 +76,7 @@ public class Map : ButtonUI
         scrollBar.value = 1f;
 
         mapReset = false;
-        LocationInformation locationInformation = MapDescMaker.Instance.GetLocationInformationTEST(id);
-
-        nameText.text = locationInformation.Name;
-        countryText.text = locationInformation.Territory.Equals("none") ? "" : locationInformation.Territory;
-        continentText.text = locationInformation.Continent;
-        descriptionText.text = locationInformation.Description;
-
-        StartCoroutine(FadeCanvasGroup(informationWidget, 1f));
-        StartCoroutine(FadeCanvasGroup(buttonGroup, 0f));
-        StartCoroutine(ChangeCameraLocation(locationInformation));
+        LoadMapLocationInformation(id);
     }
 
     /// <summary>
@@ -179,6 +166,20 @@ public class Map : ButtonUI
         GameManager.Instance.PlayerState = PlayerState.TRANSITION;
         SceneLoader.walkInAnimation = false;
         SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
+    }
+
+    private void LoadMapLocationInformation(string id)
+    {
+        LocationInformation locationInformation = MapDescMaker.Instance.GetLocationInformationBasedOnID(id);
+
+        nameText.text = locationInformation.Name;
+        countryText.text = locationInformation.Territory.Equals("none") ? "" : locationInformation.Territory;
+        continentText.text = locationInformation.Continent;
+        descriptionText.text = locationInformation.Description;
+
+        StartCoroutine(FadeCanvasGroup(informationWidget, 1f));
+        StartCoroutine(FadeCanvasGroup(buttonGroup, 0f));
+        StartCoroutine(ChangeCameraLocation(locationInformation));
     }
 
 }

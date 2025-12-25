@@ -1,6 +1,4 @@
 
-using UnityEngine;
-
 /// <summary>
 /// QuestMaker is a class that parses through
 /// the data to create <c>Quest</c> objects for
@@ -8,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class QuestMaker : Singleton<QuestMaker>
 {
-    private readonly string _questDataPath = "/database/quests.csv";
+    private const int QUEST_INDEX = 12;
 
     /// <summary>
     /// Finds quest data and creates the Quest object
@@ -22,16 +20,12 @@ public class QuestMaker : Singleton<QuestMaker>
         if (name == null)
             return null;
 
-        Quest quest;
-        string[] questAttributes;
+        string[] questAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[QUEST_INDEX], id).Split(',');
 
-        // DataEncoder.Instance.DecodePersistentDataFile(_questDataPath);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_questDataPath);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_questDataPath));
-        questAttributes = DataEncoder.Instance.GetRowOfData(id).Split(',');
-        DataEncoder.ClearData();
+        if (questAttributes == null)
+            return null;
 
-        quest = new Quest
+        return new Quest
         (
             questAttributes[0],
             questAttributes[1],
@@ -40,7 +34,5 @@ public class QuestMaker : Singleton<QuestMaker>
             questAttributes[4],
             questAttributes[5] == "1"
         );
-
-        return quest;
     }
 }

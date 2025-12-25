@@ -91,6 +91,7 @@ public class FightState : CutSceneState
 
         BattleSimStatus.CanRun = false;
         BattleSimStatus.SceneName = SceneManager.GetActiveScene().name;
+
         SceneLoader.Instance.LoadScene("Battle Scene", TransitionType);
     }
 }

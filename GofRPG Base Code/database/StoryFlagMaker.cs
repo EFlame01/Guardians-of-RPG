@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// StoryFlagMaker is a class that parses through
@@ -8,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class StoryFlagMaker : Singleton<StoryFlagMaker>
 {
-    private readonly string _storyFlagDataPath1 = "/database/story_flags.csv";
+    private int STORY_FLAG_INDEX = 18;
 
     /// <summary>
     /// Finds a story flag data and creates the 
@@ -22,13 +21,10 @@ public class StoryFlagMaker : Singleton<StoryFlagMaker>
         if (name == null)
             return null;
 
-        string[] flagAttributes;
+        string[] flagAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STORY_FLAG_INDEX], id).Split(',');
 
-        // DataEncoder.Instance.DecodePersistentDataFile(_storyFlagDataPath1);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_storyFlagDataPath1));
-        flagAttributes = DataEncoder.Instance.GetRowOfData(id).Split(',');
-        DataEncoder.ClearData();
+        if (flagAttributes == null)
+            return null;
 
         return new StoryFlag
         (
@@ -42,23 +38,15 @@ public class StoryFlagMaker : Singleton<StoryFlagMaker>
 
     public StoryFlag[] GetAllStoryFlags()
     {
-        if (name == null)
-            return null;
-
-        List<StoryFlag> storyFlags = new List<StoryFlag>();
-        string[] flags;
+        List<StoryFlag> storyFlags = new();
+        string[] flags = DataRetriever.Instance.SplitDataBasedOnRow(DataRetriever.Instance.Database[STORY_FLAG_INDEX]);
         string[] flagAttributes;
-
-        // DataEncoder.Instance.DecodePersistentDataFile(_storyFlagDataPath1);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_storyFlagDataPath1);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_storyFlagDataPath1));
-        flags = DataEncoder.Instance.GetRowsOfData();
-        DataEncoder.ClearData();
 
         foreach (string flag in flags)
         {
             if (flag.Trim().Length <= 0)
                 break;
+
             flagAttributes = flag.Split(',');
             storyFlags.Add
             (
@@ -74,6 +62,6 @@ public class StoryFlagMaker : Singleton<StoryFlagMaker>
         }
 
         return storyFlags.ToArray();
-
     }
+
 }

@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro.Examples;
 using UnityEngine;
 
 /// <summary>
@@ -34,8 +31,6 @@ public class MoveEffects : MonoBehaviour
     public IEnumerator ActionAnimationRoutine(string nameOfAnimation, string offset)
     {
         string animationName = nameOfAnimation.ToLower().Replace(" ", "_");
-        // int oldSize = (int)MainCamera.orthographicSize;
-        // int newSize = (int)((float)oldSize * 0.667f);
         float t = 0f;
         bool animationPerformed;
 
@@ -48,7 +43,8 @@ public class MoveEffects : MonoBehaviour
         else
         {
             Debug.LogWarning("WARNING: Animation " + animationName + " could not be played...");
-            switch (MoveMaker.Instance.GetMoveBasedOnName(nameOfAnimation).Type)
+            Move move = MoveMaker.Instance.GetMoveBasedOnName(nameOfAnimation);
+            switch (move.Type)
             {
                 case MoveType.KNOCK_OUT:
                 case MoveType.PRIORITY:
@@ -71,15 +67,11 @@ public class MoveEffects : MonoBehaviour
                 yield return null;
             }
 
-            // actionAnimator.Play("none");
-
             while (t < cameraAnimator.GetCurrentAnimatorStateInfo(0).length)
             {
                 t += Time.fixedDeltaTime;
                 yield return null;
             }
-
-            // cameraAnimator.Play("none");
         }
     }
 

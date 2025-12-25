@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 /// <summary>
 /// ItemMaker is a class that parses through
@@ -8,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class ItemMaker : Singleton<ItemMaker>
 {
-    private readonly string _itemDatabasePath = "/database/items.csv";
+    private const int ITEM_INDEX = 6;
 
     /// <summary>
     /// Gets and returns the <c>Item</c> object based on the <paramref name="name"/>.
@@ -17,96 +16,74 @@ public class ItemMaker : Singleton<ItemMaker>
     /// <returns>the <c>Item</c> objects or <c>null</c> if the item could not be found.</returns>
     public Item GetItemBasedOnName(string name)
     {
-        if (name == null)
+        if (string.IsNullOrEmpty(name))
             return null;
 
-        Item item = null;
-        string[] itemAttributes;
+        string[] itemAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[ITEM_INDEX], name).Split(',');
 
-        // DataEncoder.Instance.DecodePersistentDataFile(_itemDatabasePath);
-        // DataEncoder.Instance.GetStreamingAssetsFile(_itemDatabasePath);
-        StartCoroutine(DataEncoder.Instance.GetStreamingAssetsFileWebGL(_itemDatabasePath));
-        itemAttributes = DataEncoder.Instance.GetRowOfData(name).Split(',');
-        DataEncoder.ClearData();
-
-        switch (itemAttributes[3])
+        return itemAttributes[3] switch
         {
-            case "FOOD":
-                item = new FoodItem
-                (
-                    itemAttributes[0],
-                    itemAttributes[1],
-                    itemAttributes[2].Replace('~', ','),
-                    ItemType.FOOD,
-                    int.Parse(itemAttributes[4]),
-                    int.Parse(itemAttributes[11]),
-                    int.Parse(itemAttributes[5])
-                );
-                break;
-            case "HEALING":
-                item = new HealingItem
-                (
-                    itemAttributes[0],
-                    itemAttributes[1],
-                    itemAttributes[2].Replace('~', ','),
-                    ItemType.HEALING,
-                    int.Parse(itemAttributes[4]),
-                    int.Parse(itemAttributes[11]),
-                    int.Parse(itemAttributes[6])
-                );
-                break;
-            case "KEY":
-                item = new KeyItem
-                (
-                    itemAttributes[0],
-                    itemAttributes[1],
-                    itemAttributes[2].Replace('~', ','),
-                    ItemType.KEY,
-                    int.Parse(itemAttributes[4])
-                );
-                break;
-            case "MEDICAL":
-                item = new MedicalItem
-                (
-                    itemAttributes[0],
-                    itemAttributes[1],
-                    itemAttributes[2].Replace('~', ','),
-                    ItemType.MEDICAL,
-                    int.Parse(itemAttributes[4]),
-                    int.Parse(itemAttributes[11]),
-                    int.Parse(itemAttributes[5]),
-                    itemAttributes[7].Split('~')
-                );
-                break;
-            case "PRIORITY":
-                item = new PriorityItem
-                (
-                    itemAttributes[0],
-                    itemAttributes[1],
-                    itemAttributes[2].Replace('~', ','),
-                    ItemType.PRIORITY,
-                    int.Parse(itemAttributes[4]),
-                    int.Parse(itemAttributes[11]),
-                    int.Parse(itemAttributes[8])
-                );
-                break;
-            case "STAT_CHANGING":
-                item = new StatChangingItem
-                (
-                    itemAttributes[0],
-                    itemAttributes[1],
-                    itemAttributes[2].Replace('~', ','),
-                    ItemType.STAT_CHANGING,
-                    int.Parse(itemAttributes[4]),
-                    int.Parse(itemAttributes[11]),
-                    itemAttributes[9].Split('~'),
-                    Array.ConvertAll(itemAttributes[10].Split('~'), int.Parse)
-                );
-                break;
-            default:
-                break;
-        }
-
-        return item;
+            "FOOD" => new FoodItem
+                            (
+                                itemAttributes[0],
+                                itemAttributes[1],
+                                itemAttributes[2].Replace('~', ','),
+                                ItemType.FOOD,
+                                int.Parse(itemAttributes[4]),
+                                int.Parse(itemAttributes[11]),
+                                int.Parse(itemAttributes[5])
+                            ),
+            "HEALING" => new HealingItem
+                            (
+                                itemAttributes[0],
+                                itemAttributes[1],
+                                itemAttributes[2].Replace('~', ','),
+                                ItemType.HEALING,
+                                int.Parse(itemAttributes[4]),
+                                int.Parse(itemAttributes[11]),
+                                int.Parse(itemAttributes[6])
+                            ),
+            "KEY" => new KeyItem
+                            (
+                                itemAttributes[0],
+                                itemAttributes[1],
+                                itemAttributes[2].Replace('~', ','),
+                                ItemType.KEY,
+                                int.Parse(itemAttributes[4])
+                            ),
+            "MEDICAL" => new MedicalItem
+                            (
+                                itemAttributes[0],
+                                itemAttributes[1],
+                                itemAttributes[2].Replace('~', ','),
+                                ItemType.MEDICAL,
+                                int.Parse(itemAttributes[4]),
+                                int.Parse(itemAttributes[11]),
+                                int.Parse(itemAttributes[5]),
+                                itemAttributes[7].Split('~')
+                            ),
+            "PRIORITY" => new PriorityItem
+                            (
+                                itemAttributes[0],
+                                itemAttributes[1],
+                                itemAttributes[2].Replace('~', ','),
+                                ItemType.PRIORITY,
+                                int.Parse(itemAttributes[4]),
+                                int.Parse(itemAttributes[11]),
+                                int.Parse(itemAttributes[8])
+                            ),
+            "STAT_CHANGING" => new StatChangingItem
+                            (
+                                itemAttributes[0],
+                                itemAttributes[1],
+                                itemAttributes[2].Replace('~', ','),
+                                ItemType.STAT_CHANGING,
+                                int.Parse(itemAttributes[4]),
+                                int.Parse(itemAttributes[11]),
+                                itemAttributes[9].Split('~'),
+                                Array.ConvertAll(itemAttributes[10].Split('~'), int.Parse)
+                            ),
+            _ => null,
+        };
     }
 }
