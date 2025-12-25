@@ -31,15 +31,15 @@ public class IntroScene : MonoBehaviour
         StartDialogue();
     }
 
-    public virtual void Update()
-    {
-        if (Select.action.ReadValue<float>() <= 0f)
-            return;
-        // if (!_textBoxOpened)
-        //     return;
-        if (GameManager.Instance.EnableNarrationInputs)
-            OnNextButtonPressed();
-    }
+    // public virtual void Update()
+    // {
+    //     if (Select.action.ReadValue<float>() <= 0f)
+    //         return;
+    //     // if (!_textBoxOpened)
+    //     //     return;
+    //     if (GameManager.Instance.EnableNarrationInputs)
+    //         OnNextButtonPressed();
+    // }
 
     public void OnNextButtonPressed()
     {
