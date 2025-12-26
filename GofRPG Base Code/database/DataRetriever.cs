@@ -9,11 +9,13 @@ public class DataRetriever : Singleton<DataRetriever>
 {
     private string Data;
     public string[] Database { get; private set; }
+    public static bool initializedStreamingAssets;
 
     protected override void Awake()
     {
         base.Awake();
-        StartCoroutine(InitializeStreamingAssetsData());
+        if (!initializedStreamingAssets)
+            StartCoroutine(InitializeStreamingAssetsData());
     }
 
     public void ClearData()
@@ -23,6 +25,7 @@ public class DataRetriever : Singleton<DataRetriever>
 
     public IEnumerator InitializeStreamingAssetsData()
     {
+        initializedStreamingAssets = true;
         List<string> database = new();
         foreach (string path in Units.DATABASE_PATHS)
         {
@@ -39,10 +42,7 @@ public class DataRetriever : Singleton<DataRetriever>
         try
         {
             if (File.Exists(Application.streamingAssetsPath + path))
-            {
                 Data = File.ReadAllText(Application.streamingAssetsPath + path);
-                Debug.Log("Retrieved data for " + path);
-            }
             else
                 Debug.LogWarning("file: " + Application.streamingAssetsPath + path + " does not exist!");
         }
@@ -109,10 +109,15 @@ public class DataRetriever : Singleton<DataRetriever>
     public string[] SplitDataBasedOnRow(string data)
     {
         List<string> rows = new();
+        int colNameRow = 0;
 
         foreach (string row in data.Split('\n'))
-            rows.Add(row);
-
+        {
+            if (colNameRow++ == 0)
+                continue;
+            else
+                rows.Add(row);
+        }
         return rows.ToArray();
     }
 }

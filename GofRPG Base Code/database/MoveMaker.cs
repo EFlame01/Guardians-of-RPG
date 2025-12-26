@@ -50,7 +50,7 @@ public class MoveMaker : Singleton<MoveMaker>
             try
             {
                 if (string.IsNullOrEmpty(moveData))
-                    return null;
+                    continue;
 
                 string[] moveAttributes = moveData.Split(',');
 
@@ -64,6 +64,7 @@ public class MoveMaker : Singleton<MoveMaker>
             catch (Exception e)
             {
                 Debug.LogWarning("WARNING: " + e.Message);
+                Debug.LogWarning("Move Data: " + moveData);
                 return listOfMoves.ToArray();
             }
         }

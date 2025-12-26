@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 /// <c>MedicalCenterData</c> to be loaded
 /// and saved in the game.
 /// <summary>
+[Serializable]
 public class MedicalCenterDataContainer
 {
 
@@ -28,12 +30,12 @@ public class MedicalCenterDataContainer
     /// <param name="id">The identifying string connecting the <c>MedicalCenterData</c> to the <c>MedicalObject</c></param>
     public static MedicalCenterData GetMedicalCenterData(string id)
     {
-        if(MedicalCenterDataList.Count <= 0)
+        if (MedicalCenterDataList.Count <= 0)
             return null;
 
-        foreach(MedicalCenterData data in MedicalCenterDataList)
+        foreach (MedicalCenterData data in MedicalCenterDataList)
         {
-            if(data.ID.Equals(id))
+            if (data.ID.Equals(id))
                 return data;
         }
         return null;
@@ -62,7 +64,7 @@ public class MedicalCenterDataContainer
     /// </summary>
     public static void ResetNumOfTimesUsed()
     {
-        foreach(MedicalCenterData data in MedicalCenterDataList)
+        foreach (MedicalCenterData data in MedicalCenterDataList)
         {
             data.NumOfTimesUsed = 0;
         }

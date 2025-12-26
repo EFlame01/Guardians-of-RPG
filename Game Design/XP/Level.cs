@@ -57,8 +57,13 @@ public class Level
             return null;
 
         foreach (Move move in moves)
-            if ((move.Level == player.Level) && !player.MoveManager.MoveExistsInBattleSlot(move.Name))
+        {
+            if (!MoveManager.MoveDictionary.ContainsKey(move.Name))
+            {
                 learnedMoves.Add(move);
+                player.MoveManager.AddMove(move);
+            }
+        }
 
         return learnedMoves.ToArray();
     }

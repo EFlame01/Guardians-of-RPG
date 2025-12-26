@@ -40,6 +40,7 @@ public class GameManager : PersistentSingleton<GameManager>
         GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
         data.PlayerData.LoadData();
         string sceneName = data.PlayerData.PlayerSceneName.Equals("Start Scene") ? "Intro" : data.PlayerData.PlayerSceneName;
+        AudioManager.Instance.StopCurrentMusic(false);
         SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
     }
 

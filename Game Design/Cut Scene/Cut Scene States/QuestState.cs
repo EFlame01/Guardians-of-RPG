@@ -67,7 +67,8 @@ public class QuestState : CutSceneState, IDialogue
                 DialogueManager.Instance.CurrentStory.variablesState["levelUpText"] = "You are now level " + Player.Instance().Level;
             }
 
-            Move[] moves = MoveMaker.Instance.GetLevelUpMoves(Player.Instance().Level, Player.Instance().Archetype.ArchetypeName, Player.Instance().Archetype.ClassName);
+            // Move[] moves = MoveMaker.Instance.GetLevelUpMoves(Player.Instance().Level, Player.Instance().Archetype.ArchetypeName, Player.Instance().Archetype.ClassName);
+            Move[] moves = Level.DetermineLearnedMoves();
 
             if (moves != null && moves.Length > 0)
             {

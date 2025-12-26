@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -5,6 +6,7 @@ using System.Collections.Generic;
 /// of the <c>ItemData</c> inside of a list
 /// to be loaded and saved in the game.
 /// </summary>
+[Serializable]
 public class ItemDataContainer
 {
     //public static variable
@@ -27,12 +29,12 @@ public class ItemDataContainer
     /// <param name="id">The identifying string connecting the <c>ItemData</c> to the <c>ItemObject</c></param>
     public static ItemData GetItemData(string id)
     {
-        if(ItemDataList.Count <= 0)
+        if (ItemDataList.Count <= 0)
             return null;
 
-        foreach(ItemData data in ItemDataList)
+        foreach (ItemData data in ItemDataList)
         {
-            if(data.ID.Equals(id))
+            if (data.ID.Equals(id))
                 return data;
         }
         return null;

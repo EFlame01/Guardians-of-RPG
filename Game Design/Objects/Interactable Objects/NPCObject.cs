@@ -33,7 +33,10 @@ public class NPCObject : InteractableObject, IDialogue
         //_npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
         NpcData = NpcDataContainer.GetNpcData(npc_ID);
         if (NpcData == null)
+        {
+            Debug.LogWarning("WARNING: " + npc_ID + " was not found in NpcDataContainer");
             NpcData = new NpcData(npc_ID, transform.position, flags, flagValues);
+        }
         else
             transform.position = NpcData.Position;
 

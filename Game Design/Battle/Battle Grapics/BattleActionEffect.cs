@@ -241,6 +241,7 @@ public class BattleActionEffect : MonoBehaviour
         UpdateBattleCharacter(_user);
         UpdateBattleCharacter(Target);
         SetMoveEffectString();
+        BattleSimStatus.CheckGraveyardStatus(Target);
         yield return new WaitForSeconds(1f);
     }
 
@@ -252,6 +253,7 @@ public class BattleActionEffect : MonoBehaviour
         UpdateInventory(item);
         UpdateBattleCharacter(Target);
         SetItemEffectString();
+        BattleSimStatus.CheckGraveyardStatus(Target);
         yield return new WaitForSeconds(1f);
     }
 

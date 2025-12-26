@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 /// <c>WellData</c> to be loaded
 /// and saved in the game.
 /// <summary>
+[Serializable]
 public class WellDataContainer
 {
     //public static variable
@@ -28,12 +30,12 @@ public class WellDataContainer
     /// </param>
     public static WellData GetWellData(string id)
     {
-        if(WellDataList.Count <= 0)
+        if (WellDataList.Count <= 0)
             return null;
 
-        foreach(WellData data in WellDataList)
+        foreach (WellData data in WellDataList)
         {
-            if(data.ID.Equals(id))
+            if (data.ID.Equals(id))
                 return data;
         }
         return null;
@@ -62,7 +64,7 @@ public class WellDataContainer
     /// </summary>
     public static void IncrementWellDay()
     {
-        foreach(WellData data in WellDataList)
+        foreach (WellData data in WellDataList)
         {
             data.DaysWithoutWater++;
         }
@@ -70,15 +72,15 @@ public class WellDataContainer
 
     public static void AddWellData(WellData data)
     {
-        if(WellDataList.Count == 0)
+        if (WellDataList.Count == 0)
         {
             WellDataList.Add(data);
             return;
         }
 
-        for(int i = 0; i < WellDataList.Count; i++)
+        for (int i = 0; i < WellDataList.Count; i++)
         {
-            if(WellDataList[i].ID == data.ID)
+            if (WellDataList[i].ID == data.ID)
             {
                 WellDataList[i] = data;
                 return;

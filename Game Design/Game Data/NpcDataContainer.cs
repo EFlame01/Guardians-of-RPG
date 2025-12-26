@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 /// <c>NpcData</c> to be loaded
 /// and saved in the game.
 /// <summary>
+[Serializable]
 public class NpcDataContainer
 {
     //public static variables
@@ -28,12 +30,12 @@ public class NpcDataContainer
     /// </param>
     public static NpcData GetNpcData(string id)
     {
-        if(NpcDataList.Count <= 0)
+        if (NpcDataList.Count <= 0)
             return null;
 
-        foreach(NpcData data in NpcDataList)
+        foreach (NpcData data in NpcDataList)
         {
-            if(data.ID.Equals(id))
+            if (data.ID.Equals(id))
                 return data;
         }
         return null;
@@ -49,15 +51,15 @@ public class NpcDataContainer
 
     public static void AddNpcData(NpcData data)
     {
-        if(NpcDataList.Count == 0)
+        if (NpcDataList.Count == 0)
         {
             NpcDataList.Add(data);
             return;
         }
 
-        for(int i = 0; i < NpcDataList.Count; i++)
+        for (int i = 0; i < NpcDataList.Count; i++)
         {
-            if(NpcDataList[i].ID == data.ID)
+            if (NpcDataList[i].ID == data.ID)
             {
                 NpcDataList[i] = data;
                 return;

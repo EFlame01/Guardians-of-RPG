@@ -26,7 +26,7 @@ public class AbilityMaker : Singleton<AbilityMaker>
         return new Ability
         (
             abilityAttributes[0],
-            abilityAttributes[1],
+            abilityAttributes[1].Replace('~', ','),
             EffectMaker.Instance.GetEffectsBasedOnName(abilityAttributes[0]),
             abilityAttributes[2].Split('~')
         );
