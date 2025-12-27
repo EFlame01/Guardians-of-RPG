@@ -140,7 +140,8 @@ public class BattleSimulator : MonoBehaviour
         BattleInformation.ResetBattleInformation();
         try
         {
-            DayNightCycle.Instance.ResumeTimer();
+            if (GameManager.Instance.StartDayNightCycle)
+                DayNightCycle.Instance.ResumeTimer();
         }
         catch (Exception e)
         {

@@ -11,7 +11,6 @@ public class LightCycle : MonoBehaviour
 {
     //Serialized variables
     public Light2D Light;
-    // public bool SetTimer;
 
     //private variables
     private Color MORNING_COLOR = new Color((float)(251f / 255f), (float)(222f / 255f), (float)(188f / 255f));
