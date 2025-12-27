@@ -37,9 +37,7 @@ public class GameManager : PersistentSingleton<GameManager>
 
     public void LoadGame()
     {
-        GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
-        data.PlayerData.LoadData();
-        string sceneName = data.PlayerData.PlayerSceneName.Equals("Start Scene") ? "Intro" : data.PlayerData.PlayerSceneName;
+        string sceneName = SetSceneBasedOnPlayerData();
         AudioManager.Instance.StopCurrentMusic(false);
         SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
     }
@@ -99,7 +97,6 @@ public class GameManager : PersistentSingleton<GameManager>
     public bool IsPlayingAsUser()
     {
         GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
-        // return data.Username != null;
         if (data.Username is null)
             return false;
         else
@@ -110,9 +107,6 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
         PlayerDataCloud playerData = data.PlayerData;
-        // public string PlayerSceneName;
-        // public string MapLocationName;
-        // public Vector3 LocationPosition;
         playerData.PlayerSceneName = SceneManager.GetActiveScene().ToString();
         playerData.MapLocationName = MapLocation.GetCurrentMapLocation();
         playerData.LocationPosition = PlayerSpawn.PlayerPosition;
@@ -130,6 +124,18 @@ public class GameManager : PersistentSingleton<GameManager>
             PlayerState.TRANSITION => false,
             PlayerState.INTERACTING_WITH_OBJECT => false,
             _ => false,
+        };
+    }
+
+    private string SetSceneBasedOnPlayerData()
+    {
+        GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
+        data.PlayerData.LoadData();
+        return data.PlayerData.PlayerSceneName switch
+        {
+            "Start Scene" => "Intro",
+            "Credits" => "Tiro Town",
+            _ => data.PlayerData.PlayerSceneName
         };
     }
 }
