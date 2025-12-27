@@ -29,12 +29,23 @@ public class Map : ButtonUI
     //private variables
     private bool mapReset;
     private static string sceneName = "Tiro Town";
+    private const string GIVEN_MAP = "0x27";
 
 
     public override void Start()
     {
         base.Start();
         ResetMapAtStart();
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (mapButton == null)
+            return;
+
+        gameObject.SetActive(StoryFlagManager.FlagDictionary[GIVEN_MAP].Value);
     }
 
     /// <summary>
