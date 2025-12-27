@@ -127,8 +127,11 @@ public class BattleSimStatus
 
     public static void CheckGraveyardStatus(Character character)
     {
-        if (Graveyard.Contains(character) && character.BaseStats.Hp > 0)
-            Graveyard.Remove(character);
+        if (Graveyard.Contains(character) || character.BaseStats.Hp <= 0)
+            return;
+
+        Graveyard.Remove(character);
+
         if (character.Type.Equals("ALLY") && !Allies.Contains(character))
             Allies.Add(character);
         else if (character.Type.Equals("ENEMY") && !Enemies.Contains(character))
