@@ -22,7 +22,7 @@ public class ItemOption : MonoBehaviour
     private ItemType _itemType = ItemType.FOOD;
     private string _itemName;
 
-    public void Start()
+    public void OnEnable()
     {
         InitializeItemOption();
     }
