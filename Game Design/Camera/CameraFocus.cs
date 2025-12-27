@@ -18,7 +18,10 @@ public class CameraFocus : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if(ResetCamera)
+        if (GameManager.Instance.PlayerState.Equals(PlayerState.CUT_SCENE))
+            return;
+
+        if (ResetCamera)
             ResetCameraFocus();
     }
 
@@ -28,11 +31,11 @@ public class CameraFocus : MonoBehaviour
     /// </summary>
     private void ResetCameraFocus()
     {
-        float t = (float)(start/end);
+        float t = (float)(start / end);
         Vector3 a = transform.localPosition;
         Vector3 b = new Vector3(0, 0, 0);
 
-        if(start >= end || transform.localPosition == b)
+        if (start >= end || transform.localPosition == b)
         {
             ResetCamera = false;
             transform.localPosition = b;
