@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro.Examples;
 using UnityEngine;
 
 /// <summary>
@@ -89,6 +86,7 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
     /// </summary>
     public void SetNewDay(int timeOfDay)
     {
+        Debug.Log("Setting new day");
         GameManager.Instance.TimeOfDay = timeOfDay == -1 ? Units.MORNING : timeOfDay;
         WellDataContainer.IncrementWellDay();
         MedicalCenterDataContainer.ResetNumOfTimesUsed();

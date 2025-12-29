@@ -27,7 +27,7 @@ public class CutScene : MonoBehaviour
 
     [Header("Day/Night Cycle")]
     public bool SetDayOnStart;
-    public int TimeOfDay;
+    public int TimeOfDay = -1;
     public bool StartTimer;
     public bool SetNewDay;
 
