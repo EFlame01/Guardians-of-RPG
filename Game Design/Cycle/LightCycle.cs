@@ -19,8 +19,8 @@ public class LightCycle : MonoBehaviour
 
     private void Start()
     {
+        DayNightCycle.SetTimeRemaining(Units.TIME_PER_PART);
         SetLight();
-        // SetTimer = GameManager.Instance.StartDayNightCycle;
     }
 
     // Update is called once per frame
@@ -39,7 +39,8 @@ public class LightCycle : MonoBehaviour
     /// </summary>
     private void SetLight()
     {
-        Light.color = /*DayNightCycle.TimeOfDay*/GameManager.Instance.TimeOfDay switch
+        Debug.Log("Time of day: " + GameManager.Instance.TimeOfDay);
+        Light.color = GameManager.Instance.TimeOfDay switch
         {
             Units.MORNING => Color.Lerp(EVENING_COLOR, MORNING_COLOR, (float)DayNightCycle.TimeRemaining / Units.TIME_PER_PART),//use day light
             Units.EVENING => Color.Lerp(NIGHT_COLOR, EVENING_COLOR, (float)DayNightCycle.TimeRemaining / Units.TIME_PER_PART),//use afternoon light

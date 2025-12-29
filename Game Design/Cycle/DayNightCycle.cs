@@ -37,6 +37,11 @@ public class DayNightCycle : PersistentSingleton<DayNightCycle>
             ChangeTimeOfDay();
     }
 
+    public static void SetTimeRemaining(float timeRemaining)
+    {
+        TimeRemaining = timeRemaining;
+    }
+
     /// <summary>
     /// Starts timer to begin the Day/Night cycle.
     /// </summary>
