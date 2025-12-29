@@ -65,6 +65,7 @@ public class GameManager : PersistentSingleton<GameManager>
         GetComponentInChildren<CloudSave>().LoadData(username);
     }
 
+    [System.Obsolete]
     public void DeleteGameData(string username)
     {
         GetComponentInChildren<CloudSave>().DeleteData(username);
