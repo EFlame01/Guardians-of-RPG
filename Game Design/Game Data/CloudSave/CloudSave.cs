@@ -52,4 +52,37 @@ public class CloudSave : MonoBehaviour
             GameData = JsonUtility.FromJson<GameDataCloud>(json);
         }
     }
+
+    [System.Obsolete]
+    public async void DeleteData(string username)
+    {
+        try
+        {
+            await CloudSaveService.Instance.Data.Player.DeleteAsync(username);
+        }
+        catch (CloudSaveValidationException e)
+        {
+            Debug.LogError(e);
+        }
+        catch (CloudSaveRateLimitedException e)
+        {
+            Debug.LogError(e);
+        }
+        catch (CloudSaveException e)
+        {
+            Debug.LogError(e);
+        }
+    }
+
+    public void ResetData()
+    {
+        if (GameData.Username != null && GameData.Password != null)
+        {
+            CreateData(GameData.Username, GameData.Password);
+            Debug.Log("Reset PlayerData: " + GameData.Username);
+        }
+        else
+            Debug.LogWarning("No PlayerData to reset...");
+
+    }
 }

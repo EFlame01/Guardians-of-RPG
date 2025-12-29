@@ -1,11 +1,14 @@
 
-public class GuestPlayPage : StartMenuPage
+using UnityEngine.UI;
+
+public class DeleteAccount : StartMenuPage
 {
+    public Button yesButton;
+    public Button noButton;
 
     public void OnYesButtonPressed()
     {
         OnBackButtonPressed();
-        GameManager.Instance.StartGame();
     }
 
     public void OnNoButtonPressed()

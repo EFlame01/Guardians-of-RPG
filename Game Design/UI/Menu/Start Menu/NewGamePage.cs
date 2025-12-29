@@ -1,10 +1,11 @@
 
-public class GuestPlayPage : StartMenuPage
+public class NewGamePage : StartMenuPage
 {
 
     public void OnYesButtonPressed()
     {
         OnBackButtonPressed();
+        GameManager.Instance.ResetGameData();
         GameManager.Instance.StartGame();
     }
 

@@ -15,11 +15,13 @@ public class StartScene : MonoBehaviour
     [SerializeField] private Button loginButton;
     [SerializeField] private Button signUpButton;
     [SerializeField] private Button playButton;
+    [SerializeField] private Button newGameButton;
     [SerializeField] private GameObject signUpPrefab;
     [SerializeField] private GameObject loginPrefab;
     [SerializeField] private GameObject optionPrefab;
     [SerializeField] private GameObject creditsPrefab;
     [SerializeField] private GameObject guestPrefab;
+    [SerializeField] private GameObject newGamePrefab;
 
     public static string Username;
     public static bool UpdatedUsername;
@@ -34,6 +36,7 @@ public class StartScene : MonoBehaviour
     {
         UpdateStartMenuPage();
         playButton.interactable = GameManager.Instance.GameDataPresent();
+        newGameButton.interactable = GameManager.Instance.GameDataPresent();
     }
 
     public void OnSignUpButtonPressed()
@@ -72,6 +75,14 @@ public class StartScene : MonoBehaviour
     public void OnPlayAsGuestPressed()
     {
         Instantiate(guestPrefab, null);
+    }
+
+    public void OnNewGamePressed()
+    {
+        if (GameManager.Instance.IsNewPlayer())
+            OnPlayButtonPressed();
+
+        Instantiate(newGamePrefab, null);
     }
 
     private void UpdateStartMenuPage()

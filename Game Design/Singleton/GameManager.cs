@@ -46,6 +46,7 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         GetComponentInChildren<CloudSave>().InitGameDataCloud();
         Player.Instance().CreateNewInstance();
+        AudioManager.Instance.StopCurrentMusic(false);
         SceneLoader.Instance.LoadScene("Intro", TransitionType.FADE_TO_BLACK);
     }
 
@@ -62,6 +63,16 @@ public class GameManager : PersistentSingleton<GameManager>
     public void LoadGameData(string username)
     {
         GetComponentInChildren<CloudSave>().LoadData(username);
+    }
+
+    public void DeleteGameData(string username)
+    {
+        GetComponentInChildren<CloudSave>().DeleteData(username);
+    }
+
+    public void ResetGameData()
+    {
+        GetComponentInChildren<CloudSave>().ResetData();
     }
 
     public async Task<string> SignIn(string username, string password)
@@ -112,6 +123,16 @@ public class GameManager : PersistentSingleton<GameManager>
         playerData.LocationPosition = PlayerSpawn.PlayerPosition;
     }
 
+    public bool IsNewPlayer()
+    {
+        GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
+
+        if (data.PlayerData == null || data.PlayerData.TotalSavedPlayTime <= 0)
+            return true;
+
+        return false;
+    }
+
     private void CheckToEnableButtons()
     {
         EnableButtons = Instance.PlayerState switch
@@ -134,7 +155,7 @@ public class GameManager : PersistentSingleton<GameManager>
         return data.PlayerData.PlayerSceneName switch
         {
             "Start Scene" => "Intro",
-            "Credits" => "Tiro Town",
+            "Credits Scene" => "Tiro Town",
             _ => data.PlayerData.PlayerSceneName
         };
     }

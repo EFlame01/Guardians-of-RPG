@@ -9,6 +9,7 @@ public class Authentification : MonoBehaviour
     private const string SIGN_UP_SUCCESSFUL = "SignUp is successful.";
     private const string SIGN_IN_SUCCESSFUL = "SignIn is successful.";
     private const string USERNAME_EXISTS = "Username already exists.";
+    private const string PLAYER_SIGNING_IN = "Player is signing in...";
     private const string PLAYER_ALREADY_SIGNED_IN = "This player is already signed in.";
     private const string USERNAME_PASSWORD_DONT_MATCH = "Invalid username or password";
     private const string PASSWORDS_DONT_MATCH_REQ = "Password does not match requirements:\n- 1 uppercase\n- 1 lowercase\n- 1 digit\n- 1 symbol\n - minimum 8 characters\n- maximum 30 characters";
@@ -75,6 +76,8 @@ public class Authentification : MonoBehaviour
         catch (AuthenticationException ex)
         {
             Debug.LogWarning("Authentication Exception: " + ex.Message);
+            if (ex.Message.Contains("The player is already signing in"))
+                return PLAYER_SIGNING_IN;
             if (ex.Message.Contains("do not match"))
                 return USERNAME_PASSWORD_DONT_MATCH;
 

@@ -9,6 +9,7 @@ public class LoginPage : StartMenuPage
     [SerializeField] private TMP_InputField usernameField;
     [SerializeField] private TMP_InputField passwordField;
     [SerializeField] private TextMeshProUGUI errorMessage;
+    [SerializeField] private GameObject deleteGameDataPrefab;
 
     public void Start()
     {
@@ -26,7 +27,6 @@ public class LoginPage : StartMenuPage
         string username = usernameField.text;
         string password = passwordField.text;
 
-        // bool validCredentials = await GameManager.Instance.CheckLoginCredentials(username, password);
         string loginResult = await GameManager.Instance.SignIn(username, password);
         if (!loginResult.Equals("SignIn is successful."))
         {
@@ -39,6 +39,35 @@ public class LoginPage : StartMenuPage
             GameManager.Instance.LoadGameData(username);
             SetUsernameText(username);
             OnBackButtonPressed();
+        }
+    }
+
+    public async void OnDeleteButtonPressed()
+    {
+        //TODO: Instantiate a pop up that asks if they are sure
+        //  they  wish to delete their data
+        string username = usernameField.text;
+        string password = passwordField.text;
+        string loginResult = await GameManager.Instance.SignIn(username, password);
+        if (!loginResult.Equals("SignIn is successful."))
+        {
+            ClearInputFields();
+            errorMessage.text = loginResult;
+        }
+        else
+        {
+            DeleteAccount deleteAccountPage = Instantiate(deleteGameDataPrefab, null).GetComponent<DeleteAccount>();
+            deleteAccountPage.yesButton.onClick.AddListener(() =>
+            {
+                GameManager.Instance.DeleteGameData(username);
+                ClearInputFields();
+                errorMessage.text = "Successfully deleted " + username;
+            });
+            deleteAccountPage.noButton.onClick.AddListener(() =>
+            {
+                GameManager.Instance.Logout();
+                errorMessage.text = "You did not delete " + username;
+            });
         }
     }
 
