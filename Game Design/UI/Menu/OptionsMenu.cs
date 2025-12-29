@@ -62,8 +62,16 @@ public class OptionsMenu : MenuState
     /// </summary>
     public void OnExitButtonPressed()
     {
-        //TODO: optional - ask if they are sure they want to exit game
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+
+#elif UNITY_WEBGL
+        Application.ExternalEval("window.location.href = 'https://eo-comics.itch.io/guardians-of-rpg-v103-beta';");
+
+#else
         Application.Quit();
+
+#endif
     }
 
     private void SetUpOptions()
