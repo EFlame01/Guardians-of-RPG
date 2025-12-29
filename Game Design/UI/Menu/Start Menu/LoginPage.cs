@@ -42,10 +42,9 @@ public class LoginPage : StartMenuPage
         }
     }
 
+    [System.Obsolete]
     public async void OnDeleteButtonPressed()
     {
-        //TODO: Instantiate a pop up that asks if they are sure
-        //  they  wish to delete their data
         string username = usernameField.text;
         string password = passwordField.text;
         string loginResult = await GameManager.Instance.SignIn(username, password);
