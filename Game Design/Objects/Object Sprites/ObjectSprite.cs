@@ -11,7 +11,7 @@ public class ObjectSprite : MonoBehaviour
     [SerializeField] private string _startAnimation;
 
     //private variables
-    private Animator _animator;
+    protected Animator _animator;
 
     public virtual void Start()
     {
