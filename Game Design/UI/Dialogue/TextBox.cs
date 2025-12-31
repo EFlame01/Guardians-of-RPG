@@ -24,13 +24,13 @@ public class TextBox : MonoBehaviour
     [SerializeField] protected Animator Animator;
     [SerializeField] protected bool PlayOnStart;
     [SerializeField] protected bool DestroyTextBox = true;
-    [SerializeField] private InputActionReference Select;
+    [SerializeField] protected InputActionReference Select;
 
     public bool IsClosed = true; //{ get; private set; }
     public bool ClosedTextBox { get; private set; }
 
     private DialogueData _dialogueData;
-    private bool _textBoxOpened;
+    protected bool _textBoxOpened;
 
     public virtual void Start()
     {
@@ -147,5 +147,10 @@ public class TextBox : MonoBehaviour
         {
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         }
+    }
+
+    protected void ClickConfirm()
+    {
+        DialogueManager.Instance.ClickedOption(0);
     }
 }

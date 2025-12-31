@@ -271,7 +271,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         });
     }
 
-    private void ClickedOption(int index)
+    public void ClickedOption(int index)
     {
         if (_clickedAlready)
             return;

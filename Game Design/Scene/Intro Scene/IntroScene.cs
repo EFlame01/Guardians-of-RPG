@@ -8,6 +8,7 @@ public class IntroScene : MonoBehaviour
     [SerializeField] private DialogueData introDialogueData;
     [SerializeField] private InputActionReference Select;
     [SerializeField] private GameObject[] introUIs;
+    [SerializeField] private TextBox[] textBoxes;
 
     //private variables
     public static Story CurrentStory { get; private set; }
@@ -31,15 +32,15 @@ public class IntroScene : MonoBehaviour
         StartDialogue();
     }
 
-    // public virtual void Update()
-    // {
-    //     if (Select.action.ReadValue<float>() <= 0f)
-    //         return;
-    //     // if (!_textBoxOpened)
-    //     //     return;
-    //     if (GameManager.Instance.EnableNarrationInputs)
-    //         OnNextButtonPressed();
-    // }
+    public virtual void Update()
+    {
+        if (Select.action.ReadValue<float>() <= 0f)
+            return;
+        if (AreTextBoxesClosed())
+            return;
+        if (GameManager.Instance.EnableNarrationInputs)
+            OnNextButtonPressed();
+    }
 
     public void OnNextButtonPressed()
     {
@@ -149,6 +150,17 @@ public class IntroScene : MonoBehaviour
     {
         SexName = sex;
         CurrentStory.variablesState["stateStatus"] = "next";
+    }
+
+    private bool AreTextBoxesClosed()
+    {
+        foreach (TextBox textBox in textBoxes)
+        {
+            if (textBox != null && (!textBox.IsClosed || textBox.gameObject.activeSelf))
+                return false;
+        }
+
+        return true;
     }
 
     private void SetIntroUI(int uiIndex)
