@@ -10,15 +10,15 @@ public class TextBoxDecision : TextBox
     public Transform ListLayout;
     public int OptionSelected = -1;
 
-    public override void Update()
-    {
-        if (Select.action.ReadValue<float>() <= 0f)
-            return;
-        if (!_textBoxOpened)
-            return;
-        if (GameManager.Instance.EnableNarrationInputs)
-            ClickConfirm();
-    }
+    // public override void Update()
+    // {
+    //     if (Select.action.ReadValue<float>() <= 0f)
+    //         return;
+    //     if (!_textBoxOpened)
+    //         return;
+    //     if (GameManager.Instance.EnableNarrationInputs)
+    //         ClickConfirm();
+    // }
 
     public void UpdateOptionButton(Button button, string optionString)
     {
