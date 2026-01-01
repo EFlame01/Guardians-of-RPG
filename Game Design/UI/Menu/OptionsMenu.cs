@@ -66,7 +66,9 @@ public class OptionsMenu : MenuState
         UnityEditor.EditorApplication.isPlaying = false;
 
 #elif UNITY_WEBGL
-        Application.ExternalEval("window.location.href = 'https://eo-comics.itch.io/guardians-of-rpg-v103-beta';");
+        AudioManager.Instance.StopCurrentMusic(false);
+        SceneLoader.Instance.LoadScene("Start Scene", TransitionType.FADE_TO_BLACK);
+        // Application.ExternalEval("window.location.href = 'https://eo-comics.itch.io/guardians-of-rpg-v103-beta';");
 
 #else
         Application.Quit();
