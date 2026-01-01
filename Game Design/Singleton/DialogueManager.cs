@@ -305,6 +305,8 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         foreach (Transform child in DecisionTextBox.ListLayout)
             Destroy(child.gameObject);
 
+        DecisionTextBox.choices = choices;
+
         foreach (Choice choice in choices)
         {
             Button choiceBtn = Instantiate(DecisionTextBox.DecisionOptionPrefab, DecisionTextBox.ListLayout);
@@ -313,7 +315,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         }
     }
 
-    private void MakeDecision(Choice choice, List<Choice> currentChoices)
+    public void MakeDecision(Choice choice, List<Choice> currentChoices)
     {
         if (_clickedAlready)
             return;
