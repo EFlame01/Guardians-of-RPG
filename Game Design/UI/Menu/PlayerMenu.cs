@@ -38,7 +38,7 @@ public class PlayerMenu : MenuState
         Player player = Player.Instance();
 
         playerNameText.text = player.Name;
-        playerAbilityText.text = player.Ability == null? "Nothing" : player.Ability.Name;
+        playerAbilityText.text = player.Ability == null ? "Nothing" : player.Ability.Name;
         playerArchetypeText.text = player.Archetype.ArchetypeName;
         playerAtkText.text = player.BaseStats.Atk.ToString();
         playerBitsText.text = player.Bits.ToString();
@@ -47,26 +47,29 @@ public class PlayerMenu : MenuState
         playerEvaText.text = player.BaseStats.Eva.ToString();
         playerFullHpText.text = player.BaseStats.FullHp.ToString();
         playerHpText.text = player.BaseStats.Hp.ToString();
-        playerItemText.text = player.Item == null ? "Nothing": player.Item.Name;
+        playerItemText.text = player.Item == null ? "Nothing" : player.Item.Name;
         playerLevelText.text = player.Level.ToString();
         playerLimitXPText.text = player.LimXP.ToString();
         playerSexText.text = player.Sex;
         playerSpdText.text = player.BaseStats.Spd.ToString();
-        
+
         string sex = player.Sex.Equals("MALEFE") ? GameManager.Instance.Leaning : player.Sex;
         playerImage.sprite = sex.Equals("FEMALE") ? femaleSprite : maleSprite;
 
         playerHpSlider.SetValue(player.BaseStats.Hp, player.BaseStats.FullHp);
         playerXpSlider.SetValue(player.CurrXP, player.LimXP);
 
-        unEquipButton.interactable = !playerItemText.text.Equals("Nothing");
+        unEquipButton.interactable = player.Item != null;
     }
 
     public void OnUnEquipButtonPressed()
     {
         Player player = Player.Instance();
+        string itemName = player.Item.Name;
+        string itemType = player.Item.Type.ToString();
         player.UnequipItemFromPlayer();
-        playerItemText.text = player.Item == null ? "Nothing": player.Item.Name;
+        playerItemText.text = player.Item == null ? "Nothing" : player.Item.Name;
+        unEquipButton.interactable = player.Item != null;
         //TODO: narrate that item has been unequipped from player
     }
 }
