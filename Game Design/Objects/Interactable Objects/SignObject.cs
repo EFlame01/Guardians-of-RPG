@@ -16,6 +16,7 @@ public class SignObject : InteractableObject, IDialogue
 
     //private variable
     private bool _readSign;
+    private bool _error;
 
     /// <summary>
     /// If can interact, calls the method
@@ -51,8 +52,20 @@ public class SignObject : InteractableObject, IDialogue
     /// <returns></returns>
     private void ReadObject()
     {
-        StartDialogue();
-        CheckForInteraction = true;
+        try
+        {
+            StartDialogue();
+            CheckForInteraction = true;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Could not read object: " + e.Message);
+            GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
+            _error = true;
+            CanInteract = false;
+            IsThisObjectDetected = false;
+            HideInputSymbol();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collider2D)
@@ -89,7 +102,8 @@ public class SignObject : InteractableObject, IDialogue
     {
         if (collider2D.gameObject.CompareTag("Player"))
         {
-            _readSign = false;
+            if (!_error)
+                _readSign = false;
             CanInteract = false;
             IsThisObjectDetected = false;
             HideInputSymbol();
