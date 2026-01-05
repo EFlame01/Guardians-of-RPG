@@ -81,8 +81,8 @@ public class StartScene : MonoBehaviour
     {
         if (GameManager.Instance.IsNewPlayer())
             OnPlayButtonPressed();
-
-        Instantiate(newGamePrefab, null);
+        else
+            Instantiate(newGamePrefab, null);
     }
 
     private void UpdateStartMenuPage()

@@ -34,14 +34,16 @@ public class SignObject : InteractableObject, IDialogue
 
     public void StartDialogue()
     {
-        try
-        {
+        if (_dialogueData != null)
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
-        }
-        catch (Exception e)
+        else
         {
-            Debug.LogError("ERROR: " + e.Message);
+            Debug.LogWarning("Dialogue Data is null.");
             GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
+            _error = true;
+            CanInteract = false;
+            IsThisObjectDetected = false;
+            HideInputSymbol();
         }
     }
 
@@ -52,20 +54,8 @@ public class SignObject : InteractableObject, IDialogue
     /// <returns></returns>
     private void ReadObject()
     {
-        try
-        {
-            StartDialogue();
-            CheckForInteraction = true;
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Could not read object: " + e.Message);
-            GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
-            _error = true;
-            CanInteract = false;
-            IsThisObjectDetected = false;
-            HideInputSymbol();
-        }
+        StartDialogue();
+        CheckForInteraction = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collider2D)

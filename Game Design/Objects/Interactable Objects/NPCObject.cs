@@ -30,7 +30,6 @@ public class NPCObject : InteractableObject, IDialogue
 
     public void OnEnable()
     {
-        //_npcData = NpcDataContainer.GetNpcData(npcID) ?? new NpcData(npcID, transform.position, flags, flagValues);
         NpcData = NpcDataContainer.GetNpcData(npc_ID);
         if (NpcData == null)
             NpcData = new NpcData(npc_ID, transform.position, flags, flagValues);
@@ -38,7 +37,6 @@ public class NPCObject : InteractableObject, IDialogue
             transform.position = NpcData.Position;
 
         //Add NPC to NPC Container
-        // NpcDataContainer.NpcDataList.Add(NpcData);
         NpcDataContainer.AddNpcData(NpcData);
 
         if (NpcData.direction != null)
