@@ -35,7 +35,7 @@ public class StartScene : MonoBehaviour
     public void Update()
     {
         UpdateStartMenuPage();
-        playButton.interactable = GameManager.Instance.GameDataPresent();
+        playButton.interactable = GameManager.Instance.GameDataPresent() && !GameManager.Instance.IsNewPlayer();
         newGameButton.interactable = GameManager.Instance.GameDataPresent();
     }
 

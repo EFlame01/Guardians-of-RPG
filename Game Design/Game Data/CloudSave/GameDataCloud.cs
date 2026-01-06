@@ -16,9 +16,11 @@ public class GameDataCloud
     public float GameTextSpeed;
     public bool EnableTouchPad;
 
+    public bool NewUser;
+
     public GameDataCloud()
     {
-
+        NewUser = true;
     }
 
     public void UpdatePlayerData(PlayerDataCloud playerData)
@@ -42,6 +44,8 @@ public class GameDataCloud
         GameVolume = GameManager.Instance.GameVolume;
         GameTextSpeed = GameManager.Instance.GameTextSpeed;
         EnableTouchPad = GameManager.Instance.EnableTouchPad;
+
+        NewUser = false;
 
         //returning data in form of GameDataCloud object
         return this;

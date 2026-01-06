@@ -128,10 +128,7 @@ public class GameManager : PersistentSingleton<GameManager>
     {
         GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
 
-        if (data.PlayerData == null || data.PlayerData.AbilityName == null)
-            return true;
-
-        return false;
+        return data.NewUser;
     }
 
     private void CheckToEnableButtons()

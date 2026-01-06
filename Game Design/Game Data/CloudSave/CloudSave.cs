@@ -50,6 +50,8 @@ public class CloudSave : MonoBehaviour
         {
             string json = keyName.Value.GetAsString();
             GameData = JsonUtility.FromJson<GameDataCloud>(json);
+            if (GameData.NewUser)
+                GameData.NewUser = false;
         }
     }
 
