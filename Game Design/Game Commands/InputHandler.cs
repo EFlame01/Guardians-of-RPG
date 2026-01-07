@@ -14,12 +14,12 @@ public class InputHandler : MonoBehaviour
     public CharacterPos charPos;
 
     public InputActionReference Move;
-    // public InputAction Pause;
+    public InputActionReference Pause;
 
     private Rigidbody2D _rb2D;
     private float _speed;
     private Vector3 _targetPos;
-    private Vector2 _velocity;
+    public static Vector2 _velocity;
 
 
     private void Start()
@@ -33,7 +33,10 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        _velocity = Move.action.ReadValue<Vector2>();
+        if (Pause.action.ReadValue<float>() > 0f && MenuButton.CanBePressed())
+            OpenMenu();
+        if (!GameManager.Instance.EnableTouchPad)
+            _velocity = Move.action.ReadValue<Vector2>();
         if (_velocity.y != 0)
             _velocity.x = 0;
 
@@ -46,17 +49,6 @@ public class InputHandler : MonoBehaviour
             ControlMovement();
         else
             _playerSprite.PerformIdleAnimation(PlayerSpawn.PlayerDirection);
-    }
-
-    /// <summary>
-    /// Opens the menu and changes the
-    /// PlayerState to PAUSED to pause the 
-    /// game.
-    /// </summary>
-    public void OnMenuButtonClicked()
-    {
-        OpenMenu();
-        GameManager.Instance.PlayerState = PlayerState.PAUSED;
     }
 
     /// <summary>
@@ -119,18 +111,6 @@ public class InputHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// Opens the menu and changes the
-    /// PlayerState to PAUSED to pause the 
-    /// game.
-    /// <summary>
-    /// <param name="context">The input action's callback context</param>
-    private void PauseGame(InputAction.CallbackContext context)
-    {
-        OpenMenu();
-        GameManager.Instance.PlayerState = PlayerState.PAUSED;
-    }
-
-    /// <summary>
     /// Instantiates the menu gameobject and keeps
     /// the player in an idle position.
     /// </summary>
@@ -138,5 +118,7 @@ public class InputHandler : MonoBehaviour
     {
         Instantiate(_menuOption);
         _playerSprite.PerformIdleAnimation(PlayerSpawn.PlayerDirection);
+        GameManager.Instance.PlayerState = PlayerState.PAUSED;
     }
+
 }

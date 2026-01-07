@@ -69,8 +69,16 @@ public abstract class InteractableObject : MonoBehaviour
     /// </summary>
     protected void HandleInput()
     {
-        if (Select.action.ReadValue<float>() > 0f && CanInteract && GameManager.Instance.EnableButtons)
-            InteractWithObject();
+        if (GameManager.Instance.EnableTouchPad)
+        {
+            if (SelectButton.SelectValue > 0 && CanInteract && GameManager.Instance.EnableButtons)
+                InteractWithObject();
+        }
+        else
+        {
+            if (Select.action.ReadValue<float>() > 0f && CanInteract && GameManager.Instance.EnableButtons)
+                InteractWithObject();
+        }
     }
 
     /// <summary>

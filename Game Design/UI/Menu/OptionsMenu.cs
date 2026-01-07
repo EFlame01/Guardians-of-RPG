@@ -17,6 +17,9 @@ public class OptionsMenu : MenuState
     [SerializeField] private TextMeshProUGUI volumeValueText;
     [SerializeField] private GameObject sfxOn;
     [SerializeField] private GameObject sfxOff;
+    [SerializeField] private GameObject touchPadOn;
+    [SerializeField] private GameObject touchPadOff;
+
 
     // Start is called before the first frame update
     public override void Start()
@@ -45,6 +48,11 @@ public class OptionsMenu : MenuState
     public void OnSFXButtonPressed(bool sfx)
     {
         GameManager.Instance.GameSFX = sfx;
+    }
+
+    public void OnEnableTouchPadPressed(bool enableTouchPad)
+    {
+        GameManager.Instance.EnableTouchPad = enableTouchPad;
     }
 
     /// <summary>
@@ -82,6 +90,9 @@ public class OptionsMenu : MenuState
 
         sfxOn.SetActive(GameManager.Instance.GameSFX);
         sfxOff.SetActive(!GameManager.Instance.GameSFX);
+
+        touchPadOn.SetActive(GameManager.Instance.EnableTouchPad);
+        touchPadOff.SetActive(!GameManager.Instance.EnableTouchPad);
 
         volumeSlider.SetValue(volumeVal, 100);
         volumeValueText.text = volumeVal.ToString();

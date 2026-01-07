@@ -15,14 +15,14 @@ public class MenuButton : MonoBehaviour
 
     public void OnPressed()
     {
-        if(_canBePressed)
+        if (_canBePressed)
         {
             Instantiate(menuObject, null);
             GameManager.Instance.PlayerState = PlayerState.PAUSED;
         }
     }
 
-    public bool CanBePressed()
+    public static bool CanBePressed()
     {
         return GameManager.Instance.PlayerState switch
         {
