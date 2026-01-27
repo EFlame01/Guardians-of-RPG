@@ -15,8 +15,8 @@ public class Charm : StatusCondition
     public Charm(int charmDuration)
     {
         Name = "CHARM";
-        AfflictionText = "charmed";
-        WhenToImplement = "'DURING ROUND'";
+        AfflictionText = "is charmed!";
+        Condition = "DURING ROUND";
         _roundsLeft = charmDuration;
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
@@ -39,24 +39,17 @@ public class Charm : StatusCondition
 
     public override void ImplementStatusCondition(Character character)
     {
-        if(!character.BattleStatus.TurnStatus.Equals("FIGHTING"))
+        if (!character.BattleStatus.TurnStatus.Equals("FIGHTING"))
             return;
 
-        if(character.BattleStatus.ChosenMove == null)
+        if (character.BattleStatus.ChosenMove == null)
             return;
-        
-        switch(character.BattleStatus.ChosenMove.Target)
+
+        switch (character.BattleStatus.ChosenMove.Target)
         {
             case MoveTarget.ENEMY:
             case MoveTarget.ALL_ENEMIES:
-                if(character.Type.Equals("ALLY") || character.Type.Equals("PLAYER"))
-                    DetermineIfCharmed(character);
-                break;
-            case MoveTarget.USER:
-            case MoveTarget.ALLY:
-            case MoveTarget.ALL_ALLIES:
-                if(character.Type.Equals("ENEMY"))
-                    DetermineIfCharmed(character);
+                DetermineIfCharmed(character);
                 break;
             case MoveTarget.EVERYONE:
                 _chanceOfCharm = Units.LOWER_CHARM_CHANCE;
@@ -69,14 +62,14 @@ public class Charm : StatusCondition
 
     private void DetermineIfCharmed(Character character)
     {
-        if(_roundsLeft <= 0)
+        if (_roundsLeft <= 0)
         {
             RemoveStatusCondition(character, Name);
             return;
         }
 
-        if(_chanceOfCharm > Random.Range(0, 100))
-        {   
+        if (_chanceOfCharm > Random.Range(0, 100))
+        {
             character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
             character.BattleStatus.SetTurnStatusTag(character.Name + " is charmed by the enemy!");
         }

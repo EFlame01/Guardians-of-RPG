@@ -100,6 +100,11 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                 try
                 {
                     CurrentStory = new Story(_dialogueData.InkJSON.text);
+                    if (CurrentStory == null)
+                    {
+                        EndDialogue();
+                        return;
+                    }
                     CurrentStory.onError += HandleStoryError;
                     SetUpDialogueVariables();
                 }

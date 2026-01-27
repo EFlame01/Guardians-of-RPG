@@ -11,8 +11,8 @@ public class Burn : StatusCondition
     public Burn()
     {
         Name = "BURN";
-        AfflictionText = "burned";
-        WhenToImplement = "'AFTER ROUND'";
+        AfflictionText = "is burned!";
+        Condition = "AFTER ROUND";
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
             {"BLIND", true},
@@ -42,7 +42,7 @@ public class Burn : StatusCondition
     {
         int oldHp = character.BaseStats.Hp;
         int newHp = oldHp - (int)(oldHp * Units.BURN_DMG);
-        if(oldHp == newHp)
+        if (oldHp == newHp)
             newHp--;
         character.BaseStats.SetHp(newHp);
     }

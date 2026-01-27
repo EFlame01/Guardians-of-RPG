@@ -19,7 +19,12 @@ public class ItemMaker : Singleton<ItemMaker>
         if (string.IsNullOrEmpty(name))
             return null;
 
-        string[] itemAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[ITEM_INDEX], name).Split(',');
+        string itemData = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[ITEM_INDEX], name);
+
+        if (string.IsNullOrEmpty(itemData))
+            return null;
+
+        string[] itemAttributes = itemData.Split(',');
 
         return itemAttributes[3] switch
         {

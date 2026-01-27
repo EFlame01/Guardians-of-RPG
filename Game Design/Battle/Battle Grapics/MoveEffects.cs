@@ -106,16 +106,22 @@ public class MoveEffects : MonoBehaviour
 
     public IEnumerator HealRoutine()
     {
+        //TODO: delete and update for actual animation
+        yield return FlashRoutine();
         yield return null;
     }
 
     public IEnumerator StatRoutine()
     {
+        //TODO: delete and update for actual animation
+        yield return FlashRoutine();
         yield return null;
     }
 
     public IEnumerator StatusConditionRoutine()
     {
+        //TODO: delete and update for actual animation
+        yield return FlashRoutine();
         yield return null;
     }
 

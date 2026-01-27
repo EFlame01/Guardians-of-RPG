@@ -39,7 +39,6 @@ public class LightCycle : MonoBehaviour
     /// </summary>
     private void SetLight()
     {
-        Debug.Log("Time of day: " + GameManager.Instance.TimeOfDay);
         Light.color = GameManager.Instance.TimeOfDay switch
         {
             Units.MORNING => Color.Lerp(EVENING_COLOR, MORNING_COLOR, (float)DayNightCycle.TimeRemaining / Units.TIME_PER_PART),//use day light

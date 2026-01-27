@@ -19,10 +19,11 @@ public class Frozen : StatusCondition
     public Frozen(int freezeChance)
     {
         Name = "FROZEN";
-        AfflictionText = "frozened";
-        WhenToImplement = "'DURING ROUND'";
+        AfflictionText = "is frozened!";
+        Condition = "DURING ROUND";
         _roundsLeft = Units.FREEZE_DURATION;
-        _freezeChance = freezeChance switch{
+        _freezeChance = freezeChance switch
+        {
             1 => Units.FREEZE_CHANCE_1,
             2 => Units.FREEZE_CHANCE_2,
             3 => Units.FREEZE_CHANCE_3,
@@ -55,7 +56,7 @@ public class Frozen : StatusCondition
     public override void ImplementStatusCondition(Character character)
     {
         int percent = Random.Range(0, 100);
-        if(_freezeChance >= percent || _roundsLeft > 0)
+        if (_freezeChance >= percent || _roundsLeft > 0)
         {
             character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
             character.BattleStatus.SetTurnStatusTag(character.Name + " is frozen!");

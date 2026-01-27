@@ -22,7 +22,6 @@ public class CharacterActionState : BattleState, IDialogue
     //private variables
     private TextBox _narrationTextBox;
     private DialogueData _dialogueData;
-    // private bool _roundOver;
     private string _characterActionText;
     private bool _startedDialogue;
 
@@ -36,24 +35,23 @@ public class CharacterActionState : BattleState, IDialogue
 
     public override void Enter()
     {
+        Debug.Log("Character Action State...");
         //Determine order of operations if the round just started
         if (!BattleSimStatus.RoundStarted)
-            DetermineOrder();
+            DetermineOrderForCharacterAction();
+
         //If the round is not over, show the character's action
         //Otherwise, determine which state to go to
         if (!RoundOver())
             DisplayAction();
         else
         {
-            //TODO: test why RoundStarted is commented out
-            // BattleSimStatus.RoundStarted = false;
             if (BattleSimStatus.RunSuccessful)
                 NextState = Units.END_BATTLE;
             else if (BattleOver())
                 NextState = Units.BATTLE_OVER_STATE;
             else
                 NextState = Units.AFTER_ROUND_STATE;
-            // NextState = "AFTER ROUND STATE";
         }
     }
 
@@ -64,7 +62,10 @@ public class CharacterActionState : BattleState, IDialogue
         if (_startedDialogue && DialogueManager.Instance.DialogueEnded)
         {
             if (HasAction(BattleSimStatus.ChosenCharacter))
+            {
+                ActionEffectState.ActionEffectStateStarted = false;
                 NextState = Units.ACTION_EFFECT_STATE;
+            }
             else
                 NextState = Units.CHARACTER_ACTION_STATE;
         }
@@ -75,10 +76,10 @@ public class CharacterActionState : BattleState, IDialogue
 
     }
 
-    private void DetermineOrder()
+    private void DetermineOrderForCharacterAction()
     {
         BattleSimStatus.RoundStarted = true;
-        BattleOrderBST battleOrderBST = new BattleOrderBST();
+        BattleOrderBST battleOrderBST = new();
         battleOrderBST.ArrangeBST();
     }
 
@@ -86,6 +87,14 @@ public class CharacterActionState : BattleState, IDialogue
     {
         Character character = BattleSimStatus.BattleQueue.Dequeue();
         BattleSimStatus.ChosenCharacter = character;
+
+        foreach (StatusCondition sc in character.BattleStatus.StatusConditions.Values)
+        {
+            if (sc.Condition.Equals("DURING ROUND"))
+            {
+                sc.ImplementStatusCondition(character);
+            }
+        }
 
         if (character.BaseStats.Hp <= 0 && !character.BattleStatus.TurnStatus.Equals(TurnStatus.ITEM))
         {
@@ -112,33 +121,23 @@ public class CharacterActionState : BattleState, IDialogue
         StartDialogue();
     }
 
-    // private bool RoundOver()
-    // {
-    //     _roundOver = BattleSimStatus.BattleQueue.Count == 0;
-    //     return _roundOver;
-    // }
-
     public void StartDialogue()
     {
         TextBoxBattle.KeepTextBoxOpened = true;
         TextBoxBattle.EndNarrationNow = false;
-        _startedDialogue = true;
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
         DialogueManager.Instance.CurrentStory.variablesState["text"] = _characterActionText;
         DialogueManager.Instance.TextBox = _narrationTextBox;
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        _startedDialogue = true;
     }
 
     private bool HasAction(Character character)
     {
-        switch (character.BattleStatus.TurnStatus)
+        return character.BattleStatus.TurnStatus switch
         {
-            case TurnStatus.SKIP:
-            case TurnStatus.CANNOT_MOVE:
-            case TurnStatus.NOTHING:
-                return false;
-            default:
-                return true;
-        }
+            TurnStatus.SKIP or TurnStatus.CANNOT_MOVE or TurnStatus.NOTHING => false,
+            _ => true,
+        };
     }
 }

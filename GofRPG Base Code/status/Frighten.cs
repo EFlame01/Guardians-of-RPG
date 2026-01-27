@@ -11,12 +11,12 @@ using UnityEngine;
 public class Frighten : StatusCondition
 {
     private int _rollAdvantage;
-    
+
     public Frighten(int rollAdvantage)
     {
         Name = "FRIGHTEN";
-        AfflictionText = "frightened";
-        WhenToImplement = "'NOW'";
+        AfflictionText = "is frightened!";
+        Condition = "DURING ROUND";
         _rollAdvantage = Mathf.Clamp(rollAdvantage, -6, -1);
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {

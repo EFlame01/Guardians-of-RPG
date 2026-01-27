@@ -17,8 +17,8 @@ public class Sleep : StatusCondition
     public Sleep(int rounds)
     {
         Name = "SLEEP";
-        AfflictionText = "asleep";
-        WhenToImplement = "DURING ROUND";
+        AfflictionText = "is asleep!";
+        Condition = "DURING ROUND";
         _roundsLeft = Mathf.Clamp(rounds, 1, 3);
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
@@ -47,7 +47,7 @@ public class Sleep : StatusCondition
     ///<param name="character"> the character being slept... lol </param>
     public override void ImplementStatusCondition(Character character)
     {
-        if(_roundsLeft > 0)
+        if (_roundsLeft > 0)
         {
             _roundsLeft--;
             character.BaseStats.SetEva(0);

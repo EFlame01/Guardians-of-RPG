@@ -11,8 +11,8 @@ public class Blind : StatusCondition
     public Blind()
     {
         Name = "BLIND";
-        AfflictionText = "blinded";
-        WhenToImplement = "'NOW'";
+        AfflictionText = "is blinded!";
+        Condition = "DURING ROUND";
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
             {"BLIND", false},

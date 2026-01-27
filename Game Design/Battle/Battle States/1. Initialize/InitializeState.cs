@@ -40,18 +40,19 @@ public class InitializeState : BattleState, IDialogue
 
     public override void Enter()
     {
+        Debug.Log("Initialize State...");
         InitializeBattleSimStatus();
     }
 
     public override void Update()
     {
-        if (GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING) && InitializeText != null && !startedDialogue)
-        {
-            startedDialogue = true;
-            StartDialogue();
-        }
+        // if (GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING) && InitializeText != null && !startedDialogue)
+        // {
+        //     startedDialogue = true;
+        //     StartDialogue();
+        // }
         if (startedDialogue && DialogueManager.Instance.DialogueEnded)
-            NextState = Units.OPTION_STATE;
+            NextState = Units.BEFORE_ROUND_STATE;
     }
 
     public override void Exit()
@@ -62,16 +63,14 @@ public class InitializeState : BattleState, IDialogue
     private void InitializeBattleSimStatus()
     {
         SetUpBattleCharacter(BattlePlayer, BattleInformation.BattlePlayerData);
-
         for (int i = 0; i < BattleInformation.BattleAlliesData.Length; i++)
             SetUpBattleCharacter(BattleAllies[i], BattleInformation.BattleAlliesData[i]);
-
         for (int i = 0; i < BattleInformation.BattleEnemiesData.Length; i++)
             SetUpBattleCharacter(BattleEnemies[i], BattleInformation.BattleEnemiesData[i]);
-
         SetUpCameraSize();
         SetUpEnvironment();
         SetUpText();
+        StartDialogue();
     }
 
     private void SetUpBattleCharacter(BattleCharacter battleCharacter, BattleCharacterData battleCharacterData)
@@ -98,6 +97,13 @@ public class InitializeState : BattleState, IDialogue
 
             battleCharacter.RuntimeAnimatorController = battleCharacterData.CharacterAnimator;
             battleCharacter.InitializeBattleCharacter();
+
+            foreach (StatusCondition sc in battleCharacter.Character.BattleStatus.StatusConditions.Values)
+            {
+                if (sc != null)
+                    battleCharacter.CharacterHUD.AddStatusSymbol(BattleSimStatus.ReturnStatusConditionSymbol(sc.Name));
+            }
+
         }
         else
             battleCharacter.gameObject.SetActive(false);
@@ -167,6 +173,7 @@ public class InitializeState : BattleState, IDialogue
 
     public void StartDialogue()
     {
+        startedDialogue = true;
         TextBoxBattle.KeepTextBoxOpened = true;
         TextBoxBattle.EndNarrationNow = false;
         DialogueManager.Instance.CurrentStory = new Story(DialogueData.InkJSON.text);

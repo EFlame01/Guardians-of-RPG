@@ -294,6 +294,8 @@ public class CutScene : MonoBehaviour
         if (CurrentState == null)
             return;
 
+        // GameManager.Instance.PlayerState = PlayerState.CUT_SCENE;
+
         switch (director.state)
         {
             case PlayState.Playing:

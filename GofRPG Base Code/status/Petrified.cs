@@ -15,8 +15,8 @@ public class Petrified : StatusCondition
     public Petrified()
     {
         Name = "PETRIFIED";
-        AfflictionText = "petrified";
-        WhenToImplement = "'DURING ROUND'";
+        AfflictionText = "is petrified!";
+        Condition = "DURING ROUND";
         _roundsLeft = Units.PETRIFIED_ROUNDS;
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
@@ -46,7 +46,7 @@ public class Petrified : StatusCondition
     public override void ImplementStatusCondition(Character character)
     {
         int percent = Random.Range(0, 100) + 1;
-        if(Units.PETRIFIED_RATE >= percent || _roundsLeft > 0)
+        if (Units.PETRIFIED_RATE >= percent || _roundsLeft > 0)
         {
             character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
             character.BattleStatus.SetTurnStatusTag(character.Name + " is petrified!");

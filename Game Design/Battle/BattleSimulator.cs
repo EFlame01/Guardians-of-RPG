@@ -28,18 +28,26 @@ public class BattleSimulator : MonoBehaviour
     [SerializeField] private GameObject BattleTimer;
 
     //UI for status conditions
+    [SerializeField] private GameObject BlindSymbol;
     [SerializeField] private GameObject BurnSymbol;
+    [SerializeField] private GameObject CharmSymbol;
+    [SerializeField] private GameObject ConfuseSymbol;
+    [SerializeField] private GameObject DeafenSymbol;
+    [SerializeField] private GameObject ExhaustionSymbol;
     [SerializeField] private GameObject FrozenSymbol;
     [SerializeField] private GameObject PetrifiedSymbol;
     [SerializeField] private GameObject PoisonSymbol;
+    [SerializeField] private GameObject RestrainSymbol;
     [SerializeField] private GameObject SleepSymbol;
     [SerializeField] private GameObject StunSymbol;
 
     //ALL BATTLE STATES
     private BattleState InitializeState;
+    private BattleState BeforeRoundState;
     private BattleState OptionState;
     private BattleState CharacterActionState;
     private BattleState ActionEffectState;
+    private BattleState ActionEffectState2;
     private BattleState KnockoutState;
     private BattleState AfterRoundState;
     private BattleState BattleOverState;
@@ -48,11 +56,13 @@ public class BattleSimulator : MonoBehaviour
     {
         BattleStateMachine = new BattleStateMachine();
         InitializeState = new InitializeState(BattlePlayer, BattleAllies, BattleEnemies, EnvironmentDetails, Camera, DialogueData, NarrationTextBox);
+        BeforeRoundState = new BeforeRoundState(BattlePlayer, BattleAllies, BattleEnemies, DialogueData, NarrationTextBox, BattleActionEffect);
         OptionState = new OptionState(BattleTimer, BattleOptions);
         CharacterActionState = new CharacterActionState(DialogueData, NarrationTextBox);
         ActionEffectState = new ActionEffectState(BattlePlayer, BattleAllies, BattleEnemies, Camera, DialogueData, NarrationTextBox, BattleActionEffect);
+        ActionEffectState2 = new ActionEffectState2(BattlePlayer, BattleAllies, BattleEnemies, Camera, DialogueData, NarrationTextBox, BattleActionEffect);
         KnockoutState = new KnockoutState(DialogueData, NarrationTextBox);
-        AfterRoundState = new AfterRoundState();
+        AfterRoundState = new AfterRoundState(BattleActionEffect);
         BattleOverState = new BattleOverState((PlayerHUD)BattlePlayer.CharacterHUD, DialogueData, NarrationTextBox);
     }
 
@@ -67,7 +77,7 @@ public class BattleSimulator : MonoBehaviour
         {
             Debug.LogWarning("WARNING: " + e.ToString());
         }
-        BattleSimStatus.AssignStatusGameObjects(BurnSymbol, FrozenSymbol, PetrifiedSymbol, PoisonSymbol, SleepSymbol, StunSymbol);
+        BattleSimStatus.AssignStatusGameObjects(BlindSymbol, BurnSymbol, CharmSymbol, ConfuseSymbol, DeafenSymbol, ExhaustionSymbol, FrozenSymbol, PetrifiedSymbol, PoisonSymbol, RestrainSymbol, SleepSymbol, StunSymbol);
         BattleStateMachine.StartState(InitializeState);
     }
 
@@ -87,6 +97,9 @@ public class BattleSimulator : MonoBehaviour
 
         switch (nextState)
         {
+            case "BEFORE ROUND STATE":
+                BattleStateMachine.ChangeState(BeforeRoundState);
+                break;
             case "OPTION STATE":
                 UpdateElixirPool();
                 BattleStateMachine.ChangeState(OptionState);
@@ -97,7 +110,8 @@ public class BattleSimulator : MonoBehaviour
             case "ACTION EFFECT STATE":
                 BattleStateMachine.ChangeState(ActionEffectState);
                 break;
-            case "ACTION EFFECT 2 STATE":
+            case "ACTION EFFECT STATE 2":
+                BattleStateMachine.ChangeState(ActionEffectState2);
                 break;
             case "KNOCK OUT STATE":
                 BattleStateMachine.ChangeState(KnockoutState);
@@ -112,7 +126,8 @@ public class BattleSimulator : MonoBehaviour
                 EndBattle();
                 break;
             default:
-                Debug.Log(nextState);
+                Debug.LogWarning(nextState + " not found. Moving to OPTION STATE...");
+                BattleStateMachine.ChangeState(OptionState);
                 break;
         }
     }
@@ -124,6 +139,9 @@ public class BattleSimulator : MonoBehaviour
 
         //Reset Elx and Stats
         Player.Instance().BaseStats.ResetStats();
+
+        foreach (Move move in Player.Instance().BattleMoves)
+            move?.ResetMove();
 
         //Reset Health if HP = 0
         if (Player.Instance().BaseStats.Hp == 0)

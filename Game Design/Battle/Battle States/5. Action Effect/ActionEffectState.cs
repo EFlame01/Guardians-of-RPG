@@ -23,6 +23,8 @@ public class ActionEffectState : BattleState
     private BattleCharacter[] _battleEnemies;
     private BattleActionEffect _battleActionEffect;
 
+    public static bool ActionEffectStateStarted = false;
+
     //Constructor
     public ActionEffectState(BattleCharacter battlePlayer, BattleCharacter[] battleAllies, BattleCharacter[] battleEnemies, Camera camera, DialogueData dialogueData, TextBox textBox, BattleActionEffect battleActionEffect)
     {
@@ -38,18 +40,25 @@ public class ActionEffectState : BattleState
 
     public override void Enter()
     {
-        _battleActionEffect.SetUpBattleActionEffect(BattleSimStatus.ChosenCharacter, _battlePlayer, _battleAllies, _battleEnemies, _camera, _narrationTextBox, _dialogueData, PrevState);
-        _battleActionEffect.StartActionEffect();
+        Debug.Log("Action Effect State...");
+        if (!ActionEffectStateStarted)
+        {
+            ActionEffectStateStarted = true;
+            _battleActionEffect.SetUpBattleActionEffect(BattleSimStatus.ChosenCharacter, _battlePlayer, _battleAllies, _battleEnemies, _camera, _narrationTextBox, _dialogueData, PrevState, CurrentState);
+            _battleActionEffect.StartActionEffect();
+        }
+        else
+            CheckStatus();
     }
 
     public override void Update()
     {
-        if(_battleActionEffect.StartedDialogue && DialogueManager.Instance.DialogueEnded)
+        if (_battleActionEffect.StartedDialogue && DialogueManager.Instance.DialogueEnded && _battleActionEffect.FinishedAction)
         {
             _battleActionEffect.StartedDialogue = false;
             CheckStatus();
         }
-        else if(_battleActionEffect.Target == null && _battleActionEffect.FinishedAction)
+        else if (_battleActionEffect.Target == null && _battleActionEffect.FinishedAction)
         {
             BattleSimStatus.ChosenCharacter.BattleStatus.SetTurnStatus(TurnStatus.NOTHING);
             CheckStatus();
@@ -63,32 +72,33 @@ public class ActionEffectState : BattleState
 
     private void CheckStatus()
     {
-        if(BattleSimStatus.RunSuccessful)
+        if (BattleSimStatus.RunSuccessful)
         {
             NextState = Units.END_BATTLE;
             return;
         }
+
         if (_battleActionEffect.Target.BaseStats.Hp == 0)
+            BattleSimStatus.AddToGraveYard(_battleActionEffect.Target);
+
+        if (_battleActionEffect.TargetQueue.Count == 0)
         {
-            BattleSimStatus.RoundKnockOuts.Add(_battleActionEffect.Target);
-            BattleSimStatus.Graveyard.Add(_battleActionEffect.Target);
-            if (_battleActionEffect.Target.Type.Equals("ALLY"))
-                BattleSimStatus.Allies.Remove(_battleActionEffect.Target);
-            else if (_battleActionEffect.Target.Type.Equals("ENEMY"))
-                BattleSimStatus.Enemies.Remove(_battleActionEffect.Target);
-        }
-        if(_battleActionEffect.TargetQueue.Count == 0)
-        {
-            if(BattleSimStatus.RoundKnockOuts.Count > 0)
+            if (BattleSimStatus.RoundKnockOuts.Count > 0)
             {
                 //if characters are knocked out, go to knock out state
+                // ActionEffectStateStarted = false;
                 NextState = Units.KNOCK_OUT_STATE;
+            }
+            else if (HasSecondaryEffect() && !PrevState.Equals(Units.ACTION_EFFECT_STATE_2))
+            {
+                NextState = Units.ACTION_EFFECT_STATE_2;
             }
             else
             {
                 BattleSimStatus.ChosenCharacter.BattleStatus.SetTurnStatus(TurnStatus.NOTHING);
-                //go to previous state
-                NextState = PrevState;
+                //go to character action state
+                // ActionEffectStateStarted = false;
+                NextState = Units.CHARACTER_ACTION_STATE;
             }
         }
         else
@@ -96,6 +106,12 @@ public class ActionEffectState : BattleState
             //perform the action on the next target
             _battleActionEffect.StartActionEffect();
         }
+    }
+
+    private bool HasSecondaryEffect()
+    {
+        Move move = BattleSimStatus.ChosenCharacter.BattleStatus.ChosenMove;
+        return move != null && move.SecondaryEffects != null && move.SecondaryEffects.Length > 0;
     }
 
 }

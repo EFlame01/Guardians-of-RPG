@@ -17,8 +17,8 @@ public class Poison : StatusCondition
     public Poison(int stage)
     {
         Name = "POISON";
-        AfflictionText = "poisoned";
-        WhenToImplement = "'AFTER ROUND'";
+        AfflictionText = "is poisoned!";
+        Condition = "AFTER ROUND";
         _poisonDmg = stage switch
         {
             1 => Units.POISON_DMG_STG_1,
@@ -54,7 +54,7 @@ public class Poison : StatusCondition
     {
         int oldHp = character.BaseStats.Hp;
         int newHp = oldHp - (int)(oldHp * _poisonDmg);
-        if(oldHp == newHp)
+        if (oldHp == newHp)
             newHp--;
         character.BaseStats.SetHp(newHp);
     }

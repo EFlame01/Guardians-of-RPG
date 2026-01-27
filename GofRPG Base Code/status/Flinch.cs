@@ -8,7 +8,7 @@ public class Flinch : StatusCondition
     {
         Name = "FLINCH";
         AfflictionText = "flinched!";
-        WhenToImplement = "'DURING ROUND'";
+        Condition = "DURING ROUND";
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
             {"BLIND", true},

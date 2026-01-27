@@ -15,8 +15,8 @@ public class Restrain : StatusCondition
     public Restrain(int restrainDuration)
     {
         Name = "RESTRAIN";
-        AfflictionText = "restrained";
-        WhenToImplement = "'DURING ROUND'";
+        AfflictionText = "is restrained!";
+        Condition = "DURING ROUND";
         _roundsLeft = Mathf.Clamp(restrainDuration, 1, 3);
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
@@ -39,7 +39,7 @@ public class Restrain : StatusCondition
 
     public override void ImplementStatusCondition(Character character)
     {
-        if(_roundsLeft <= 0)
+        if (_roundsLeft <= 0)
         {
             character.BaseStats.ChangeStat("SPD", 0);
             character.BattleStatus.SetCanEscape(true);

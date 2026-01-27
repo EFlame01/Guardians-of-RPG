@@ -30,7 +30,6 @@ public class Authentification : MonoBehaviour
             if (!AuthenticationService.Instance.IsSignedIn)
                 await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync(username, password);
 
-            Debug.Log(SIGN_UP_SUCCESSFUL);
             return SIGN_UP_SUCCESSFUL;
         }
         catch (AuthenticationException ex)
@@ -70,7 +69,6 @@ public class Authentification : MonoBehaviour
             if (!AuthenticationService.Instance.IsSignedIn)
                 await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(username, password);
 
-            Debug.Log(SIGN_IN_SUCCESSFUL);
             return SIGN_IN_SUCCESSFUL;
         }
         catch (AuthenticationException ex)

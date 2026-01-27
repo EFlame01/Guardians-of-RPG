@@ -45,6 +45,11 @@ public class CharacterHUD : MonoBehaviour
 
     public void AddStatusSymbol(GameObject symbol)
     {
-        GameObject.Instantiate(symbol, StatusConditionLayout);
+        foreach (Transform child in StatusConditionLayout)
+        {
+            if (child.gameObject.name.Contains(symbol.name))
+                return;
+        }
+        Instantiate(symbol, StatusConditionLayout);
     }
 }

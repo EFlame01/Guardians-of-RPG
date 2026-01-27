@@ -19,6 +19,7 @@ public class BattleCharacter : MonoBehaviour
     [SerializeField] protected SpriteRenderer CharacterSprite;
     [SerializeField] protected SpriteRenderer PlatformSprite;
     public CharacterHUD CharacterHUD;
+    public string MoveHitWith;
 
     /// <summary>
     /// Sets up the <c>CharacterHUD</c> and the position

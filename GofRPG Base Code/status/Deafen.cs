@@ -11,8 +11,8 @@ public class Deafen : StatusCondition
     public Deafen()
     {
         Name = "DEAFEN";
-        AfflictionText = "deafened";
-        WhenToImplement = "'NOW'";
+        AfflictionText = "is deafened!";
+        Condition = "NOW";
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
             {"BLIND", true},

@@ -8,9 +8,9 @@ using System.Collections.Generic;
 public abstract class StatusCondition
 {
     protected Dictionary<string, bool> _statusCompatabilityDictionary;
-    public string Name {get; protected set;}
-    public string AfflictionText {get; protected set;}
-    public string WhenToImplement {get; protected set;}
+    public string Name { get; protected set; }
+    public string AfflictionText { get; protected set; }
+    public string Condition { get; protected set; }
 
     ///<summary>
     /// Implements the status condition on the
@@ -47,12 +47,12 @@ public abstract class StatusCondition
             - STUN: BLIND, BURN, CHARM, CONFUSE, DEAFEN, EXHAUSTION, FLINCH, FRIGHTEN, FROZEN, PETRIFIED, POISON, RESTRAIN, SLEEP
         */
         Dictionary<string, StatusCondition> statusConditions = character.BattleStatus.StatusConditions;
-        foreach(var statusInfo in statusConditions)
+        foreach (var statusInfo in statusConditions)
         {
-            if(!statusInfo.Value._statusCompatabilityDictionary[statusCondition])
+            if (!statusInfo.Value._statusCompatabilityDictionary[statusCondition])
                 return false;
         }
-        
+
         return true;
     }
 
@@ -69,14 +69,14 @@ public abstract class StatusCondition
 
     public static StatusCondition GenerateStatusCondition
     (
-        string status, 
-        int charmDuration, 
+        string status,
+        int charmDuration,
         int confuseDuration,
         int rollAdvantage,
-        int freezeRate, 
-        int poisonRate, 
+        int freezeRate,
+        int poisonRate,
         int restrainDuration,
-        int sleepRate, 
+        int sleepRate,
         int stunRate
     )
     {

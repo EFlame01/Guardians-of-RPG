@@ -114,6 +114,7 @@ public static class Units
     public const string OPTION_STATE = "OPTION STATE";
     public const string CHARACTER_ACTION_STATE = "CHARACTER ACTION STATE";
     public const string ACTION_EFFECT_STATE = "ACTION EFFECT STATE";
+    public const string ACTION_EFFECT_STATE_2 = "ACTION EFFECT STATE 2";
     public const string KNOCK_OUT_STATE = "KNOCK OUT STATE";
     public const string AFTER_ROUND_STATE = "AFTER ROUND STATE";
     public const string BATTLE_OVER_STATE = "BATTLE OVER STATE";

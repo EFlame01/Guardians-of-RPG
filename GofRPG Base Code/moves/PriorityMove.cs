@@ -9,7 +9,7 @@ using UnityEngine;
 ///</summary>
 public class PriorityMove : Move
 {
-    public int PriorityLevel {get; private set;}
+    public int PriorityLevel { get; private set; }
     private int _stage;
     private int _flinchPercent;
 
@@ -50,12 +50,14 @@ public class PriorityMove : Move
         base.UseMove(user, target, epMultiplyer);
         int dmg = CalculateDamage(user, target, epMultiplyer);
         target.BaseStats.SetHp(target.BaseStats.Hp - dmg);
-        if(Flinched())
+        if (Flinched())
         {
-            if(target.BattleStatus.StatusConditions.ContainsKey("FLINCH"))
+            if (target.BattleStatus.StatusConditions.ContainsKey("FLINCH"))
                 target.BattleStatus.StatusConditions["FLINCH"] = new Flinch();
             else
                 target.BattleStatus.StatusConditions.Add("FLINCH", new Flinch());
+
+            target.BattleStatus.StatusConditions["FLINCH"].ImplementStatusCondition(target);
         }
         _stage++;
         SetFlinchPercent(_stage);
@@ -78,8 +80,7 @@ public class PriorityMove : Move
     /// <c>FALSE</c> if the user did not flinch.</returns>
     private bool Flinched()
     {
-        int percent = Random.Range(0, 100) + 1;
-        
+        int percent = Random.Range(0, 100);
         return _flinchPercent >= percent;
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,10 +28,16 @@ public class BattleSimStatus
     public static bool RunSuccessful;
     public static bool DidPlayerWin;
     public static bool GameOverScreenIfLost;
+    public static GameObject BlindSymbol;
     public static GameObject BurnSymbol;
+    public static GameObject CharmSymbol;
+    public static GameObject ConfuseSymbol;
+    public static GameObject DeafenSymbol;
+    public static GameObject ExhaustionSymbol;
     public static GameObject FrozenSymbol;
     public static GameObject PetrifiedSymbol;
     public static GameObject PoisonSymbol;
+    public static GameObject RestrainSymbol;
     public static GameObject SleepSymbol;
     public static GameObject StunSymbol;
 
@@ -104,25 +111,49 @@ public class BattleSimStatus
     /// <param name="poison">PoisonSymbol gameObject</param>
     /// <param name="sleep">SleepSymbol gameObject</param>
     /// <param name="stun">StunSumbol gameObject</param>
-    public static void AssignStatusGameObjects(GameObject burn, GameObject frozen, GameObject petrified, GameObject poison, GameObject sleep, GameObject stun)
+    public static void AssignStatusGameObjects(GameObject blind, GameObject burn, GameObject charm, GameObject confuse, GameObject deafen, GameObject exhausion, GameObject frozen, GameObject petrified, GameObject poison, GameObject restrain, GameObject sleep, GameObject stun)
     {
+        BlindSymbol = blind;
         BurnSymbol = burn;
+        CharmSymbol = charm;
+        ConfuseSymbol = confuse;
+        DeafenSymbol = deafen;
         FrozenSymbol = frozen;
         PetrifiedSymbol = petrified;
         PoisonSymbol = poison;
+        RestrainSymbol = restrain;
         SleepSymbol = sleep;
         StunSymbol = stun;
     }
 
-    public static void OrderQueueForAfterRound()
+    public static void OrderQueueForAfterRound(Queue<Character> queue)
     {
         AfterRoundStarted = true;
-        BattleQueue.Clear();
+        queue.Clear();
         foreach (Character enemy in Enemies)
-            BattleQueue.Enqueue(enemy);
+        {
+            if (HasAfterRoundCondition(enemy))
+                queue.Enqueue(enemy);
+        }
         foreach (Character ally in Allies)
-            BattleQueue.Enqueue(ally);
-        BattleQueue.Enqueue(Player.Instance());
+        {
+            if (HasAfterRoundCondition(ally))
+                queue.Enqueue(ally);
+        }
+        if (HasAfterRoundCondition(Player.Instance()))
+            queue.Enqueue(Player.Instance());
+    }
+
+    private static bool HasAfterRoundCondition(Character c)
+    {
+        //TODO: add another condition for if they have ability that activates after round
+        foreach (StatusCondition statusCondition in c.BattleStatus.StatusConditions.Values)
+        {
+            if (statusCondition.Condition.Equals("AFTER ROUND"))
+                return true;
+        }
+
+        return false;
     }
 
     public static void CheckGraveyardStatus(Character character)
@@ -136,5 +167,57 @@ public class BattleSimStatus
             Allies.Add(character);
         else if (character.Type.Equals("ENEMY") && !Enemies.Contains(character))
             Enemies.Add(character);
+    }
+
+    public static BattleCharacter GetBattleCharacter(Character character, BattleCharacter battlePlayer, BattleCharacter[] allies, BattleCharacter[] enemies)
+    {
+        List<BattleCharacter> battleCharacters = new()
+        {
+            battlePlayer
+        };
+        battleCharacters.AddRange(allies);
+        battleCharacters.AddRange(enemies);
+
+        foreach (BattleCharacter c in battleCharacters)
+        {
+            try
+            {
+                if (c.Character != null && c.Character.Equals(character))
+                    return c;
+            }
+            catch (Exception e)
+            {
+                if (c == null)
+                    Debug.LogWarning("BattleCharacter is null..." + e.Message);
+                else if (c.Character == null)
+                    Debug.LogWarning("Character object inside BattleCharacter is null..." + e.Message);
+            }
+        }
+        return null;
+    }
+
+    public static GameObject ReturnStatusConditionSymbol(string name)
+    {
+        return name switch
+        {
+            "BURN" => BurnSymbol,
+            "POISON" => PoisonSymbol,
+            "STUN" => StunSymbol,
+            "SLEEP" => SleepSymbol,
+            "PETRIFIED" => PetrifiedSymbol,
+            "FROZEN" => FrozenSymbol,
+            _ => null,
+        };
+
+    }
+
+    public static void AddToGraveYard(Character character)
+    {
+        RoundKnockOuts.Add(character);
+        Graveyard.Add(character);
+        if (character.Type.Equals("ALLY"))
+            Allies.Remove(character);
+        else if (character.Type.Equals("ENEMY"))
+            Enemies.Remove(character);
     }
 }

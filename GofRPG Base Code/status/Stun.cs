@@ -19,7 +19,8 @@ public class Stun : StatusCondition
     public Stun(int stunProbability)
     {
         Name = "STUN";
-
+        AfflictionText = "is stunned!";
+        Condition = "DURING ROUND";
         _stunProbability = stunProbability switch
         {
             1 => Units.STUN_PROB_1,
@@ -56,7 +57,7 @@ public class Stun : StatusCondition
     public override void ImplementStatusCondition(Character character)
     {
         int percent = Random.Range(0, 100);
-        if(_stunProbability >= percent)
+        if (_stunProbability >= percent)
         {
             character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
             character.BattleStatus.SetTurnStatusTag(character.Name + " is stunned!");

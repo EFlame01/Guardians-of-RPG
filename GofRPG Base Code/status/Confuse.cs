@@ -15,8 +15,8 @@ public class Confuse : StatusCondition
     public Confuse(int confuseDuration)
     {
         Name = "CONFUSE";
-        AfflictionText = "confused";
-        WhenToImplement = "'DURING ROUND'";
+        AfflictionText = "is confused!";
+        Condition = "DURING ROUND";
         _roundsLeft = Mathf.Clamp(confuseDuration, 1, 5);
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
@@ -39,27 +39,28 @@ public class Confuse : StatusCondition
 
     public override void ImplementStatusCondition(Character character)
     {
-        if(_roundsLeft <= 0)
+        if (_roundsLeft <= 0)
         {
             RemoveStatusCondition(character, Name);
             return;
         }
 
-        if(Units.CONFUSION_RATE > Random.Range(1, 100))
+        if (Units.CONFUSION_RATE > Random.Range(1, 100))
         {
-            int atk = (int)(character.BaseStats.FullHp * Units.CONFUSION_HIT);
-            int newHp = character.BaseStats.Hp - atk;
-            string pronoun = character.Sex switch{
+            string pronoun = character.Sex switch
+            {
                 "MALE" => "himself",
                 "FEMALE" => "herself",
                 "MALEFE" => "themself",
                 _ => "itself",
             };
-            character.BaseStats.SetHp(newHp);
+            character.BattleStatus.ChosenMove = Units.BASE_ATTACK;
+            character.BattleStatus.ChosenTargets.Clear();
+            character.BattleStatus.ChosenTargets.Add(character);
+            character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
+            character.BattleStatus.SetTurnStatusTag(character.Name + " hits" + pronoun + " in confusion!");
         }
-        
-        character.BattleStatus.SetTurnStatus(TurnStatus.CANNOT_MOVE);
-        character.BattleStatus.SetTurnStatusTag(character.Name + " is confused!");
+
         _roundsLeft--;
     }
 }

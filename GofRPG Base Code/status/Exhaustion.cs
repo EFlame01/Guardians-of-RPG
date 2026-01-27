@@ -18,8 +18,8 @@ public class Exhaustion : StatusCondition
     public Exhaustion()
     {
         Name = "EXHAUSTION";
-        AfflictionText = "exhausted";
-        WhenToImplement = "'NOW'";
+        AfflictionText = "is exhausted!";
+        Condition = "NOW";
         _statusCompatabilityDictionary = new Dictionary<string, bool>()
         {
             {"BLIND", true},
@@ -43,7 +43,7 @@ public class Exhaustion : StatusCondition
     {
         character.BattleStatus.SetExhaustionLevel();
 
-        switch(character.BattleStatus.ExhaustionLevel)
+        switch (character.BattleStatus.ExhaustionLevel)
         {
             case Units.EXHAUSTION_LEVEL_1:
                 character.BattleStatus.SetRollAdvantage(-2);
