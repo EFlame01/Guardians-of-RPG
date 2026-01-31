@@ -52,12 +52,7 @@ public class PriorityMove : Move
         target.BaseStats.SetHp(target.BaseStats.Hp - dmg);
         if (Flinched())
         {
-            if (target.BattleStatus.StatusConditions.ContainsKey("FLINCH"))
-                target.BattleStatus.StatusConditions["FLINCH"] = new Flinch();
-            else
-                target.BattleStatus.StatusConditions.Add("FLINCH", new Flinch());
-
-            target.BattleStatus.StatusConditions["FLINCH"].ImplementStatusCondition(target);
+            new Flinch().ImplementStatusCondition(target);
         }
         _stage++;
         SetFlinchPercent(_stage);

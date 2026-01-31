@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -23,7 +21,6 @@ public class AfterRoundState : BattleState
 
     public override void Enter()
     {
-        Debug.Log("After Round State...");
         if (!BattleSimStatus.AfterRoundStarted)
             BattleSimStatus.OrderQueueForAfterRound(_battleActionEffect.TargetQueue);
 
@@ -70,7 +67,7 @@ public class AfterRoundState : BattleState
 
     private void CheckStatus()
     {
-        if (_battleActionEffect.Target.BaseStats.Hp <= 0)
+        if (_battleActionEffect.Target != null && _battleActionEffect.Target.BaseStats.Hp <= 0)
             BattleSimStatus.AddToGraveYard(_battleActionEffect.Target);
 
         if (_battleActionEffect.TargetQueue.Count <= 0)

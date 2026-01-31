@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-using Ink.Runtime;
 
 /// <summary>
 /// ActionEffectState is a class that extends the 
@@ -40,7 +38,6 @@ public class ActionEffectState : BattleState
 
     public override void Enter()
     {
-        Debug.Log("Action Effect State...");
         if (!ActionEffectStateStarted)
         {
             ActionEffectStateStarted = true;

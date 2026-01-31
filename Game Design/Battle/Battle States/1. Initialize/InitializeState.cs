@@ -40,17 +40,11 @@ public class InitializeState : BattleState, IDialogue
 
     public override void Enter()
     {
-        Debug.Log("Initialize State...");
         InitializeBattleSimStatus();
     }
 
     public override void Update()
     {
-        // if (GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING) && InitializeText != null && !startedDialogue)
-        // {
-        //     startedDialogue = true;
-        //     StartDialogue();
-        // }
         if (startedDialogue && DialogueManager.Instance.DialogueEnded)
             NextState = Units.BEFORE_ROUND_STATE;
     }

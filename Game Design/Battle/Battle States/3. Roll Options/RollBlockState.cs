@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -31,12 +30,12 @@ public class RollBlockState : MonoBehaviour
 
     private int GetBlockRollNumber()
     {
-        return 0;   
+        return 0;
     }
 
     public void OnBlockButtonPressed(int val)
     {
-        switch(val)
+        switch (val)
         {
             case 0:
                 //not blocking

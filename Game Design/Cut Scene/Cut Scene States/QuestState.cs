@@ -119,7 +119,6 @@ public class QuestState : CutSceneState, IDialogue
         bool questAssigned = QuestManager.QuestDictionary.ContainsKey(questID);
         if (questAssigned)
         {
-            Debug.Log("QuestID " + questID + " does exist. Assigning to player");
             Quest quest = QuestManager.QuestDictionary[questID];
             _dialogueData = QuestAssignDialogueData;
             DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
@@ -128,7 +127,6 @@ public class QuestState : CutSceneState, IDialogue
         }
         else
         {
-            Debug.LogWarning("WARNING: QuestID " + questID + " does not exist. Could not be assigned to player");
             Exit();
         }
 

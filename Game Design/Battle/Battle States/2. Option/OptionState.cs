@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,6 +41,7 @@ public class OptionState : BattleState
     {
         if (BattleSimStatus.EndPlayerOption)
         {
+            //TODO: Add this once Roll Mechanic is implemented
             // Player player = Player.Instance();
 
             // if(player.BattleStatus.RollInitiative)

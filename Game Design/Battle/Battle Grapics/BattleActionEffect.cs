@@ -235,31 +235,30 @@ public class BattleActionEffect : MonoBehaviour
         DoneWithSecondaryEffects = false;
         foreach (Effect effect in move.SecondaryEffects)
         {
-            Debug.Log(" - testing effect for - " + effect.Name);
+            // Debug.Log(" - testing effect for - " + effect.Name);
             SetTargetBasedOnEffectTarget(effect.Target, TargetQueue);
-            if (TargetQueue.Count == 0)
-            {
-                Debug.Log(" - no more targets for effects");
-                Target = null;
-                yield return null;
-            }
-            else
+            while (TargetQueue.Count > 0)
             {
                 DoneWithSecondaryEffects = false;
                 Target = TargetQueue.Dequeue();
                 moveEffects = GetMoveEffects(Target);
                 if (SecondaryEffectSuccessful(move, effect))
                 {
-                    Debug.Log(" - implementing effect on - " + Target.Name);
+                    // Debug.Log(" - implementing effect on - " + Target.Name);
                     yield return EffectAnimation(effect.Type.ToString());
                     yield return SecondaryEffect(effect);
                     yield return new WaitForSeconds(0.25f);
                     DisplayText();
+                    while (!DialogueManager.Instance.DialogueEnded)
+                        yield return null;
                     _effectText.Clear();
                 }
-                else
-                    Debug.Log(" - effect did not activate");
+                // else
+                // Debug.Log(" - effect did not activate");
             }
+            // Debug.Log(" - no more targets for effects");
+            Target = null;
+            yield return null;
         }
 
         Debug.Log(" - done with secondary effects");
@@ -392,8 +391,7 @@ public class BattleActionEffect : MonoBehaviour
 
     private IEnumerator EffectAnimation(string afterEffect)
     {
-        //TODO: Create animation for effect
-        Debug.Log(" - " + afterEffect + " animation");
+        //TODO: Create animation for effect        Debug.Log(" - " + afterEffect + " animation");
         yield return new WaitForSeconds(0.25f);
         switch (afterEffect)
         {

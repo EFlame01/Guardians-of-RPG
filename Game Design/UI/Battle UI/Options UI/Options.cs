@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Options is the class that holds all of
@@ -15,9 +16,16 @@ public class Options : MonoBehaviour
     public GameObject InitiativeOption;
     public BattleOptions BattleOptions;
     public Animator Animator;
+    public Button NextButton;
 
     //public variable
     public string Option;
+
+    public void Update()
+    {
+        Player player = Player.Instance();
+        NextButton.interactable = player.BattleStatus.ChosenMove != null || player.BattleStatus.ChosenItem != null || player.BattleStatus.ChosenTargets.Count > 0 ? true : false;
+    }
 
     /// <summary>
     /// Based on the option the player is in, 

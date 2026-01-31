@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RollInitiativeState : MonoBehaviour
@@ -15,6 +14,6 @@ public class RollInitiativeState : MonoBehaviour
 
     private int GetInitiativeRollNumber()
     {
-        return 0;   
+        return 0;
     }
 }

@@ -28,7 +28,6 @@ public class ActionEffectState2 : BattleState
 
     public override void Enter()
     {
-        Debug.Log("Action Effect State 2...");
         _battleActionEffect.SetUpSecondaryActionEffect(BattleSimStatus.ChosenCharacter, _battlePlayer, _battleAllies, _battleEnemies, _camera, _narrationTextBox, _dialogueData, PrevState, CurrentState);
         _battleActionEffect.StartSecondaryEffect();
 

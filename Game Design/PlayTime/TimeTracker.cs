@@ -26,12 +26,10 @@ public class TimeTracker
     public void StartTime()
     {
         _sessionStartTime = Time.realtimeSinceStartup;
-        Debug.Log("Starting Time\n" + TotalSavedPlayTime);
     }
 
     public string GetPlayTime()
     {
-        Debug.Log("Getting Play Time\n" + TotalSavedPlayTime);
         TimeSpan timeSpan = TimeSpan.FromSeconds(TotalSavedPlayTime);
         string time = string.Format("{0:00}:{1:00}:{2:00}", (int)timeSpan.TotalHours, timeSpan.Minutes, timeSpan.Seconds);
         return time;

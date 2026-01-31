@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
 
@@ -35,7 +33,6 @@ public class CharacterActionState : BattleState, IDialogue
 
     public override void Enter()
     {
-        Debug.Log("Character Action State...");
         //Determine order of operations if the round just started
         if (!BattleSimStatus.RoundStarted)
             DetermineOrderForCharacterAction();
