@@ -23,7 +23,7 @@ public class TextBox : MonoBehaviour
     public Scrollbar ScrollBar;
     [SerializeField] protected Animator Animator;
     [SerializeField] protected bool PlayOnStart;
-    [SerializeField] protected bool DestroyTextBox = true;
+    [SerializeField] public bool DestroyTextBox = true;
     [SerializeField] protected InputActionReference Select;
 
     public bool IsClosed = true; //{ get; private set; }

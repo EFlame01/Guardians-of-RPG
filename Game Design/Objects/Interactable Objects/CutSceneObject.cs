@@ -17,6 +17,7 @@ public class CutSceneObject : InteractableObject
     {
         if (CanInteract && !_startedCutScene)
         {
+            CanInteract = false;
             _startedCutScene = true;
             CutScene.StartCutScene();
         }

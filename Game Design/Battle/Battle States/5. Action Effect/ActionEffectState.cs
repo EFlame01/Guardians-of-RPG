@@ -75,8 +75,8 @@ public class ActionEffectState : BattleState
             return;
         }
 
-        if (_battleActionEffect.Target.BaseStats.Hp == 0)
-            BattleSimStatus.AddToGraveYard(_battleActionEffect.Target);
+        // if (_battleActionEffect.Target.BaseStats.Hp == 0)
+        //     BattleSimStatus.AddToGraveYard(_battleActionEffect.Target);
 
         if (_battleActionEffect.TargetQueue.Count == 0)
         {

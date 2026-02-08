@@ -100,13 +100,11 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                 try
                 {
                     CurrentStory = new Story(_dialogueData.InkJSON.text);
-                    if (CurrentStory == null)
+                    if (CurrentStory != null)
                     {
-                        EndDialogue();
-                        return;
+                        CurrentStory.onError += HandleStoryError;
+                        SetUpDialogueVariables();
                     }
-                    CurrentStory.onError += HandleStoryError;
-                    SetUpDialogueVariables();
                 }
                 catch (Exception e)
                 {
@@ -149,7 +147,10 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         _textBoxType = (int)CurrentStory.variablesState["textBoxType"];
 
         if (_originalText == null || _originalText.Length <= 0)
+        {
+            Debug.LogWarning($"Original text is not present... Ending Dialogue: {_originalText}");
             EndDialogue();
+        }
         else
         {
             switch (_textBoxType)
@@ -372,11 +373,10 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private IEnumerator DeactivateTextBox(TextBox textBox)
     {
-        if (textBox != null)
+        if (textBox != null && !textBox.DestroyTextBox)
         {
             while (!textBox.ClosedTextBox)
                 yield return null;
-
             try
             {
                 textBox.IsClosed = true;
@@ -488,6 +488,9 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         {
             Debug.LogWarning($"Ink Warning: {message}");
         }
+        else
+            Debug.Log($"Something happened with Ink that was not considered an error or warning {message}");
+
         EndDialogue();
     }
 

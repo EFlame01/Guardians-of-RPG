@@ -56,7 +56,7 @@ public class ActionEffectState2 : BattleState
         // TextBoxBattle.KeepTextBoxOpened = false;
         // TextBoxBattle.EndNarrationNow = true;
 
-        if (_battleActionEffect.Target.BaseStats.Hp == 0)
+        if (_battleActionEffect.Target != null && _battleActionEffect.Target.BaseStats.Hp == 0)
             BattleSimStatus.AddToGraveYard(_battleActionEffect.Target);
 
         if (_battleActionEffect.TargetQueue.Count == 0)

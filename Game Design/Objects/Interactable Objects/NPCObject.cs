@@ -87,8 +87,9 @@ public class NPCObject : InteractableObject, IDialogue
     {
         if (CanInteract && !TalkedToPlayer)
         {
-            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+            CanInteract = false;
             TalkedToPlayer = true;
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             if (isSitting)
                 StartDialogue();
             else
@@ -109,8 +110,8 @@ public class NPCObject : InteractableObject, IDialogue
         //      Find out where PlayerState is changing to NOT_MOVING
         //      Before the NPC talks to the player
         GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-        while (!DialogueManager.Instance.DialogueEnded && DialogueManager.Instance.TextBox)
-            yield return null;
+        yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
+        Debug.Log("Dialogue Finished");
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }
 
@@ -134,7 +135,8 @@ public class NPCObject : InteractableObject, IDialogue
         textBoxCharacter.Sprite = _characterSprite;
         textBoxCharacter.CharacterName = _characterName;
         textBoxCharacter.SetUpCharacterTextBox();
-        textBoxCharacter.OpenTextBox();
+        // textBoxCharacter.OpenTextBox();
+        Debug.Log("Starting Narration");
         textBoxCharacter.StartNarration(_dialogueData);
         CheckForInteraction = true;
     }

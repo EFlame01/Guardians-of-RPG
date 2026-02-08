@@ -37,7 +37,6 @@ public class TimeTracker
 
     public void EndTime()
     {
-        Debug.Log("Ending Time");
         double currentSessionDuration = Time.realtimeSinceStartup - _sessionStartTime;
         _sessionStartTime = Time.realtimeSinceStartup;
         TotalSavedPlayTime += currentSessionDuration;

@@ -134,8 +134,6 @@ public class MoveSetMenu : MenuState
         if (chosenMove == null)
             return;
 
-        Debug.Log(chosenMove.Name + " selected");
-
         moveNameText.text = chosenMove.Name;
         moveTypeText.text = chosenMove.Type.ToString();
         movePowerText.text = chosenMove.Power.ToString();

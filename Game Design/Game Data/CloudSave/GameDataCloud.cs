@@ -31,9 +31,9 @@ public class GameDataCloud
     public GameDataCloud SaveGameData()
     {
         //Updating Player Data
-        Debug.Log("Saving Player Data");
+        // Debug.Log("Saving Player Data");
 
-        PlayerDataCloud playerData = new PlayerDataCloud();
+        PlayerDataCloud playerData = new();
         playerData.PlayerSceneName = SceneManager.GetActiveScene().name;
         TimeTracker.Instance().EndTime();
         playerData.TotalSavedPlayTime = TimeTracker.Instance().TotalSavedPlayTime;

@@ -19,17 +19,16 @@ public class CloudSave : MonoBehaviour
 
     public async void CreateData(string username, string password)
     {
-        GameData.Username = username;
-        GameData.Password = password;
-
         //after signing up with username and password, create game data
         var gameData = new Dictionary<string, object>
         {
-            {GameData.Username, GameData.SaveGameData()}
+            {username, GameData.SaveGameData()}
         };
 
         //after creating game data, add data to cloud
         await CloudSaveService.Instance.Data.Player.SaveAsync(gameData);
+        GameData.Username = username;
+        GameData.Password = password;
     }
 
     public async void SaveData()
@@ -39,7 +38,6 @@ public class CloudSave : MonoBehaviour
             {GameData.Username, GameData.SaveGameData()}
         };
         await CloudSaveService.Instance.Data.Player.SaveAsync(gameData);
-        Debug.Log("Saved data...");
     }
 
     public async void LoadData(string username)
@@ -79,10 +77,7 @@ public class CloudSave : MonoBehaviour
     public void ResetData()
     {
         if (GameData.Username != null && GameData.Password != null)
-        {
             CreateData(GameData.Username, GameData.Password);
-            Debug.Log("Reset PlayerData: " + GameData.Username);
-        }
         else
             Debug.LogWarning("No PlayerData to reset...");
 
