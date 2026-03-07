@@ -32,7 +32,7 @@ public class EffectMaker : Singleton<EffectMaker>
         string[] mainAttributes;
         string[] additionalAttributes;
 
-        string[] effects = DataRetriever.Instance.SplitDataBasedOnID(DataRetriever.Instance.Database[EFFECT_INDEX], name);
+        string[] effects = DataRetriever.Instance.SplitDataBasedOnName(DataRetriever.Instance.Database[EFFECT_INDEX], name);
 
         foreach (string effectAttributes in effects)
         {

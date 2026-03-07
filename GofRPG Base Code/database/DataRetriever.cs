@@ -93,13 +93,13 @@ public class DataRetriever : Singleton<DataRetriever>
         return null;
     }
 
-    public string[] SplitDataBasedOnID(string data, string id)
+    public string[] SplitDataBasedOnName(string data, string id)
     {
         List<string> rows = new();
 
         foreach (string row in data.Split('\n'))
         {
-            if (row.Contains(id + ","))
+            if (row.Contains("," + id + ","))
                 rows.Add(row);
         }
 
