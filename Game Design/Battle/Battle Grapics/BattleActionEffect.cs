@@ -433,6 +433,8 @@ public class BattleActionEffect : MonoBehaviour
         _user.BattleStatus.ChosenMove.UseMove(_user, Target, 1);
         EnableAllCharacterHUD(true);
         // UpdateBattleCharacter(_user);
+        if (Target.BaseStats.Hp <= 0)
+            BattleSimStatus.AddToGraveYard(Target);
         UpdateBattleCharacter(_user, null, null);
         UpdateBattleCharacter(Target, _user.BattleStatus.ChosenMove.Name, null);
         SetMoveEffectString();
