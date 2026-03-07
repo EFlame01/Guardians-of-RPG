@@ -14,6 +14,7 @@ using Ink.Runtime;
 public class DialogueManager : PersistentSingleton<DialogueManager>
 {
     //Serialized variables
+    public bool DestroyOnLoad;
     public TextBox TextBox;
     public TextBoxConfirmation ConfirmationTextBox;
     public TextBoxDecision DecisionTextBox;
@@ -39,6 +40,22 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     private string _itemType = "";
     private int _number = 0;
     private bool _clickedAlready = false;
+
+    //Override method added for Intro scene
+    //  that may have additional functionality
+    //  when using the DialogueManager
+    protected override void Awake()
+    {
+        if (!DestroyOnLoad)
+        {
+            base.Awake();
+        }
+        else
+        {
+            if (Instance == null)
+                Instance = this;
+        }
+    }
 
     //Getters and Setters
     public void SetTextBox(TextBox textBox)
@@ -102,6 +119,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     CurrentStory = new Story(_dialogueData.InkJSON.text);
                     if (CurrentStory != null)
                     {
+                        CurrentStory.ResetState();
                         CurrentStory.onError += HandleStoryError;
                         SetUpDialogueVariables();
                     }

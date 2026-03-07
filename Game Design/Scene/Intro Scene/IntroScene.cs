@@ -8,7 +8,7 @@ public class IntroScene : MonoBehaviour
     [SerializeField] private DialogueData introDialogueData;
     [SerializeField] private InputActionReference Select;
     [SerializeField] private GameObject[] introUIs;
-    [SerializeField] private TextBox[] textBoxes;
+    // [SerializeField] private TextBox[] textBoxes;
 
     //private variables
     public static Story CurrentStory { get; private set; }
@@ -36,8 +36,8 @@ public class IntroScene : MonoBehaviour
     {
         if (Select.action.ReadValue<float>() <= 0f)
             return;
-        if (AreTextBoxesClosed())
-            return;
+        // if (AreTextBoxesClosed())
+        //     return;
         if (GameManager.Instance.EnableNarrationInputs)
             OnNextButtonPressed();
     }
@@ -152,16 +152,16 @@ public class IntroScene : MonoBehaviour
         CurrentStory.variablesState["stateStatus"] = "next";
     }
 
-    private bool AreTextBoxesClosed()
-    {
-        foreach (TextBox textBox in textBoxes)
-        {
-            if (textBox != null && (!textBox.IsClosed || textBox.gameObject.activeSelf))
-                return false;
-        }
+    // private bool AreTextBoxesClosed()
+    // {
+    //     foreach (TextBox textBox in textBoxes)
+    //     {
+    //         if (textBox != null && (!textBox.IsClosed || textBox.gameObject.activeSelf))
+    //             return false;
+    //     }
 
-        return true;
-    }
+    //     return true;
+    // }
 
     private void SetIntroUI(int uiIndex)
     {
