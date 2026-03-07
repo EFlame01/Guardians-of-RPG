@@ -20,6 +20,8 @@ public class CloudSave : MonoBehaviour
     public async void CreateData(string username, string password)
     {
         //after signing up with username and password, create game data
+        GameData.Username = username;
+        GameData.Password = password;
         var gameData = new Dictionary<string, object>
         {
             {username, GameData.SaveGameData()}
@@ -27,8 +29,8 @@ public class CloudSave : MonoBehaviour
 
         //after creating game data, add data to cloud
         await CloudSaveService.Instance.Data.Player.SaveAsync(gameData);
-        GameData.Username = username;
-        GameData.Password = password;
+        // GameData.Username = username;
+        // GameData.Password = password;
     }
 
     public async void SaveData()
@@ -51,6 +53,8 @@ public class CloudSave : MonoBehaviour
             if (GameData.NewUser)
                 GameData.NewUser = false;
         }
+        else
+            Debug.LogError($"ERROR: Username {username} could not be found.");
     }
 
     [System.Obsolete]
