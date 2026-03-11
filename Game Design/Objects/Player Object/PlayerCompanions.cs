@@ -11,7 +11,7 @@ using UnityEngine;
 public class PlayerCompanions : PersistentSingleton<PlayerCompanions>
 {
     //public methods
-    public BattleCharacterData[] CompanionData { get; private set; }
+    [SerializeField] public BattleCharacterData[] CompanionData;
 
     public void Start()
     {

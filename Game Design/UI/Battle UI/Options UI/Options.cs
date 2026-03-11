@@ -101,7 +101,7 @@ public class Options : MonoBehaviour
             case "MOVE":
                 //if target is enemy and there is one enemy, skip target.
                 //if skipping target and out of initiatives, end turn
-                if (BattleSimStatus.Enemies.Count == 1 && (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ENEMY) || player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALL_ENEMIES)))
+                if (BattleSimStatus.Enemies.Count == 1 && player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ENEMY))
                 {
                     foreach (Character enemy in BattleSimStatus.Enemies)
                     {
@@ -116,6 +116,72 @@ public class Options : MonoBehaviour
                     //     SetOption("INITIATIVE");
                     // else
                     //     EndTurn();
+                    EndTurn();
+                }
+                else if (BattleSimStatus.Allies.Count == 1 && player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALLY))
+                {
+                    foreach (Character enemy in BattleSimStatus.Enemies)
+                    {
+                        if (enemy != null)
+                        {
+                            player.BattleStatus.ChosenTargets.Clear();
+                            player.BattleStatus.ChosenTargets.Add(enemy);
+                            break;
+                        }
+                    }
+                    // if(player.BattleStatus.InitiativeCount > 0)
+                    //     SetOption("INITIATIVE");
+                    // else
+                    //     EndTurn();
+                    EndTurn();
+                }
+                else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALL_ENEMIES))
+                {
+                    player.BattleStatus.ChosenTargets.Clear();
+                    foreach (Character enemy in BattleSimStatus.Enemies)
+                    {
+                        if (enemy != null)
+                            player.BattleStatus.ChosenTargets.Add(enemy);
+                    }
+                    EndTurn();
+                }
+                else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALL_ALLIES))
+                {
+                    player.BattleStatus.ChosenTargets.Clear();
+                    foreach (Character ally in BattleSimStatus.Allies)
+                    {
+                        if (ally != null)
+                            player.BattleStatus.ChosenTargets.Add(ally);
+                    }
+                    EndTurn();
+                }
+                else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALLY_SIDE))
+                {
+                    player.BattleStatus.ChosenTargets.Clear();
+                    player.BattleStatus.ChosenTargets.Add(player);
+                    foreach (Character ally in BattleSimStatus.Allies)
+                    {
+                        if (ally != null)
+                            player.BattleStatus.ChosenTargets.Add(ally);
+                    }
+
+                    EndTurn();
+                }
+                else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.EVERYONE))
+                {
+                    player.BattleStatus.ChosenTargets.Clear();
+                    foreach (Character enemy in BattleSimStatus.Enemies)
+                    {
+                        if (enemy != null)
+                            player.BattleStatus.ChosenTargets.Add(enemy);
+                    }
+
+                    foreach (Character ally in BattleSimStatus.Allies)
+                    {
+                        if (ally != null)
+                            player.BattleStatus.ChosenTargets.Add(ally);
+                    }
+
                     EndTurn();
                 }
                 else

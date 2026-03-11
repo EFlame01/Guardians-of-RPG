@@ -175,6 +175,7 @@ public class NPCCompanion : MonoBehaviour
         {
             charPos.ClearWayPoints();
             targetPos.ClearWayPoints();
+            lastIndex = 0;
             return true;
         }
         return false;
@@ -193,6 +194,9 @@ public class NPCCompanion : MonoBehaviour
             return false;
         if (StoryFlagManager.FlagDictionary[cutSceneFlag] == null)
             return false;
+
+        //If the cut scene the npc is supposed to move after hasn't happened, 
+        //assume they are in the cut scene
         if (StoryFlagManager.FlagDictionary[cutSceneFlag].Value == false)
             return true;
 

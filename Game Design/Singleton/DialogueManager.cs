@@ -116,6 +116,11 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             {
                 try
                 {
+                    if (_dialogueData == null)
+                    {
+                        EndDialogue();
+                        return;
+                    }
                     CurrentStory = new Story(_dialogueData.InkJSON.text);
                     if (CurrentStory != null)
                     {

@@ -27,12 +27,12 @@ public class Move
     ///<param name="target"> the target for the move.</param>
     public virtual void UseMove(Character user, Character target)
     {
-        user.BaseStats.SetElx(user.BaseStats.Elx - (int)EP);
+        // user.BaseStats.SetElx(user.BaseStats.Elx - (int)EP);
         return;
     }
     public virtual void UseMove(Character user, Character target, double epMultiplyer)
     {
-        user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplyer));
+        // user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplyer));
         return;
     }
 
@@ -151,5 +151,10 @@ public class Move
             _ => MoveTarget.USER
         };
 
+    }
+
+    public void UpdateElixir(Character user, double epMultiplyer)
+    {
+        user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplyer));
     }
 }

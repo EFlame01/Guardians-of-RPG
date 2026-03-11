@@ -84,9 +84,9 @@ public class InitializeState : BattleState, IDialogue
                 battleCharacter.AnimationPosition = battleCharacterData.CharacterAnimationPosition;
             }
 
-            if (battleCharacter.Character.Type.Equals("ALLY"))
+            if (battleCharacter.Character != null && battleCharacter.Character.Type.Equals("ALLY"))
                 BattleSimStatus.Allies.Add(battleCharacter.Character);
-            else if (battleCharacter.Character.Type.Equals("ENEMY"))
+            else if (battleCharacter.Character != null && battleCharacter.Character.Type.Equals("ENEMY"))
                 BattleSimStatus.Enemies.Add(battleCharacter.Character);
 
             battleCharacter.RuntimeAnimatorController = battleCharacterData.CharacterAnimator;

@@ -204,7 +204,6 @@ public class BattleActionEffect : MonoBehaviour
                         if (_firstTimeMove)
                         {
                             yield return ActionAnimation();
-                            _firstTimeMove = false;
                         }
                         yield return EffectAnimation("FLASH");
                         yield return MoveEffect();
@@ -431,6 +430,11 @@ public class BattleActionEffect : MonoBehaviour
     private IEnumerator MoveEffect()
     {
         _user.BattleStatus.ChosenMove.UseMove(_user, Target, 1);
+        if (_firstTimeMove)
+        {
+            _user.BattleStatus.ChosenMove.UpdateElixir(_user, 1);
+            _firstTimeMove = false;
+        }
         EnableAllCharacterHUD(true);
         // UpdateBattleCharacter(_user);
         if (Target.BaseStats.Hp <= 0)
@@ -654,9 +658,9 @@ public class BattleActionEffect : MonoBehaviour
                     _effectText.Add(Target.Name + " is already knocked out!");
                     return false;
                 }
-                if (Target.BattleStatus.ProtectionStatus != "NONE")
+                if (Target.BattleStatus.ProtectionStatus != "NONE" && !BattleSimStatus.OnSameSide(Target, _user))
                 {
-                    _effectText.Add(Target.Name + " protected themselves!");
+                    _effectText.Add(Target.Name + " was protected!");
                     return false;
                 }
             }

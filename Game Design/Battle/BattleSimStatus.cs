@@ -220,4 +220,18 @@ public class BattleSimStatus
         else if (character.Type.Equals("ENEMY"))
             Enemies.Remove(character);
     }
+
+    public static bool OnSameSide(Character c1, Character c2)
+    {
+        if (c1.Type.Equals(c2.Type))
+            return true;
+
+        if ((c1.Type.Equals("PLAYER") || c2.Type.Equals("PLAYER")) && (c1.Type.Equals("ALLY") || c2.Type.Equals("ALLY")))
+            return true;
+
+        if ((c1.Type.Equals("BOSS") || c2.Type.Equals("BOSS")) && (c1.Type.Equals("ENEMY") || c2.Type.Equals("ENEMY")))
+            return true;
+
+        return false;
+    }
 }
