@@ -120,12 +120,12 @@ public class Options : MonoBehaviour
                 }
                 else if (BattleSimStatus.Allies.Count == 1 && player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALLY))
                 {
-                    foreach (Character enemy in BattleSimStatus.Enemies)
+                    foreach (Character ally in BattleSimStatus.Allies)
                     {
-                        if (enemy != null)
+                        if (ally != null)
                         {
                             player.BattleStatus.ChosenTargets.Clear();
-                            player.BattleStatus.ChosenTargets.Add(enemy);
+                            player.BattleStatus.ChosenTargets.Add(ally);
                             break;
                         }
                     }

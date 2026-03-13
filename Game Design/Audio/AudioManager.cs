@@ -20,6 +20,9 @@ public class AudioManager : PersistentSingleton<AudioManager>
     [Header("Music")]
     [SerializeField] private Sound[] _musicList;
 
+    [Header("Timeline SFX")]
+    [SerializeField] private AudioSource[] _sfxList;
+
     //private variables
     private AudioSource _audioSource1;
     private AudioSource _audioSource2;
@@ -30,6 +33,11 @@ public class AudioManager : PersistentSingleton<AudioManager>
     {
         base.Awake();
         InitAudioDictionary();
+    }
+
+    public void UpdateSFXList(AudioSource[] sfxList)
+    {
+        _sfxList = sfxList;
     }
 
     /// <summary>
@@ -167,7 +175,13 @@ public class AudioManager : PersistentSingleton<AudioManager>
         if (_currentMusic == null)
             return;
         Sound music = _audioDictionary[_currentMusic];
+
+        //adjusting volume for current music
         StartCoroutine(StartFade(0.1f, _audioSource1.volume, music.Volume * GameManager.Instance.GameVolume, _audioSource1));
+
+        //adjusting volume for timeline sfx
+        foreach (AudioSource sfx in _sfxList)
+            sfx.volume = sfx.volume * GameManager.Instance.GameVolume;
     }
 
     /// <summary>
@@ -227,7 +241,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
     /// </summary>
     public void ResumeMusic()
     {
-        if(_currentMusic == null)
+        if (_currentMusic == null)
             return;
         Sound music = _audioDictionary[_currentMusic];
         _audioSource1.UnPause();

@@ -92,6 +92,9 @@ public class InitializeState : BattleState, IDialogue
             battleCharacter.RuntimeAnimatorController = battleCharacterData.CharacterAnimator;
             battleCharacter.InitializeBattleCharacter();
 
+            if (battleCharacter.Character == null)
+                return;
+
             foreach (StatusCondition sc in battleCharacter.Character.BattleStatus.StatusConditions.Values)
             {
                 if (sc != null)

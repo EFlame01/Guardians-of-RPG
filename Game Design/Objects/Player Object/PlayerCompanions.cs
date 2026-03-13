@@ -27,9 +27,15 @@ public class PlayerCompanions : PersistentSingleton<PlayerCompanions>
     public void AddCompanion(BattleCharacterData data)
     {
         bool added = false;
+        string warning = "WARNING: Could not add battle character data. Placement is full.";
         for (int i = 0; i < CompanionData.Length; i++)
         {
-            if (CompanionData[i] == null)
+            if (CompanionData[i] != null && CompanionData[i].CharacterData.Equals(data.CharacterData))
+            {
+                warning = "WARNING: Could not add battle character data. Data is already included.";
+                break;
+            }
+            else if (CompanionData[i] == null)
             {
                 CompanionData[i] = data;
                 added = true;
@@ -37,7 +43,7 @@ public class PlayerCompanions : PersistentSingleton<PlayerCompanions>
             }
         }
         if (!added)
-            Debug.LogWarning("WARNING: Could not add battle character data. Placement is full.");
+            Debug.LogWarning(warning);
     }
 
     /// <summary>

@@ -434,16 +434,15 @@ public class BattleActionEffect : MonoBehaviour
         {
             _user.BattleStatus.ChosenMove.UpdateElixir(_user, 1);
             _firstTimeMove = false;
+            yield return new WaitForSeconds(1f);
         }
         EnableAllCharacterHUD(true);
-        // UpdateBattleCharacter(_user);
+        BattleSimStatus.CheckGraveyardStatus(Target);
         if (Target.BaseStats.Hp <= 0)
             BattleSimStatus.AddToGraveYard(Target);
         UpdateBattleCharacter(_user, null, null);
         UpdateBattleCharacter(Target, _user.BattleStatus.ChosenMove.Name, null);
         SetMoveEffectString();
-        BattleSimStatus.CheckGraveyardStatus(Target);
-        yield return new WaitForSeconds(1f);
     }
 
     private IEnumerator ItemEffect()
@@ -451,16 +450,17 @@ public class BattleActionEffect : MonoBehaviour
         Item item = _user.BattleStatus.ChosenItem;
         item.UseItem(Target);
         EnableAllCharacterHUD(true);
+        BattleSimStatus.CheckGraveyardStatus(Target);
         UpdateInventory(item);
         UpdateBattleCharacter(Target, null, null);
         SetItemEffectString();
-        BattleSimStatus.CheckGraveyardStatus(Target);
         yield return new WaitForSeconds(1f);
     }
 
     private IEnumerator SecondaryEffect(Effect effect)
     {
         string[] effectTexts = effect.UseEffect(Target);
+        BattleSimStatus.CheckGraveyardStatus(Target);
         if (Target.BaseStats.Hp <= 0)
             BattleSimStatus.AddToGraveYard(Target);
         string statusCondition = null;

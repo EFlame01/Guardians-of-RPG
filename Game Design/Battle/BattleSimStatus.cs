@@ -158,15 +158,33 @@ public class BattleSimStatus
 
     public static void CheckGraveyardStatus(Character character)
     {
-        if (Graveyard.Contains(character) || character.BaseStats.Hp <= 0)
-            return;
+        string status = "";
+        int graveIndex = Graveyard.FindIndex(c => c == character);
+        //Check if character is in graveyard
+        //if character is in graveyard, check if they belong in graveyard
+        //if character does not belong in graveyard, remove them from graveyard
 
-        Graveyard.Remove(character);
+        if (graveIndex != -1)
+            status = "IN GRAVEYARD";
+        else
+            status = "NOT IN GRAVEYARD";
 
-        if (character.Type.Equals("ALLY") && !Allies.Contains(character))
-            Allies.Add(character);
-        else if (character.Type.Equals("ENEMY") && !Enemies.Contains(character))
-            Enemies.Add(character);
+        switch (status)
+        {
+            case "IN GRAVEYARD":
+                if (character.BaseStats.Hp < 0)
+                    return;
+                else
+                {
+                    if (character.Type.Equals("ALLY") || character.Type.Equals("PLAYER"))
+                        Allies.Add(character);
+                    if (character.Type.Equals("ENEMY") || character.Type.Equals("BOSS"))
+                        Enemies.Add(character);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public static BattleCharacter GetBattleCharacter(Character character, BattleCharacter battlePlayer, BattleCharacter[] allies, BattleCharacter[] enemies)
