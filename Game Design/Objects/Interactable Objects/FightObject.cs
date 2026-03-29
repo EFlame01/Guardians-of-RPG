@@ -86,7 +86,7 @@ public class FightObject : NPCObject
             _confrontedPlayer = true;
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             TurnToPlayer();
-            yield return TalkToPlayer();
+            yield return StartCoroutine(TalkToPlayer());
             StartFight();
         }
     }
@@ -106,11 +106,11 @@ public class FightObject : NPCObject
             _confrontedPlayer = true;
             CanInteract = false;
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
-            yield return PerformExclamation();
-            yield return WalkToPlayer();
+            yield return StartCoroutine(PerformExclamation());
+            yield return StartCoroutine(WalkToPlayer());
             NPCSprite.PerformIdleAnimation(PlayerViewDirection);
             yield return new WaitForSeconds(0.5f);
-            yield return TalkToPlayer();
+            yield return StartCoroutine(TalkToPlayer());
             StartFight();
         }
     }

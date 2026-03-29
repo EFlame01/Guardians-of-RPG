@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -69,16 +70,7 @@ public class BattleSimulator : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        try
-        {
-            DayNightCycle.Instance.StopTimer();
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning("WARNING: " + e.ToString());
-        }
-        BattleSimStatus.AssignStatusGameObjects(BlindSymbol, BurnSymbol, CharmSymbol, ConfuseSymbol, DeafenSymbol, ExhaustionSymbol, FrozenSymbol, PetrifiedSymbol, PoisonSymbol, RestrainSymbol, SleepSymbol, StunSymbol);
-        BattleStateMachine.StartState(InitializeState);
+        StartCoroutine(BeginBattle());
     }
 
     // Update is called once per frame
@@ -198,5 +190,20 @@ public class BattleSimulator : MonoBehaviour
                 battleEnemy.UpdateHUD();
             }
         }
+    }
+
+    private IEnumerator BeginBattle()
+    {
+        try
+        {
+            DayNightCycle.Instance.StopTimer();
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("WARNING: " + e.ToString());
+        }
+        BattleSimStatus.AssignStatusGameObjects(BlindSymbol, BurnSymbol, CharmSymbol, ConfuseSymbol, DeafenSymbol, ExhaustionSymbol, FrozenSymbol, PetrifiedSymbol, PoisonSymbol, RestrainSymbol, SleepSymbol, StunSymbol);
+        yield return new WaitForSeconds(1f);
+        BattleStateMachine.StartState(InitializeState);
     }
 }

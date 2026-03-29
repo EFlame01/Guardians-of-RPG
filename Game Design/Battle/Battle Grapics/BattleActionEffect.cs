@@ -203,23 +203,23 @@ public class BattleActionEffect : MonoBehaviour
                     case "MOVE":
                         if (_firstTimeMove)
                         {
-                            yield return ActionAnimation();
+                            yield return StartCoroutine(ActionAnimation());
                         }
-                        yield return EffectAnimation("FLASH");
-                        yield return MoveEffect();
+                        yield return StartCoroutine(EffectAnimation("FLASH"));
+                        yield return StartCoroutine(MoveEffect());
                         break;
                     case "ITEM":
-                        yield return EffectAnimation("");
-                        yield return ItemEffect();
+                        yield return StartCoroutine(EffectAnimation(""));
+                        yield return StartCoroutine(ItemEffect());
                         break;
                     case "RUN":
-                        yield return RollToRunAnimation();
+                        yield return StartCoroutine(RollToRunAnimation());
                         break;
                     default:
                         break;
                 }
             }
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(1f);
             DisplayText();
             while (!DialogueManager.Instance.DialogueEnded)
                 yield return null;
@@ -244,8 +244,8 @@ public class BattleActionEffect : MonoBehaviour
                 if (SecondaryEffectSuccessful(move, effect))
                 {
                     // Debug.Log(" - implementing effect on - " + Target.Name);
-                    yield return EffectAnimation(effect.Type.ToString());
-                    yield return SecondaryEffect(effect);
+                    yield return StartCoroutine(EffectAnimation(effect.Type.ToString()));
+                    yield return StartCoroutine(SecondaryEffect(effect));
                     yield return new WaitForSeconds(0.25f);
                     DisplayText();
                     while (!DialogueManager.Instance.DialogueEnded)
@@ -286,7 +286,7 @@ public class BattleActionEffect : MonoBehaviour
                 if (statusCondition.Condition.Equals("AFTER ROUND"))
                 {
                     moveEffects = GetMoveEffects(Target);
-                    yield return EffectAnimation(statusCondition.Name);
+                    yield return StartCoroutine(EffectAnimation(statusCondition.Name));
                     statusCondition.ImplementStatusCondition(Target);
                     UpdateBattleCharacter(Target, null, statusCondition.Name);
                     _effectText.Add(Target.Name + " was effected by the " + statusCondition.Name + "!");
@@ -328,7 +328,7 @@ public class BattleActionEffect : MonoBehaviour
                     while (!DialogueManager.Instance.DialogueEnded)
                         yield return null;
                     _effectText.Clear();
-                    yield return EffectAnimation("STAT_CHANGE");
+                    yield return StartCoroutine(EffectAnimation("STAT_CHANGE"));
                     for (int i = 0; i < item._stats.Length; i++)
                     {
                         string stat = item._stats[i];
@@ -385,7 +385,7 @@ public class BattleActionEffect : MonoBehaviour
     {
         string offset = Target.Type.Equals("ENEMY") ? "enemy" : "ally";
         EnableAllCharacterHUD(false);
-        yield return moveEffects.ActionAnimationRoutine(_user.BattleStatus.ChosenMove.Name, offset);
+        yield return StartCoroutine(moveEffects.ActionAnimationRoutine(_user.BattleStatus.ChosenMove.Name, offset));
     }
 
     private IEnumerator EffectAnimation(string afterEffect)
@@ -395,16 +395,16 @@ public class BattleActionEffect : MonoBehaviour
         switch (afterEffect)
         {
             case "FLASH":
-                yield return moveEffects.FlashRoutine();
+                yield return StartCoroutine(moveEffects.FlashRoutine());
                 break;
             case "HEAL":
-                yield return moveEffects.HealRoutine();
+                yield return StartCoroutine(moveEffects.HealRoutine());
                 break;
             case "STAT_CHANGE":
-                yield return moveEffects.StatRoutine();
+                yield return StartCoroutine(moveEffects.StatRoutine());
                 break;
             default:
-                yield return moveEffects.FlashRoutine();
+                yield return StartCoroutine(moveEffects.FlashRoutine());
                 break;
         }
         yield return new WaitForSeconds(0.5f);
@@ -413,7 +413,7 @@ public class BattleActionEffect : MonoBehaviour
     private IEnumerator RollToRunAnimation()
     {
         RollMechanic.gameObject.SetActive(true);
-        yield return RollMechanic.RollRun();
+        yield return StartCoroutine(RollMechanic.RollRun());
 
         if (RollMechanic.RollNumber > 10)
         {
@@ -434,7 +434,6 @@ public class BattleActionEffect : MonoBehaviour
         {
             _user.BattleStatus.ChosenMove.UpdateElixir(_user, 1);
             _firstTimeMove = false;
-            yield return new WaitForSeconds(1f);
         }
         EnableAllCharacterHUD(true);
         BattleSimStatus.CheckGraveyardStatus(Target);
@@ -443,6 +442,8 @@ public class BattleActionEffect : MonoBehaviour
         UpdateBattleCharacter(_user, null, null);
         UpdateBattleCharacter(Target, _user.BattleStatus.ChosenMove.Name, null);
         SetMoveEffectString();
+        // yield return new WaitForSeconds(1f);
+        yield return null;
     }
 
     private IEnumerator ItemEffect()
@@ -454,7 +455,8 @@ public class BattleActionEffect : MonoBehaviour
         UpdateInventory(item);
         UpdateBattleCharacter(Target, null, null);
         SetItemEffectString();
-        yield return new WaitForSeconds(1f);
+        // yield return new WaitForSeconds(1f);
+        yield return null;
     }
 
     private IEnumerator SecondaryEffect(Effect effect)
