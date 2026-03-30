@@ -40,6 +40,7 @@ public class InitializeState : BattleState, IDialogue
 
     public override void Enter()
     {
+
         InitializeBattleSimStatus();
     }
 
@@ -47,6 +48,9 @@ public class InitializeState : BattleState, IDialogue
     {
         if (startedDialogue && DialogueManager.Instance.DialogueEnded)
             NextState = Units.BEFORE_ROUND_STATE;
+
+        if (!startedDialogue && GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING))
+            StartDialogue();
     }
 
     public override void Exit()
@@ -64,7 +68,7 @@ public class InitializeState : BattleState, IDialogue
         SetUpCameraSize();
         SetUpEnvironment();
         SetUpText();
-        StartDialogue();
+
     }
 
     private void SetUpBattleCharacter(BattleCharacter battleCharacter, BattleCharacterData battleCharacterData)

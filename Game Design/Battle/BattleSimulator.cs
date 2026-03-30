@@ -70,7 +70,7 @@ public class BattleSimulator : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        StartCoroutine(BeginBattle());
+        BeginBattle();
     }
 
     // Update is called once per frame
@@ -192,7 +192,7 @@ public class BattleSimulator : MonoBehaviour
         }
     }
 
-    private IEnumerator BeginBattle()
+    private void BeginBattle()
     {
         try
         {
@@ -203,7 +203,6 @@ public class BattleSimulator : MonoBehaviour
             Debug.LogWarning("WARNING: " + e.ToString());
         }
         BattleSimStatus.AssignStatusGameObjects(BlindSymbol, BurnSymbol, CharmSymbol, ConfuseSymbol, DeafenSymbol, ExhaustionSymbol, FrozenSymbol, PetrifiedSymbol, PoisonSymbol, RestrainSymbol, SleepSymbol, StunSymbol);
-        yield return new WaitForSeconds(1f);
         BattleStateMachine.StartState(InitializeState);
     }
 }
