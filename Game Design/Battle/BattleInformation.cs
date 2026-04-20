@@ -20,19 +20,20 @@ public class BattleInformation : MonoBehaviour
 
     public static int GetNPCLogicNumber(string characterID, string type)
     {
-        switch(type){
+        switch (type)
+        {
             case "ALLY":
-                for(int i = 0; i < BattleAlliesData.Length; i++)
+                for (int i = 0; i < BattleAlliesData.Length; i++)
                 {
-                    if(BattleAlliesData[i].CharacterData.Equals(characterID))
+                    if (BattleAlliesData[i].CharacterData.Equals(characterID))
                         return BattleAlliesData[i].NPCLevel;
                 }
                 break;
             case "ENEMY":
             case "BOSS":
-                for(int i = 0; i < BattleEnemiesData.Length; i++)
+                for (int i = 0; i < BattleEnemiesData.Length; i++)
                 {
-                    if(BattleEnemiesData[i].CharacterData.Equals(characterID))
+                    if (BattleEnemiesData[i].CharacterData.Equals(characterID))
                         return BattleEnemiesData[i].NPCLevel;
                 }
                 break;
@@ -53,8 +54,9 @@ public class BattleInformation : MonoBehaviour
     public static void ResetBattleInformation()
     {
         BattlePlayerData = null;
-        Array.Clear(BattleAlliesData, 0, BattleAlliesData.Length);
-        Array.Clear(BattleEnemiesData, 0, BattleEnemiesData.Length);
+        BattleAlliesData = new BattleCharacterData[2];
+        BattleEnemiesData = new BattleCharacterData[3];
+        StoryFlagsIfWon = null;
         Environment = null;
     }
 }

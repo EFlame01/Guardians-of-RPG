@@ -40,7 +40,6 @@ public class InitializeState : BattleState, IDialogue
 
     public override void Enter()
     {
-
         InitializeBattleSimStatus();
     }
 
@@ -73,7 +72,7 @@ public class InitializeState : BattleState, IDialogue
 
     private void SetUpBattleCharacter(BattleCharacter battleCharacter, BattleCharacterData battleCharacterData)
     {
-        if (battleCharacterData != null)
+        if (battleCharacterData != null && battleCharacterData.CharacterData != null)
         {
             numberOfCharacters++;
 

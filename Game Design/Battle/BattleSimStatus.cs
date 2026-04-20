@@ -111,13 +111,14 @@ public class BattleSimStatus
     /// <param name="poison">PoisonSymbol gameObject</param>
     /// <param name="sleep">SleepSymbol gameObject</param>
     /// <param name="stun">StunSumbol gameObject</param>
-    public static void AssignStatusGameObjects(GameObject blind, GameObject burn, GameObject charm, GameObject confuse, GameObject deafen, GameObject exhausion, GameObject frozen, GameObject petrified, GameObject poison, GameObject restrain, GameObject sleep, GameObject stun)
+    public static void AssignStatusGameObjects(GameObject blind, GameObject burn, GameObject charm, GameObject confuse, GameObject deafen, GameObject exhaustion, GameObject frozen, GameObject petrified, GameObject poison, GameObject restrain, GameObject sleep, GameObject stun)
     {
         BlindSymbol = blind;
         BurnSymbol = burn;
         CharmSymbol = charm;
         ConfuseSymbol = confuse;
         DeafenSymbol = deafen;
+        ExhaustionSymbol = exhaustion;
         FrozenSymbol = frozen;
         PetrifiedSymbol = petrified;
         PoisonSymbol = poison;
