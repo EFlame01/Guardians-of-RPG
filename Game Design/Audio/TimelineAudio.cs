@@ -1,9 +1,10 @@
 using UnityEngine;
-using UnityEngine.Timeline;
-using UnityEngine.Playables;
-using System.Linq;
-using System;
 
+/// <summary>
+/// TimelineAudio is a class that updates the sound
+/// effects for the timelines (cutscenes) using the
+/// <c>AudioManager</c> 
+/// </summary>
 public class TimelineAudio : MonoBehaviour
 {
     [SerializeField] private AudioSource[] _audioSources;
@@ -12,7 +13,7 @@ public class TimelineAudio : MonoBehaviour
     {
         foreach (AudioSource audioSource in _audioSources)
         {
-            audioSource.volume = audioSource.volume * GameManager.Instance.GameVolume;
+            audioSource.volume *= GameManager.Instance.GameVolume;
         }
 
         AudioManager.Instance.UpdateSFXList(_audioSources);

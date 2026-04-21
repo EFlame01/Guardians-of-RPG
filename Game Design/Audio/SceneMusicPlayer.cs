@@ -7,7 +7,8 @@ using UnityEngine;
 /// </summary>
 public class SceneMusicPlayer : MonoBehaviour
 {
-    //serialzied variables
+    //Serialzied variables
+    [Header("Scene Music Details")]
     [SerializeField] private string trackName;
     [SerializeField] private bool playTrackImmediately;
 

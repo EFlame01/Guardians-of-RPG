@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,14 +8,17 @@ using UnityEngine;
 public class Sound
 {
     //public variables
-    public string Name;
-    public AudioClip Clip;
+    [Header("General Sound Details")]
+    [SerializeField] public string Name;
+    [SerializeField] public AudioClip Clip;
 
-    [Range(0f, 1f)] public float Volume;
-    [Range(0f, 1f)] public float Pitch;
-    public bool Loop;
-    public bool AddSource;
+    [Header("Advanced Sound Details")]
+    [Range(0f, 1f)][SerializeField] public float Volume;
+    [Range(0f, 1f)][SerializeField] public float Pitch;
+    [SerializeField] public bool Loop;
+    [SerializeField] public bool AddSource;
 
+    //public variable
     [HideInInspector]
     public AudioSource Source;
 }
