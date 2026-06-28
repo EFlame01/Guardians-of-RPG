@@ -52,6 +52,11 @@ public class ButtonUI : MonoBehaviour
     /// </summary>
     protected void AddButtonSound()
     {
-        UIButton?.onClick.AddListener(() => AudioManager.Instance.PlaySoundEffect(_soundEffect));
+        if (_soundEffect == null || _soundEffect.Length < 0)
+            return;
+        if (UIButton == null)
+            return;
+
+        UIButton.onClick.AddListener(() => AudioManager.Instance.PlaySoundEffect(_soundEffect));
     }
 }

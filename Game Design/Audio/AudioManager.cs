@@ -302,8 +302,8 @@ public class AudioManager : PersistentSingleton<AudioManager>
         }
 
         //configure variables
-        _musicList = null;
-        _sfxList = null;
+        // _musicList = null;
+        // _sfxList = null;
 
         _audioSource1.playOnAwake = false;
         _audioSource2.playOnAwake = false;
@@ -383,6 +383,8 @@ public class AudioManager : PersistentSingleton<AudioManager>
     /// <returns>TRUE if names match. FALSE otherwise.</returns>
     private bool IsCurrentMusicPlaying(string name)
     {
+        if (_currentMusic == null)
+            return false;
         return _audioSource1.isPlaying && _currentMusic.Equals(name);
     }
 }

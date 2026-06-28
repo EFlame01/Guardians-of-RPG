@@ -110,7 +110,8 @@ public class GameManager : PersistentSingleton<GameManager>
     public bool IsPlayingAsUser()
     {
         GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
-        if (data.Username is null)
+        Debug.Log($"Username: {data.Username}");
+        if (data.Username == null && StartScene.Username == null)
             return false;
         else
             return true;

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,8 +8,10 @@ using UnityEngine;
 /// </summary>
 public class BattleCharacter : MonoBehaviour
 {
-    //serialized variables
+    //Serialized variables
     public Character Character;
+
+    [Header("Sprite and Animation Details")]
     public RuntimeAnimatorController RuntimeAnimatorController;
     public string AnimationPosition;
     public MoveEffects MoveEffects;
@@ -19,6 +19,8 @@ public class BattleCharacter : MonoBehaviour
     [SerializeField] protected SpriteRenderer CharacterSprite;
     [SerializeField] protected SpriteRenderer PlatformSprite;
     public CharacterHUD CharacterHUD;
+
+    [Header("Move Details")]
     public string MoveHitWith;
 
     /// <summary>
@@ -49,9 +51,15 @@ public class BattleCharacter : MonoBehaviour
     /// <param name="enable">enable or disable <c>CharacterHUD</c></param>
     public void EnableHUD(bool enable)
     {
-        CharacterHUD?.gameObject.SetActive(enable);
+        if (CharacterHUD != null)
+            CharacterHUD.gameObject.SetActive(enable);
     }
 
+    /// <summary>
+    /// Sets the <c>RuntimeAnimatorController</c> of 
+    /// the <c>BattleCharacter</c> and plays the right
+    /// animation based on their position.
+    /// </summary>
     private void SetAnimation()
     {
         try
@@ -61,7 +69,7 @@ public class BattleCharacter : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogWarning("Error in playing animation " + e.Message);
+            Debug.LogWarning("WARNING in playing animation " + e.Message);
         }
     }
 }

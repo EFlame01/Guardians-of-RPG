@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -52,8 +53,14 @@ public class ObjectSprite : MonoBehaviour
     {
         if (_animator == null)
             return;
-
-        _animator.Play(_objectID + fireAnimation);
+        try
+        {
+            _animator.Play(_objectID + fireAnimation);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"WARNING: {e.Message} \n {_objectID}{fireAnimation} not found...");
+        }
 
         // switch (fireAnimation)
         // {

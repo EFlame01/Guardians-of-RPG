@@ -16,6 +16,7 @@ public class StartScene : MonoBehaviour
     [SerializeField] private Button signUpButton;
     [SerializeField] private Button playButton;
     [SerializeField] private Button newGameButton;
+    [SerializeField] private Button playAsGuestButton;
     [SerializeField] private GameObject signUpPrefab;
     [SerializeField] private GameObject loginPrefab;
     [SerializeField] private GameObject optionPrefab;
@@ -94,6 +95,7 @@ public class StartScene : MonoBehaviour
             logoutButton.gameObject.SetActive(true);
             loginButton.gameObject.SetActive(false);
             signUpButton.gameObject.SetActive(false);
+            playAsGuestButton.gameObject.SetActive(false);
         }
         else
         {
@@ -101,6 +103,7 @@ public class StartScene : MonoBehaviour
             logoutButton.gameObject.SetActive(false);
             loginButton.gameObject.SetActive(true);
             signUpButton.gameObject.SetActive(true);
+            playAsGuestButton.gameObject.SetActive(true);
         }
     }
 }

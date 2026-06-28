@@ -198,9 +198,9 @@ public class BattleOverState : BattleState
         {
             int textNum = i + 1;
             if (i == 0)
-                DialogueManager.Instance.CurrentStory.variablesState["text"] = texts[0];
+                DialogueManager.Instance.SetVariableState("text", texts[0]);
             else
-                DialogueManager.Instance.CurrentStory.variablesState["text" + textNum] = texts[i];
+                DialogueManager.Instance.SetVariableState("text" + textNum, texts[i]);
         }
         textBox.OpenTextBox();
         textBox.StartNarration(dialogueData);

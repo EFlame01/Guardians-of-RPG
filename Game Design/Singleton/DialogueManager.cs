@@ -167,7 +167,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         if (CurrentStory.canContinue)
             _originalText = CurrentStory.Continue();
 
-        _textBoxType = (int)CurrentStory.variablesState["textBoxType"];
+        _textBoxType = (int)GetVariableState("textBoxType");
 
         if (_originalText == null || _originalText.Length <= 0)
         {
@@ -361,7 +361,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                 DecisionTextBox.SelectOption(i);
                 _decision = i;
                 _dialogueIsPlaying = false;
-                if (CurrentStory.variablesState["endDialogue"] != null && (string)CurrentStory.variablesState["endDialogue"] == "Yes")
+                if (CheckVariableState("endDialogue", "Yes"))
                     CurrentStory.Continue();
                 DisplayNextDialogue(_dialogueData);
                 break;
@@ -447,20 +447,13 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void SetUpDialogueVariables()
     {
-        if (CurrentStory.variablesState["playerName"] != null)
-            CurrentStory.variablesState["playerName"] = Player.Instance().Name;
+        SetVariableState("playerName", Player.Instance().Name);
+        SetVariableState("itemName", _itemName);
+        SetVariableState("pluralName", _pluralName);
+        SetVariableState("_itemType", _itemType);
 
-        if (CurrentStory.variablesState["itemName"] != null)
-            CurrentStory.variablesState["itemName"] = _itemName;
-
-        if (CurrentStory.variablesState["pluralName"] != null)
-            CurrentStory.variablesState["pluralName"] = _pluralName;
-
-        if (CurrentStory.variablesState["itemType"] != null)
-            CurrentStory.variablesState["itemType"] = _itemType;
-
-        if (CurrentStory.variablesState["numberOfWater"] != null && (int)CurrentStory.variablesState["numberOfWater"] == 0)
-            CurrentStory.variablesState["numberOfWater"] = _number;
+        if (CheckVariableState("numberOfWater", 0))
+            SetVariableState("numberOfWater", _number);
 
         if (CurrentStory.variablesState["pronouns"] != null)
             SetUpPronouns();
@@ -472,33 +465,92 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         switch (sex)
         {
             case "MALE":
-                CurrentStory.variablesState["subject"] = "he";
-                CurrentStory.variablesState["subject_s"] = "he's";
-                CurrentStory.variablesState["object"] = "him";
-                CurrentStory.variablesState["possessive_a"] = "his";
-                CurrentStory.variablesState["possessive_p"] = "his";
-                CurrentStory.variablesState["reflexive"] = "himself";
-                CurrentStory.variablesState["person"] = "man";
+                SetVariableState("subject", "he");
+                SetVariableState("subject_s", "he's");
+                SetVariableState("object", "him");
+                SetVariableState("possessive_a", "his");
+                SetVariableState("possessive_p", "his");
+                SetVariableState("reflexive", "himself");
+                SetVariableState("person", "man");
                 break;
             case "FEMALE":
-                CurrentStory.variablesState["subject"] = "she";
-                CurrentStory.variablesState["subject_s"] = "she's";
-                CurrentStory.variablesState["object"] = "her";
-                CurrentStory.variablesState["possessive_a"] = "her";
-                CurrentStory.variablesState["possessive_p"] = "hers";
-                CurrentStory.variablesState["reflexive"] = "herself";
-                CurrentStory.variablesState["person"] = "woman";
+                SetVariableState("subject", "she");
+                SetVariableState("subject_s", "she's");
+                SetVariableState("object", "her");
+                SetVariableState("possessive_a", "her");
+                SetVariableState("possessive_p", "hers");
+                SetVariableState("reflexive", "herself");
+                SetVariableState("person", "woman");
                 break;
             case "MALEFE":
-                CurrentStory.variablesState["subject"] = "they";
-                CurrentStory.variablesState["subject_s"] = "they're";
-                CurrentStory.variablesState["object"] = "them";
-                CurrentStory.variablesState["possessive_a"] = "their";
-                CurrentStory.variablesState["possessive_p"] = "theirs";
-                CurrentStory.variablesState["reflexive"] = "themselves";
-                CurrentStory.variablesState["person"] = "person";
+                SetVariableState("subject", "they");
+                SetVariableState("subject_s", "they're");
+                SetVariableState("object", "them");
+                SetVariableState("possessive_a", "their");
+                SetVariableState("possessive_p", "theirs");
+                SetVariableState("reflexive", "themselves");
+                SetVariableState("person", "person");
                 break;
         }
+    }
+
+    public void SetVariableState(string variable, object value)
+    {
+        if (value == null)
+        {
+            //Debug.LogWarning($"WARNING: The value for the ink variable {variable} is null.");
+            return;
+        }
+        if (string.IsNullOrEmpty(variable))
+        {
+            //Debug.LogWarning($"WARNING: The name of the variable you are trying to add is null.");
+            return;
+        }
+        if (CurrentStory.variablesState[variable] == null)
+        {
+            //Debug.LogWarning($"WARNING: The ink variable you are trying to add value to does not exist.");
+            return;
+        }
+
+        CurrentStory.variablesState[variable] = value;
+
+    }
+
+    public object GetVariableState(string variable)
+    {
+        if (string.IsNullOrEmpty(variable))
+        {
+            //Debug.LogWarning("The variable name is null. Cannot retrieve value.");
+            return "null";
+        }
+        if (CurrentStory.variablesState[variable] == null)
+        {
+            //Debug.LogWarning("The value for this is null");
+            return "null";
+        }
+
+        return CurrentStory.variablesState[variable];
+    }
+
+    public bool CheckVariableState(string variable, object value)
+    {
+        if (string.IsNullOrEmpty(variable))
+        {
+            //Debug.LogWarning("The variable name for the ink file is null");
+            return false;
+        }
+        if (value == null)
+        {
+            //Debug.LogWarning($"The value for this ink variable {variable} is null.");
+            return false;
+        }
+        if (CurrentStory.variablesState[variable] == null)
+        {
+            //Debug.LogWarning($"There is no variable {variable} in the ink file with the variable name");
+            return false;
+        }
+
+        return CurrentStory.variablesState[variable] == value;
     }
 
     private void HandleStoryError(string message, Ink.ErrorType type)

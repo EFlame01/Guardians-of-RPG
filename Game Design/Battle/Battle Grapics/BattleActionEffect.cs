@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
-using System;
 
 /// <summary>
 /// BattleActionEffect is a helper class to
@@ -17,24 +16,24 @@ public class BattleActionEffect : MonoBehaviour
 {
     //serialize variables
     public RollMechanic RollMechanic;
+    public bool StartedDialogue;
 
     //public variables
     public Queue<Character> TargetQueue = new Queue<Character>();
-    public bool StartedDialogue;
-    public bool FinishedAction;
     public Character Target { get; private set; }
+    public bool FinishedBeforeRound { get; private set; }
+    public bool FinishedAction { get; private set; }
     public bool DoneWithSecondaryEffects { get; private set; }
-    public bool FinishedAfterRound;
-    public bool FinishedBeforeRound;
+    public bool FinishedAfterRound { get; private set; }
 
     //private variables
     private BattleCharacter _battlePlayer;
     private BattleCharacter[] _battleAllies;
     private BattleCharacter[] _battleEnemies;
     private Character _user;
+    private MoveEffects moveEffects;
     private DialogueData _dialogueData;
     private List<string> _effectText;
-    private MoveEffects moveEffects;
     private TextBox _textBox;
     private bool _firstTimeMove;
     private string _effect;
@@ -53,8 +52,10 @@ public class BattleActionEffect : MonoBehaviour
     /// <param name="allies">An array of the allies' battle information</param>
     /// <param name="enemies">An array of the enemies' battle information</param>
     /// <param name="camera">The main camera</param>
-    /// <param name="textBox">The textbox used to display the results of action</param>
+    /// <param name="textBox">The main camera</param>
     /// <param name="dialogueData">The dialogue data used to store the dialogue</param>
+    /// <param name="prevState">The name of the previous state</param>
+    /// <param name="currentState">The name of the current state</param>
     public void SetUpBattleActionEffect(Character user, BattleCharacter battlePlayer, BattleCharacter[] allies, BattleCharacter[] enemies, Camera camera, TextBox textBox, DialogueData dialogueData, string prevState, string currentState)
     {
         _user = user;
@@ -71,6 +72,23 @@ public class BattleActionEffect : MonoBehaviour
         AddTargetsToQueue();
     }
 
+    /// <summary>
+    /// Sets the public and private variables to the ones
+    /// found in the <c>ActionEffectState2</c>.
+    /// 
+    /// This allows the <c>BattleActionEffect</c> class
+    /// to perform the animations needed for the 
+    /// secondary action.
+    /// </summary>
+    /// <param name="user">The user of the action</param>
+    /// <param name="battlePlayer">The <c>Player</c> battle information</param>
+    /// <param name="allies">An array of the allies' battle information</param>
+    /// <param name="enemies">An array of the enemies' battle information</param>
+    /// <param name="camera">The main camera</param>
+    /// <param name="textBox">The main camera</param>
+    /// <param name="dialogueData">The dialogue data used to store the dialogue</param>
+    /// <param name="prevState">The name of the previous state</param>
+    /// <param name="currentState">The name of the current state</param>
     public void SetUpSecondaryActionEffect(Character user, BattleCharacter battlePlayer, BattleCharacter[] allies, BattleCharacter[] enemies, Camera camera, TextBox textBox, DialogueData dialogueData, string prevState, string currentState)
     {
         _user = user;
@@ -85,6 +103,21 @@ public class BattleActionEffect : MonoBehaviour
         GetEffect();
     }
 
+    /// <summary>
+    /// Sets the public and private variables to the ones
+    /// found in the <c>BeforeRoundState</c>.
+    /// 
+    /// This allows the <c>BattleActionEffect</c> class 
+    /// to perform the animations needed for any effects
+    /// in this state.
+    /// </summary>
+    /// <param name="battlePlayer">The <c>Player</c> battle information</param>
+    /// <param name="allies">An array of the allies' battle information</param>
+    /// <param name="enemies">An array of the enemies' battle information</param>
+    /// <param name="textBox">The main camera</param>
+    /// <param name="dialogueData">The dialogue data used to store the dialogue</param>
+    /// <param name="prevState">The name of the previous state</param>
+    /// <param name="currentState">The name of the current state</param>
     public void SetUpBeforeRoundEffect(BattleCharacter battlePlayer, BattleCharacter[] allies, BattleCharacter[] enemies, TextBox textBox, DialogueData dialogueData, string prevState, string currentState)
     {
         _battlePlayer = battlePlayer;
@@ -100,28 +133,45 @@ public class BattleActionEffect : MonoBehaviour
     }
 
     /// <summary>
-    /// Public method that is used to start the coroutine to
-    /// start the action effect from a non MonoBehaviour class.
+    /// Starts the coroutine that beings 
+    /// the before round effects from a non
+    /// MonoBehaviour class.
+    /// </summary>
+    public void StartBeforeRoundEffect()
+    {
+        StartCoroutine(PerformBeforeRoundAction());
+    }
+
+    /// <summary>
+    /// Starts the coroutine that begins 
+    /// the action effect from a non MonoBehaviour class.
     /// </summary>
     public void StartActionEffect()
     {
         StartCoroutine(PerformAction());
     }
 
+    /// <summary>
+    /// Starts the coroutine that begins
+    /// the secondary action effect from a non 
+    /// MonoBehaviour class.
+    /// </summary>
     public void StartSecondaryEffect()
     {
         StartCoroutine(PerformSecondaryAction());
     }
 
+    /// <summary>
+    /// Starts the coroutine that begins
+    /// the after round effects from a non
+    /// MonoBehaviour class.
+    /// </summary>
     public void StartAfterRoundEffect()
     {
         StartCoroutine(PerformAfterRoundAction());
     }
 
-    public void StartBeforeRoundEffect()
-    {
-        StartCoroutine(PerformBeforeRoundAction());
-    }
+    //=============== PRIVATE HELPER METHODS ==============//
 
     private void AddTargetsToQueue()
     {
@@ -154,7 +204,6 @@ public class BattleActionEffect : MonoBehaviour
                 break;
         }
     }
-
     private void GetEffect()
     {
         if (_prevState.Equals(Units.CHARACTER_ACTION_STATE))
@@ -178,128 +227,44 @@ public class BattleActionEffect : MonoBehaviour
         else if (_prevState.Equals(Units.INITIALIZE_STATE))
             _effect = "BEFORE ROUND";
     }
-
-    private IEnumerator PerformAction()
+    private void SetTargetByEffect(MoveTarget moveTarget, Queue<Character> queue)
     {
-        _effectText.Clear();
-        if (TargetQueue.Count == 0)
+        TargetQueue.Clear();
+        switch (moveTarget)
         {
-            Target = null;
-            FinishedAction = true;
-            _firstTimeMove = true;
-            yield return null;
-        }
-        else
-        {
-            FinishedAction = false;
-            Target = TargetQueue.Dequeue();
-            moveEffects = GetMoveEffects(Target);
-            if (ActionSuccessful())
-            {
-                TextBoxBattle.KeepTextBoxOpened = false;
-                TextBoxBattle.EndNarrationNow = true;
-                switch (_effect)
+            case MoveTarget.USER:
+                TargetQueue.Enqueue(_user);
+                break;
+            default:
+                foreach (BattleCharacter battleCharacter in _battleAllies)
                 {
-                    case "MOVE":
-                        if (_firstTimeMove)
-                        {
-                            yield return StartCoroutine(ActionAnimation());
-                        }
-                        yield return StartCoroutine(EffectAnimation("FLASH"));
-                        yield return StartCoroutine(MoveEffect());
-                        break;
-                    case "ITEM":
-                        yield return StartCoroutine(EffectAnimation(""));
-                        yield return StartCoroutine(ItemEffect());
-                        break;
-                    case "RUN":
-                        yield return StartCoroutine(RollToRunAnimation());
-                        break;
-                    default:
-                        break;
+                    if (!_user.BattleStatus.ChosenMove.Name.Equals(battleCharacter.MoveHitWith))
+                        continue;
+                    if (battleCharacter.Character.BaseStats.Hp <= 0)
+                        continue;
+
+                    TargetQueue.Enqueue(battleCharacter.Character);
                 }
-            }
-            yield return new WaitForSeconds(1f);
-            DisplayText();
-            while (!DialogueManager.Instance.DialogueEnded)
-                yield return null;
-            FinishedAction = true;
+                foreach (BattleCharacter battleCharacter in _battleEnemies)
+                {
+                    if (!_user.BattleStatus.ChosenMove.Name.Equals(battleCharacter.MoveHitWith))
+                        continue;
+                    if (battleCharacter.Character.BaseStats.Hp <= 0)
+                        continue;
+
+                    TargetQueue.Enqueue(battleCharacter.Character);
+                }
+                break;
         }
     }
-
-    private IEnumerator PerformSecondaryAction()
+    private MoveEffects GetMoveEffects(Character character)
     {
-        _effectText.Clear();
-        Move move = _user.BattleStatus.ChosenMove;
-        DoneWithSecondaryEffects = false;
-        foreach (Effect effect in move.SecondaryEffects)
-        {
-            // Debug.Log(" - testing effect for - " + effect.Name);
-            SetTargetBasedOnEffectTarget(effect.Target, TargetQueue);
-            while (TargetQueue.Count > 0)
-            {
-                DoneWithSecondaryEffects = false;
-                Target = TargetQueue.Dequeue();
-                moveEffects = GetMoveEffects(Target);
-                if (SecondaryEffectSuccessful(move, effect))
-                {
-                    // Debug.Log(" - implementing effect on - " + Target.Name);
-                    yield return StartCoroutine(EffectAnimation(effect.Type.ToString()));
-                    yield return StartCoroutine(SecondaryEffect(effect));
-                    yield return new WaitForSeconds(0.25f);
-                    DisplayText();
-                    while (!DialogueManager.Instance.DialogueEnded)
-                        yield return null;
-                    _effectText.Clear();
-                }
-                // else
-                // Debug.Log(" - effect did not activate");
-            }
-            // Debug.Log(" - no more targets for effects");
-            Target = null;
-            yield return null;
-        }
-
-        Debug.Log(" - done with secondary effects");
-        DoneWithSecondaryEffects = true;
+        BattleCharacter battleCharacter = BattleSimStatus.GetBattleCharacter(character, _battlePlayer, _battleAllies, _battleEnemies);
+        if (battleCharacter != null)
+            return battleCharacter.MoveEffects;
+        return null;
     }
 
-    private IEnumerator PerformAfterRoundAction()
-    {
-        _effectText.Clear();
-        FinishedAfterRound = false;
-        if (TargetQueue.Count == 0)
-        {
-            Target = null;
-            FinishedAfterRound = true;
-            yield return null;
-        }
-        else
-        {
-            Target = TargetQueue.Dequeue();
-            //TODO: check for ability
-            //TODO: check for status condition that needs to be implemented
-            foreach (StatusCondition statusCondition in Target.BattleStatus.StatusConditions.Values)
-            {
-                if (Target.BaseStats.Hp <= 0)
-                    break;
-                if (statusCondition.Condition.Equals("AFTER ROUND"))
-                {
-                    moveEffects = GetMoveEffects(Target);
-                    yield return StartCoroutine(EffectAnimation(statusCondition.Name));
-                    statusCondition.ImplementStatusCondition(Target);
-                    UpdateBattleCharacter(Target, null, statusCondition.Name);
-                    _effectText.Add(Target.Name + " was effected by the " + statusCondition.Name + "!");
-                    DisplayText();
-                    _effectText.Clear();
-                    while (!DialogueManager.Instance.DialogueEnded)
-                        yield return null;
-
-                }
-            }
-            FinishedAfterRound = true;
-        }
-    }
 
     private IEnumerator PerformBeforeRoundAction()
     {
@@ -349,37 +314,126 @@ public class BattleActionEffect : MonoBehaviour
             yield return null;
         }
     }
-
-    private void SetTargetBasedOnEffectTarget(MoveTarget moveTarget, Queue<Character> queue)
+    private IEnumerator PerformAction()
     {
-        TargetQueue.Clear();
-        switch (moveTarget)
+        _effectText.Clear();
+        if (TargetQueue.Count == 0)
         {
-            case MoveTarget.USER:
-                TargetQueue.Enqueue(_user);
-                break;
-            default:
-                foreach (BattleCharacter battleCharacter in _battleAllies)
+            Target = null;
+            FinishedAction = true;
+            _firstTimeMove = true;
+            yield return null;
+        }
+        else
+        {
+            FinishedAction = false;
+            Target = TargetQueue.Dequeue();
+            moveEffects = GetMoveEffects(Target);
+            if (ActionSuccessful())
+            {
+                TextBoxBattle.KeepTextBoxOpened = false;
+                TextBoxBattle.EndNarrationNow = true;
+                switch (_effect)
                 {
-                    if (!_user.BattleStatus.ChosenMove.Name.Equals(battleCharacter.MoveHitWith))
-                        continue;
-                    if (battleCharacter.Character.BaseStats.Hp <= 0)
-                        continue;
-
-                    TargetQueue.Enqueue(battleCharacter.Character);
+                    case "MOVE":
+                        if (_firstTimeMove)
+                        {
+                            yield return StartCoroutine(ActionAnimation());
+                        }
+                        yield return StartCoroutine(EffectAnimation("FLASH"));
+                        yield return StartCoroutine(MoveEffect());
+                        break;
+                    case "ITEM":
+                        yield return StartCoroutine(EffectAnimation(""));
+                        yield return StartCoroutine(ItemEffect());
+                        break;
+                    case "RUN":
+                        yield return StartCoroutine(RollToRunAnimation());
+                        break;
+                    default:
+                        break;
                 }
-                foreach (BattleCharacter battleCharacter in _battleEnemies)
-                {
-                    if (!_user.BattleStatus.ChosenMove.Name.Equals(battleCharacter.MoveHitWith))
-                        continue;
-                    if (battleCharacter.Character.BaseStats.Hp <= 0)
-                        continue;
-
-                    TargetQueue.Enqueue(battleCharacter.Character);
-                }
-                break;
+            }
+            yield return new WaitForSeconds(1f);
+            DisplayText();
+            while (!DialogueManager.Instance.DialogueEnded)
+                yield return null;
+            FinishedAction = true;
         }
     }
+    private IEnumerator PerformSecondaryAction()
+    {
+        _effectText.Clear();
+        Move move = _user.BattleStatus.ChosenMove;
+        DoneWithSecondaryEffects = false;
+        foreach (Effect effect in move.SecondaryEffects)
+        {
+            // Debug.Log(" - testing effect for - " + effect.Name);
+            SetTargetByEffect(effect.Target, TargetQueue);
+            while (TargetQueue.Count > 0)
+            {
+                DoneWithSecondaryEffects = false;
+                Target = TargetQueue.Dequeue();
+                moveEffects = GetMoveEffects(Target);
+                if (SecondaryEffectSuccessful(move, effect))
+                {
+                    // Debug.Log(" - implementing effect on - " + Target.Name);
+                    yield return StartCoroutine(EffectAnimation(effect.Type.ToString()));
+                    yield return StartCoroutine(SecondaryEffect(effect));
+                    yield return new WaitForSeconds(0.25f);
+                    DisplayText();
+                    while (!DialogueManager.Instance.DialogueEnded)
+                        yield return null;
+                    _effectText.Clear();
+                }
+                // else
+                // Debug.Log(" - effect did not activate");
+            }
+            // Debug.Log(" - no more targets for effects");
+            Target = null;
+            yield return null;
+        }
+
+        Debug.Log(" - done with secondary effects");
+        DoneWithSecondaryEffects = true;
+    }
+    private IEnumerator PerformAfterRoundAction()
+    {
+        _effectText.Clear();
+        FinishedAfterRound = false;
+        if (TargetQueue.Count == 0)
+        {
+            Target = null;
+            FinishedAfterRound = true;
+            yield return null;
+        }
+        else
+        {
+            Target = TargetQueue.Dequeue();
+            //TODO: check for ability
+            //TODO: check for status condition that needs to be implemented
+            foreach (StatusCondition statusCondition in Target.BattleStatus.StatusConditions.Values)
+            {
+                if (Target.BaseStats.Hp <= 0)
+                    break;
+                if (statusCondition.Condition.Equals("AFTER ROUND"))
+                {
+                    moveEffects = GetMoveEffects(Target);
+                    yield return StartCoroutine(EffectAnimation(statusCondition.Name));
+                    statusCondition.ImplementStatusCondition(Target);
+                    UpdateBattleCharacter(Target, null, statusCondition.Name);
+                    _effectText.Add(Target.Name + " was effected by the " + statusCondition.Name + "!");
+                    DisplayText();
+                    _effectText.Clear();
+                    while (!DialogueManager.Instance.DialogueEnded)
+                        yield return null;
+
+                }
+            }
+            FinishedAfterRound = true;
+        }
+    }
+
 
     private IEnumerator ActionAnimation()
     {
@@ -387,7 +441,6 @@ public class BattleActionEffect : MonoBehaviour
         EnableAllCharacterHUD(false);
         yield return StartCoroutine(moveEffects.ActionAnimationRoutine(_user.BattleStatus.ChosenMove.Name, offset));
     }
-
     private IEnumerator EffectAnimation(string afterEffect)
     {
         //TODO: Create animation for effect        Debug.Log(" - " + afterEffect + " animation");
@@ -409,7 +462,6 @@ public class BattleActionEffect : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
     }
-
     private IEnumerator RollToRunAnimation()
     {
         RollMechanic.gameObject.SetActive(true);
@@ -426,6 +478,7 @@ public class BattleActionEffect : MonoBehaviour
         Target.BattleStatus.SetRollRun(false);
         RollMechanic.gameObject.SetActive(false);
     }
+
 
     private IEnumerator MoveEffect()
     {
@@ -445,7 +498,6 @@ public class BattleActionEffect : MonoBehaviour
         // yield return new WaitForSeconds(1f);
         yield return null;
     }
-
     private IEnumerator ItemEffect()
     {
         Item item = _user.BattleStatus.ChosenItem;
@@ -458,7 +510,6 @@ public class BattleActionEffect : MonoBehaviour
         // yield return new WaitForSeconds(1f);
         yield return null;
     }
-
     private IEnumerator SecondaryEffect(Effect effect)
     {
         string[] effectTexts = effect.UseEffect(Target);
@@ -486,6 +537,7 @@ public class BattleActionEffect : MonoBehaviour
         yield return new WaitForSeconds(1f);
     }
 
+
     private void UpdateInventory(Item item)
     {
         if (!_user.Equals(Player.Instance()))
@@ -504,27 +556,6 @@ public class BattleActionEffect : MonoBehaviour
                 break;
         }
     }
-
-    private void DisplayText()
-    {
-        TextBoxBattle.KeepTextBoxOpened = true;
-        DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
-
-        for (int i = 0; i < _effectText.Count; i++)
-        {
-            int val = i + 1;
-            string variable = val >= 2 ? "text" + val.ToString() : "text";
-            DialogueManager.Instance.CurrentStory.variablesState[variable] = _effectText[i];
-        }
-
-        DialogueManager.Instance.TextBox = _textBox;
-        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
-
-        // _textBox.OpenTextBox();
-        // _textBox.StartNarration(_dialogueData);
-        StartedDialogue = true;
-    }
-
     private void UpdateBattleCharacter(Character character, string moveHitWith, string statusCondition)
     {
         BattleCharacter battleCharacter = BattleSimStatus.GetBattleCharacter(character, _battlePlayer, _battleAllies, _battleEnemies);
@@ -536,77 +567,15 @@ public class BattleActionEffect : MonoBehaviour
         if (!string.IsNullOrEmpty(statusCondition))
             battleCharacter.CharacterHUD.AddStatusSymbol(BattleSimStatus.ReturnStatusConditionSymbol(statusCondition));
     }
-
-    private void SetMoveEffectString()
+    private void EnableAllCharacterHUD(bool enable)
     {
-        if (_effect.Equals("MOVE"))
-        {
-            Move move = _user.BattleStatus.ChosenMove;
-            _effectText.Clear();
-            switch (move.Type)
-            {
-                case MoveType.REGULAR:
-                case MoveType.PRIORITY:
-                    _effectText.Add("It hit " + Target.Name + "!");
-                    break;
-                case MoveType.HEALING:
-                    _effectText.Add(_user.Name + " healed " + Target.Name + "!");
-                    break;
-                case MoveType.STAT_CHANGING:
-                    StatChangingMove statChangingMove = (StatChangingMove)move;
-                    for (int i = 0; i < statChangingMove._stats.Length; i++)
-                    {
-                        string changed = statChangingMove._stages[i] > 0 ? " increased " : " decreased ";
-                        int stageLevel = Mathf.Abs(statChangingMove._stages[i]);
-                        _effectText.Add(Target.Name + "'s " + statChangingMove._stats[i] + changed + stageLevel + " stages!");
-                    }
-                    break;
-                case MoveType.STATUS_CHANGING:
-                    StatusChangingMove statusChangingMove = (StatusChangingMove)move;
-                    if (Target.BattleStatus.StatusConditions[statusChangingMove._statusCondition.Name].Equals(statusChangingMove._statusCondition))
-                        _effectText.Add(Target.Name + " is " + statusChangingMove._statusCondition.AfflictionText + "!");
-                    else
-                        _effectText.Add("The move failed!");
-                    break;
-                case MoveType.COUNTER:
-                    string targetSex = "themselves";
-                    if (Target.Sex.Equals("MALE"))
-                        targetSex = "himself";
-                    else if (Target.Sex.Equals("FEMALE"))
-                        targetSex = "herslef";
-                    _effectText.Add(Target.Name + " prepared " + targetSex + " for an attack!");
-                    break;
-                case MoveType.PROTECT:
-                    _effectText.Add(Target.Name + " was protected!");
-                    break;
-                case MoveType.KNOCK_OUT:
-                    _effectText.Add("It's a one hit knock out!");
-                    break;
-                default:
-                    break;
-            }
-        }
+        _battlePlayer.EnableHUD(enable);
+        foreach (BattleCharacter ally in _battleAllies)
+            ally.EnableHUD(enable);
+        foreach (BattleCharacter enemy in _battleEnemies)
+            enemy.EnableHUD(enable);
     }
 
-    private void SetItemEffectString()
-    {
-        if (!_effect.Equals("ITEM"))
-            return;
-
-        Item item = Player.Instance().BattleStatus.ChosenItem;
-        switch (item.Type)
-        {
-            case ItemType.FOOD:
-            case ItemType.MEDICAL:
-                _effectText.Add(Target.Name + " was healed!");
-                break;
-            case ItemType.HEALING:
-            case ItemType.PRIORITY:
-            case ItemType.STAT_CHANGING:
-                _effectText.Add(Target.Name + " equipped the " + item.Name + "!");
-                break;
-        }
-    }
 
     private bool ActionSuccessful()
     {
@@ -674,7 +643,6 @@ public class BattleActionEffect : MonoBehaviour
         }
         return true;
     }
-
     private bool SecondaryEffectSuccessful(Move move, Effect effect)
     {
         List<BattleCharacter> bcList = new()
@@ -698,20 +666,94 @@ public class BattleActionEffect : MonoBehaviour
         return false;
     }
 
-    private MoveEffects GetMoveEffects(Character character)
+
+    private void SetMoveEffectString()
     {
-        BattleCharacter battleCharacter = BattleSimStatus.GetBattleCharacter(character, _battlePlayer, _battleAllies, _battleEnemies);
-        if (battleCharacter != null)
-            return battleCharacter.MoveEffects;
-        return null;
+        if (_effect.Equals("MOVE"))
+        {
+            Move move = _user.BattleStatus.ChosenMove;
+            _effectText.Clear();
+            switch (move.Type)
+            {
+                case MoveType.REGULAR:
+                case MoveType.PRIORITY:
+                    _effectText.Add("It hit " + Target.Name + "!");
+                    break;
+                case MoveType.HEALING:
+                    _effectText.Add(_user.Name + " healed " + Target.Name + "!");
+                    break;
+                case MoveType.STAT_CHANGING:
+                    StatChangingMove statChangingMove = (StatChangingMove)move;
+                    for (int i = 0; i < statChangingMove._stats.Length; i++)
+                    {
+                        string changed = statChangingMove._stages[i] > 0 ? " increased " : " decreased ";
+                        int stageLevel = Mathf.Abs(statChangingMove._stages[i]);
+                        _effectText.Add(Target.Name + "'s " + statChangingMove._stats[i] + changed + stageLevel + " stages!");
+                    }
+                    break;
+                case MoveType.STATUS_CHANGING:
+                    StatusChangingMove statusChangingMove = (StatusChangingMove)move;
+                    if (Target.BattleStatus.StatusConditions[statusChangingMove._statusCondition.Name].Equals(statusChangingMove._statusCondition))
+                        _effectText.Add(Target.Name + " is " + statusChangingMove._statusCondition.AfflictionText + "!");
+                    else
+                        _effectText.Add("The move failed!");
+                    break;
+                case MoveType.COUNTER:
+                    string targetSex = "themselves";
+                    if (Target.Sex.Equals("MALE"))
+                        targetSex = "himself";
+                    else if (Target.Sex.Equals("FEMALE"))
+                        targetSex = "herslef";
+                    _effectText.Add(Target.Name + " prepared " + targetSex + " for an attack!");
+                    break;
+                case MoveType.PROTECT:
+                    _effectText.Add(Target.Name + " was protected!");
+                    break;
+                case MoveType.KNOCK_OUT:
+                    _effectText.Add("It's a one hit knock out!");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    private void SetItemEffectString()
+    {
+        if (!_effect.Equals("ITEM"))
+            return;
+
+        Item item = Player.Instance().BattleStatus.ChosenItem;
+        switch (item.Type)
+        {
+            case ItemType.FOOD:
+            case ItemType.MEDICAL:
+                _effectText.Add(Target.Name + " was healed!");
+                break;
+            case ItemType.HEALING:
+            case ItemType.PRIORITY:
+            case ItemType.STAT_CHANGING:
+                _effectText.Add(Target.Name + " equipped the " + item.Name + "!");
+                break;
+        }
+    }
+    private void DisplayText()
+    {
+        TextBoxBattle.KeepTextBoxOpened = true;
+        DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+
+        for (int i = 0; i < _effectText.Count; i++)
+        {
+            int val = i + 1;
+            string variable = val >= 2 ? "text" + val.ToString() : "text";
+            DialogueManager.Instance.SetVariableState(variable, _effectText[i]);
+        }
+
+        DialogueManager.Instance.TextBox = _textBox;
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+
+        // _textBox.OpenTextBox();
+        // _textBox.StartNarration(_dialogueData);
+        StartedDialogue = true;
     }
 
-    private void EnableAllCharacterHUD(bool enable)
-    {
-        _battlePlayer.EnableHUD(enable);
-        foreach (BattleCharacter ally in _battleAllies)
-            ally.EnableHUD(enable);
-        foreach (BattleCharacter enemy in _battleEnemies)
-            enemy.EnableHUD(enable);
-    }
 }
