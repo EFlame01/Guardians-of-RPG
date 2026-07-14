@@ -1,7 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ActionEffectState2 is a class that extends the 
+/// BattleState class. ActionEffect2 shows the secondary
+/// effects that an action has on character(s).
+/// 
+/// Once the action is completed, it will determine
+/// if the next state should be the <c>KnockoutState</c>,
+/// the <c>ActionEffectState<c>, or the
+/// <c>CharacterActionState</c>.
+/// </summary>
 public class ActionEffectState2 : BattleState
 {
     //private variables

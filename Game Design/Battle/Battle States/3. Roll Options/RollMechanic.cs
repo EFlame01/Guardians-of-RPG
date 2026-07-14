@@ -1,12 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RollMechanic : MonoBehaviour
 {
-    private static WaitForSeconds _waitForSeconds1_25 = new WaitForSeconds(1.25f);
-    public Animator RollAnimator;
+    //public methods
+    [SerializeField] public Animator RollAnimator;
     public int RollNumber { get; private set; }
+
+    //private  methods
+    private static readonly WaitForSeconds _waitForSeconds1_25 = new(1.25f);
 
     public IEnumerator RollRun()
     {

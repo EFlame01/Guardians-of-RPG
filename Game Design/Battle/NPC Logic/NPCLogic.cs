@@ -24,7 +24,6 @@ public class NPCLogic
         CharacterEnemies = new List<Character>();
         NPCLevel = 0;
     }
-
     public NPCLogic(Character c, int npcLevel)
     {
         character = c;

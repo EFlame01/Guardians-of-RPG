@@ -7,8 +7,9 @@ using UnityEngine;
 /// to all of the targets of said action.
 /// 
 /// Once the action is completed, it will determine
-/// if the next state should be the <c>KnockoutState</c>
-/// or the <c>CharacterActionState</c>.
+/// if the next state should be the <c>KnockoutState</c>,
+/// the <c>ActionEffectState2<c>, or the
+/// <c>CharacterActionState</c>.
 /// </summary>
 public class ActionEffectState : BattleState
 {

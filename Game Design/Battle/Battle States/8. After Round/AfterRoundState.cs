@@ -5,12 +5,14 @@ using UnityEngine;
 /// that survived the round and update any 
 /// battle status effects for the next round.
 /// 
-/// After this it will determine if there
+/// Once that has been completed, it will determine
+/// if the next state should be the <c>BattleOverState</c>,
+/// the <c>KnockOutState</c>, or the <c>OptionState<c>
 /// </summary>
 public class AfterRoundState : BattleState
 {
-
-    BattleActionEffect _battleActionEffect;
+    //private variable
+    private BattleActionEffect _battleActionEffect;
 
     //Constructor
     public AfterRoundState(BattleActionEffect battleActionEffect)

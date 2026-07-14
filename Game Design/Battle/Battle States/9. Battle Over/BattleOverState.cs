@@ -15,23 +15,23 @@ using System;
 /// </summary>
 public class BattleOverState : BattleState
 {
-    private string _winner;
 
     //private variables
-    private PlayerHUD playerHUD;
-    private DialogueData dialogueData;
-    private TextBox textBox;
-    private List<string> texts;
-    private bool startedDialogue;
+    private PlayerHUD _playerHUD;
+    private DialogueData _dialogueData;
+    private TextBox _textBox;
+    private List<string> _texts;
+    private bool _startedDialogue;
+    private string _winner;
 
     //Constructor
     public BattleOverState(PlayerHUD playerHUD, DialogueData dialogueData, TextBox textBox)
     {
         CurrentState = Units.BATTLE_OVER_STATE;
-        this.playerHUD = playerHUD;
-        this.dialogueData = dialogueData;
-        this.textBox = textBox;
-        texts = new List<string>();
+        _playerHUD = playerHUD;
+        _dialogueData = dialogueData;
+        _textBox = textBox;
+        _texts = new List<string>();
     }
 
     public override void Enter()
@@ -41,7 +41,7 @@ public class BattleOverState : BattleState
 
     public override void Update()
     {
-        if (startedDialogue && DialogueManager.Instance.DialogueEnded)
+        if (_startedDialogue && DialogueManager.Instance.DialogueEnded)
         {
             TextBoxBattle.EndNarrationNow = true;
             NextState = Units.END_BATTLE;
@@ -52,7 +52,7 @@ public class BattleOverState : BattleState
     {
         TextBoxBattle.KeepTextBoxOpened = false;
         if (Winner().Equals("ENEMY"))
-            Player.Instance().BaseStats.SetHp((int)Mathf.Clamp((float)Player.Instance().BaseStats.FullHp * 0.2f, 1, Player.Instance().BaseStats.FullHp));
+            Player.Instance().BaseStats.SetHp((int)Mathf.Clamp(Player.Instance().BaseStats.FullHp * 0.2f, 1, Player.Instance().BaseStats.FullHp));
         NextState = null;
     }
 
@@ -111,32 +111,25 @@ public class BattleOverState : BattleState
         {
             text = Player.Instance().Name + " ";
 
-            for (int i = 0; i < allies.Count; i++)
-            {
-                if (i == 0 && i + 1 == allies.Count)
-                    text += "and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
-                else if (i == 0)
-                    text += ", " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
-                else if (i + 1 == allies.Count)
-                    text += ", and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
-            }
+            //text that dependent on the amount of allies
+            if (allies.Count == 0)
+                text += "was defeated by ";
+            if (allies.Count == 1)
+                text += "and " + allies[0].Name + " were defeated by ";
+            else if (allies.Count == 2)
+                text += ", " + allies[0].Name + ", and " + allies[1].Name + " were defeated by ";
 
-            text += " was defeated by ";
-
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (i == 0)
-                    text += enemies[i].Name;
-                else if (i + 1 == enemies.Count)
-                    text += ", and " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower() : enemies[i].Name);
-                else
-                    text += ", " + (enemies[i].Name.Contains("Wild") ? "a " + enemies[i].Name.ToLower() : enemies[i].Name);
-            }
-
-            text += "!";
+            //texts that's dependent on the amount of enemies
+            if (enemies.Count == 1)
+                text += enemies[0].Name + "!";
+            else if (enemies.Count == 2)
+                text += enemies[0].Name + " and " + enemies[1].Name + "!";
+            else if (enemies.Count == 3)
+                text += enemies[0].Name + ", " + enemies[1].Name + ", and " + enemies[2].Name + "!";
         }
 
-        texts.Add(text);
+        text = text.Replace("Wild", "a wild");
+        _texts.Add(text);
     }
 
     private void GetLevelUpText()
@@ -164,25 +157,25 @@ public class BattleOverState : BattleState
         Move[] newMoves = MoveMaker.Instance.GetLevelUpMoves(newLevel, Player.Instance().Archetype.ArchetypeName, Player.Instance().Archetype.ClassName);
 
         if (bits > 0)
-            texts.Add("You gained " + xp + " XP" + " and " + bits + " bits!");
+            _texts.Add("You gained " + xp + " XP" + " and " + bits + " bits!");
         else
-            texts.Add("You gained " + xp + " XP!");
+            _texts.Add("You gained " + xp + " XP!");
 
         if (newLevel != oldLevel)
         {
-            texts.Add("You are now level " + newLevel + "!");
+            _texts.Add("You are now level " + newLevel + "!");
             foreach (Move move in newMoves)
             {
                 if (!MoveManager.MoveDictionary.ContainsKey(move.Name))
                 {
-                    texts.Add("You learned " + move.Name + "!");
+                    _texts.Add("You learned " + move.Name + "!");
                     Player.Instance().MoveManager.AddMove(move);
                 }
             }
         }
 
-        playerHUD.UpdateHUD(Player.Instance());
-        playerHUD.UpdateXPBar();
+        _playerHUD.UpdateHUD(Player.Instance());
+        _playerHUD.UpdateXPBar();
     }
 
     private void AnnounceBattleResult()
@@ -193,18 +186,18 @@ public class BattleOverState : BattleState
         if (_winner.Equals("PLAYER"))
             AudioManager.Instance.BlendMusic2(Units.Music.VICTORY_THEME);
 
-        DialogueManager.Instance.CurrentStory = new Story(dialogueData.InkJSON.text);
-        for (int i = 0; i < texts.Count; i++)
+        DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+        for (int i = 0; i < _texts.Count; i++)
         {
             int textNum = i + 1;
             if (i == 0)
-                DialogueManager.Instance.SetVariableState("text", texts[0]);
+                DialogueManager.Instance.SetVariableState("text", _texts[0]);
             else
-                DialogueManager.Instance.SetVariableState("text" + textNum, texts[i]);
+                DialogueManager.Instance.SetVariableState("text" + textNum, _texts[i]);
         }
-        textBox.OpenTextBox();
-        textBox.StartNarration(dialogueData);
-        startedDialogue = true;
+        _textBox.OpenTextBox();
+        _textBox.StartNarration(_dialogueData);
+        _startedDialogue = true;
     }
 
     public void UpdateFlagForWin()

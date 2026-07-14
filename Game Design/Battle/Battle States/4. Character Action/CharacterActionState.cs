@@ -1,5 +1,5 @@
-using UnityEngine;
 using Ink.Runtime;
+using UnityEngine;
 
 /// <summary>
 /// CharacterActionState is a class that extends the 
@@ -15,7 +15,7 @@ using Ink.Runtime;
 public class CharacterActionState : BattleState, IDialogue
 {
     //public variables
-    public BattleOrderBST battleOrderBST;
+    public BattleOrderBST BattleOrderBST;
 
     //private variables
     private TextBox _narrationTextBox;
@@ -76,14 +76,20 @@ public class CharacterActionState : BattleState, IDialogue
     private void DetermineOrderForCharacterAction()
     {
         BattleSimStatus.RoundStarted = true;
-        BattleOrderBST battleOrderBST = new();
-        battleOrderBST.ArrangeBST();
+        BattleOrderBST = new();
+        BattleOrderBST.ArrangeBST();
     }
 
     private void DisplayAction()
     {
         Character character = BattleSimStatus.BattleQueue.Dequeue();
         BattleSimStatus.ChosenCharacter = character;
+
+        if (character == null)
+        {
+            Debug.LogWarning("WARNING: character is NULL and thus cannot perform an action.");
+            return;
+        }
 
         foreach (StatusCondition sc in character.BattleStatus.StatusConditions.Values)
         {
@@ -131,6 +137,12 @@ public class CharacterActionState : BattleState, IDialogue
 
     private bool HasAction(Character character)
     {
+        if (character == null)
+        {
+            Debug.LogWarning("WARNING: character is NULL and thus cannot have an action.");
+            return false;
+        }
+
         return character.BattleStatus.TurnStatus switch
         {
             TurnStatus.SKIP or TurnStatus.CANNOT_MOVE or TurnStatus.NOTHING => false,

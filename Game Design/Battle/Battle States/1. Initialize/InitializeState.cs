@@ -8,34 +8,34 @@ using Ink.Runtime;
 /// <c>EnvironmentDetail</c> to start the battle.
 /// 
 /// Once the action is completed, it will move 
-/// to the <c>OptionState</c>.
+/// to the <c>BeforeRoundState</c>.
 /// </summary>
 public class InitializeState : BattleState, IDialogue
 {
     //private variables
-    private string InitializeText;
-    private BattleCharacter BattlePlayer;
-    private BattleCharacter[] BattleAllies;
-    private BattleCharacter[] BattleEnemies;
-    private EnvironmentDetail[] EnvironmentDetails;
-    private Camera Camera;
-    private TextBox NarrationTextBox;
-    private DialogueData DialogueData;
-    private int numberOfCharacters;
-    private bool startedDialogue;
+    private string _initializeText;
+    private BattleCharacter _battlePlayer;
+    private BattleCharacter[] _battleAllies;
+    private BattleCharacter[] _battleEnemies;
+    private EnvironmentDetail[] _environmentDetails;
+    private Camera _camera;
+    private TextBox _narrationTextBox;
+    private DialogueData _dialogueData;
+    private int _numberOfCharacters;
+    private bool _startedDialogue;
 
 
     //Constructor
     public InitializeState(BattleCharacter battlePlayer, BattleCharacter[] battleAllies, BattleCharacter[] battleEnemies, EnvironmentDetail[] environmentDetails, Camera camera, DialogueData dialogueData, TextBox textBox)
     {
         CurrentState = Units.INITIALIZE_STATE;
-        BattlePlayer = battlePlayer;
-        BattleAllies = battleAllies;
-        BattleEnemies = battleEnemies;
-        EnvironmentDetails = environmentDetails;
-        Camera = camera;
-        DialogueData = dialogueData;
-        NarrationTextBox = textBox;
+        _battlePlayer = battlePlayer;
+        _battleAllies = battleAllies;
+        _battleEnemies = battleEnemies;
+        _environmentDetails = environmentDetails;
+        _camera = camera;
+        _dialogueData = dialogueData;
+        _narrationTextBox = textBox;
     }
 
     public override void Enter()
@@ -45,10 +45,10 @@ public class InitializeState : BattleState, IDialogue
 
     public override void Update()
     {
-        if (startedDialogue && DialogueManager.Instance.DialogueEnded)
+        if (_startedDialogue && DialogueManager.Instance.DialogueEnded)
             NextState = Units.BEFORE_ROUND_STATE;
 
-        if (!startedDialogue && GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING))
+        if (!_startedDialogue && GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING))
             StartDialogue();
     }
 
@@ -59,11 +59,11 @@ public class InitializeState : BattleState, IDialogue
 
     private void InitializeBattleSimStatus()
     {
-        SetUpBattleCharacter(BattlePlayer, BattleInformation.BattlePlayerData);
+        SetUpBattleCharacter(_battlePlayer, BattleInformation.BattlePlayerData);
         for (int i = 0; i < BattleInformation.BattleAlliesData.Length; i++)
-            SetUpBattleCharacter(BattleAllies[i], BattleInformation.BattleAlliesData[i]);
+            SetUpBattleCharacter(_battleAllies[i], BattleInformation.BattleAlliesData[i]);
         for (int i = 0; i < BattleInformation.BattleEnemiesData.Length; i++)
-            SetUpBattleCharacter(BattleEnemies[i], BattleInformation.BattleEnemiesData[i]);
+            SetUpBattleCharacter(_battleEnemies[i], BattleInformation.BattleEnemiesData[i]);
         SetUpCameraSize();
         SetUpEnvironment();
         SetUpText();
@@ -74,7 +74,7 @@ public class InitializeState : BattleState, IDialogue
     {
         if (battleCharacterData != null && battleCharacterData.CharacterData != null)
         {
-            numberOfCharacters++;
+            _numberOfCharacters++;
 
             if (battleCharacterData.IsPlayer)
             {
@@ -87,16 +87,18 @@ public class InitializeState : BattleState, IDialogue
                 battleCharacter.AnimationPosition = battleCharacterData.CharacterAnimationPosition;
             }
 
-            if (battleCharacter.Character != null && battleCharacter.Character.Type.Equals("ALLY"))
-                BattleSimStatus.Allies.Add(battleCharacter.Character);
-            else if (battleCharacter.Character != null && battleCharacter.Character.Type.Equals("ENEMY"))
-                BattleSimStatus.Enemies.Add(battleCharacter.Character);
-
-            battleCharacter.RuntimeAnimatorController = battleCharacterData.CharacterAnimator;
-            battleCharacter.InitializeBattleCharacter();
-
-            if (battleCharacter.Character == null)
+            if (battleCharacter.Character != null)
+            {
+                battleCharacter.RuntimeAnimatorController = battleCharacterData.CharacterAnimator;
+                battleCharacter.InitializeBattleCharacter();
+            }
+            else
                 return;
+
+            if (battleCharacter.Character.Type.Equals("ALLY"))
+                BattleSimStatus.Allies.Add(battleCharacter.Character);
+            else if (battleCharacter.Character.Type.Equals("ENEMY"))
+                BattleSimStatus.Enemies.Add(battleCharacter.Character);
 
             foreach (StatusCondition sc in battleCharacter.Character.BattleStatus.StatusConditions.Values)
             {
@@ -111,17 +113,17 @@ public class InitializeState : BattleState, IDialogue
 
     private void SetUpCameraSize()
     {
-        if (numberOfCharacters == 2)
-            Camera.orthographicSize = 3;
-        else if (numberOfCharacters > 2 && numberOfCharacters < 5)
-            Camera.orthographicSize = 4;
+        if (_numberOfCharacters == 2)
+            _camera.orthographicSize = 3;
+        else if (_numberOfCharacters > 2 && _numberOfCharacters < 5)
+            _camera.orthographicSize = 4;
         else
-            Camera.orthographicSize = 5;
+            _camera.orthographicSize = 5;
     }
 
     private void SetUpEnvironment()
     {
-        foreach (EnvironmentDetail environmentDetail in EnvironmentDetails)
+        foreach (EnvironmentDetail environmentDetail in _environmentDetails)
         {
             if (!environmentDetail.ID.Equals(BattleInformation.Environment))
                 environmentDetail.Environment.SetActive(false);
@@ -132,53 +134,49 @@ public class InitializeState : BattleState, IDialogue
 
     private void SetUpText()
     {
-        InitializeText = Player.Instance().Name;
+        _initializeText = Player.Instance().Name;
         int numAllies = 0;
         int numEnemies = 0;
-        foreach (BattleCharacter ally in BattleAllies)
+
+        foreach (BattleCharacter ally in _battleAllies)
         {
             if (ally.gameObject.activeSelf)
                 numAllies++;
         }
-        foreach (BattleCharacter enemy in BattleEnemies)
+        foreach (BattleCharacter enemy in _battleEnemies)
         {
             if (enemy.gameObject.activeSelf)
                 numEnemies++;
         }
 
-        //if there is 1 ally
-        //if there are 2 allies
-        //if there are no allies
+        //texts for if there are 0, 1, or 2 allies
         if (numAllies == 1)
-            InitializeText += " and " + BattleAllies[0].Character.Name + " are fighting ";
+            _initializeText += " and " + _battleAllies[0].Character.Name + " are fighting ";
         else if (numAllies == 2)
-            InitializeText += ", " + BattleAllies[0].Character.Name + ", and " + BattleAllies[1].Character.Name + " are fighting ";
+            _initializeText += ", " + _battleAllies[0].Character.Name + ", and " + _battleAllies[1].Character.Name + " are fighting ";
         else
-            InitializeText += " is fighting ";
+            _initializeText += " is fighting ";
 
-        //if there is 1 enemy
-        //if there are 2 enemies
-        //if there are 3 enemies
+        //texts for if there are 1, 2, or 3 enemies
         if (numEnemies == 1)
-            InitializeText += BattleEnemies[0].Character.Name + "!";
+            _initializeText += _battleEnemies[0].Character.Name + "!";
         else if (numEnemies == 2)
-            InitializeText += BattleEnemies[0].Character.Name + ", and " + BattleEnemies[1].Character.Name + "!";
+            _initializeText += _battleEnemies[0].Character.Name + " and " + _battleEnemies[1].Character.Name + "!";
         else if (numEnemies == 3)
-            InitializeText += BattleEnemies[0].Character.Name + ", " + BattleEnemies[1].Character.Name + ", and " + BattleEnemies[2].Character.Name + "!";
+            _initializeText += _battleEnemies[0].Character.Name + ", " + _battleEnemies[1].Character.Name + ", and " + _battleEnemies[2].Character.Name + "!";
 
-        InitializeText += "!";
-
-        InitializeText = InitializeText.Replace("Wild", "a wild");
+        _initializeText += "!";
+        _initializeText = _initializeText.Replace("Wild", "a wild");
     }
 
     public void StartDialogue()
     {
-        startedDialogue = true;
+        _startedDialogue = true;
         TextBoxBattle.KeepTextBoxOpened = true;
         TextBoxBattle.EndNarrationNow = false;
-        DialogueManager.Instance.CurrentStory = new Story(DialogueData.InkJSON.text);
-        DialogueManager.Instance.SetVariableState("text", InitializeText);
-        DialogueManager.Instance.TextBox = NarrationTextBox;
-        DialogueManager.Instance.DisplayNextDialogue(DialogueData);
+        DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+        DialogueManager.Instance.SetVariableState("text", _initializeText);
+        DialogueManager.Instance.TextBox = _narrationTextBox;
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
     }
 }

@@ -30,6 +30,7 @@ public class MoveEffects : MonoBehaviour
     /// <returns></returns>
     public IEnumerator ActionAnimationRoutine(string nameOfAnimation, string offset)
     {
+        nameOfAnimation = nameOfAnimation ?? "";
         string animationName = nameOfAnimation.ToLower().Replace(" ", "_");
         float t = 0f;
         bool animationPerformed;

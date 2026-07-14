@@ -11,11 +11,11 @@ using UnityEngine;
 public class BattleSimStatus
 {
     //public static variables
-    public static List<Character> Allies = new List<Character>();
-    public static List<Character> Enemies = new List<Character>();
-    public static List<Character> Graveyard = new List<Character>();
-    public static Queue<Character> BattleQueue = new Queue<Character>();
-    public static List<Character> RoundKnockOuts = new List<Character>();
+    public static List<Character> Allies = new();
+    public static List<Character> Enemies = new();
+    public static List<Character> Graveyard = new();
+    public static Queue<Character> BattleQueue = new();
+    public static List<Character> RoundKnockOuts = new();
     public static bool EndPlayerOption;
     public static Character ChosenCharacter;
     public static bool UpdatedCharacterHUD;

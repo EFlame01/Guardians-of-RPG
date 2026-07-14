@@ -13,17 +13,17 @@ using Ink.Runtime;
 public class KnockoutState : BattleState
 {
     //private variables
-    private DialogueData dialogueData;
-    private TextBox textBox;
-    private string text;
-    private bool startedDialogue;
+    private DialogueData _dialogueData;
+    private TextBox _textBox;
+    private string _text;
+    private bool _startedDialogue;
 
     //Constructor
     public KnockoutState(DialogueData dialogueData, TextBox textBox)
     {
         CurrentState = Units.KNOCK_OUT_STATE;
-        this.dialogueData = dialogueData;
-        this.textBox = textBox;
+        _dialogueData = dialogueData;
+        _textBox = textBox;
     }
 
     public override void Enter()
@@ -34,7 +34,7 @@ public class KnockoutState : BattleState
 
     public override void Update()
     {
-        if (startedDialogue && DialogueManager.Instance.DialogueEnded)
+        if (_startedDialogue && DialogueManager.Instance.DialogueEnded)
         {
             if (BattleOver())
                 NextState = Units.BATTLE_OVER_STATE;
@@ -57,32 +57,34 @@ public class KnockoutState : BattleState
 
     private void GetText()
     {
-        text = "";
+        _text = "";
 
         for (int i = 0; i < BattleSimStatus.RoundKnockOuts.Count; i++)
         {
             if (i == 0)
-                text += BattleSimStatus.RoundKnockOuts[i].Name + " ";
+                _text += BattleSimStatus.RoundKnockOuts[i].Name + " ";
             else if (i + 1 == BattleSimStatus.RoundKnockOuts.Count)
-                text += ", and " + BattleSimStatus.RoundKnockOuts[i].Name;
+                _text += ", and " + BattleSimStatus.RoundKnockOuts[i].Name;
             else
-                text += ", " + BattleSimStatus.RoundKnockOuts[i].Name + " ";
+                _text += ", " + BattleSimStatus.RoundKnockOuts[i].Name + " ";
         }
 
         if (BattleSimStatus.RoundKnockOuts.Count > 1)
-            text += " are knocked out!";
+            _text += " are knocked out!";
         if (BattleSimStatus.RoundKnockOuts.Count == 1)
-            text += "is knocked out!";
+            _text += "is knocked out!";
+
+        _text = _text.Replace("Wild", "the wild");
     }
 
     private void StartDialogue()
     {
         TextBoxBattle.KeepTextBoxOpened = true;
         TextBoxBattle.EndNarrationNow = false;
-        DialogueManager.Instance.CurrentStory = new Story(dialogueData.InkJSON.text);
-        DialogueManager.Instance.SetVariableState("text", text);
-        DialogueManager.Instance.TextBox = textBox;
-        DialogueManager.Instance.DisplayNextDialogue(dialogueData);
-        startedDialogue = true;
+        DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
+        DialogueManager.Instance.SetVariableState("text", _text);
+        DialogueManager.Instance.TextBox = _textBox;
+        DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
+        _startedDialogue = true;
     }
 }
