@@ -21,6 +21,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     public TextBox NarrationTextBox;
 
     //public variables
+    public bool DialogueStarted { get; private set; }
     public bool DialogueEnded { get; private set; }
     public bool DialogueContinued { get; private set; }
     public Story CurrentStory;
@@ -104,6 +105,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     {
         DialogueEnded = false;
         DialogueContinued = true;
+        DialogueStarted = true;
 
         //assigns global _dialogueData variable to use for further methods
         _dialogueData = dialogueData;
@@ -255,6 +257,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
         _dialogueIsPlaying = false;
         DialogueContinued = false;
+        DialogueStarted = false;
         GameManager.Instance.EnableNarrationInputs = true;
     }
 
@@ -267,6 +270,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         _dialogueEnded = false;
         DialogueEnded = true;
         DialogueContinued = false;
+        DialogueStarted = false;
         CloseRightTextBox(null);
     }
 
@@ -441,6 +445,8 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     public IEnumerator WaitUntilDialogueIsOver()
     {
+        while (!DialogueStarted)
+            yield return null;
         while (!DialogueEnded)
             yield return null;
     }
@@ -494,26 +500,26 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         }
     }
 
-    public void SetVariableState(string variable, object value)
+    public bool SetVariableState(string variable, object value)
     {
         if (value == null)
         {
             //Debug.LogWarning($"WARNING: The value for the ink variable {variable} is null.");
-            return;
+            return false;
         }
         if (string.IsNullOrEmpty(variable))
         {
             //Debug.LogWarning($"WARNING: The name of the variable you are trying to add is null.");
-            return;
+            return false;
         }
         if (CurrentStory.variablesState[variable] == null)
         {
             //Debug.LogWarning($"WARNING: The ink variable you are trying to add value to does not exist.");
-            return;
+            return false;
         }
 
         CurrentStory.variablesState[variable] = value;
-
+        return true;
     }
 
     public object GetVariableState(string variable)
