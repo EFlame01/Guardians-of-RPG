@@ -518,7 +518,14 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             return false;
         }
 
-        CurrentStory.variablesState[variable] = value;
+        try
+        {
+            CurrentStory.variablesState[variable] = value;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
+        }
         return true;
     }
 
