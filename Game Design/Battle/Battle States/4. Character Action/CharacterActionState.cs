@@ -129,7 +129,7 @@ public class CharacterActionState : BattleState, IDialogue
         TextBoxBattle.KeepTextBoxOpened = true;
         TextBoxBattle.EndNarrationNow = false;
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
-        DialogueManager.Instance.SetVariableState("text", _characterActionText);
+        DialogueManager.Instance.SetVariableState("text", _characterActionText, "string");
         DialogueManager.Instance.TextBox = _narrationTextBox;
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         _startedDialogue = true;

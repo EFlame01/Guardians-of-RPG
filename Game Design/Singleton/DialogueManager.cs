@@ -453,13 +453,13 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     private void SetUpDialogueVariables()
     {
-        SetVariableState("playerName", Player.Instance().Name);
-        SetVariableState("itemName", _itemName);
-        SetVariableState("pluralName", _pluralName);
-        SetVariableState("_itemType", _itemType);
+        SetVariableState("playerName", Player.Instance().Name, "string");
+        SetVariableState("itemName", _itemName, "string");
+        SetVariableState("pluralName", _pluralName, "string");
+        SetVariableState("_itemType", _itemType, "string");
 
         if (CheckVariableState("numberOfWater", 0))
-            SetVariableState("numberOfWater", _number);
+            SetVariableState("numberOfWater", _number, "int");
 
         if (CurrentStory.variablesState["pronouns"] != null)
             SetUpPronouns();
@@ -471,36 +471,36 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         switch (sex)
         {
             case "MALE":
-                SetVariableState("subject", "he");
-                SetVariableState("subject_s", "he's");
-                SetVariableState("object", "him");
-                SetVariableState("possessive_a", "his");
-                SetVariableState("possessive_p", "his");
-                SetVariableState("reflexive", "himself");
-                SetVariableState("person", "man");
+                SetVariableState("subject", "he", "string");
+                SetVariableState("subject_s", "he's", "string");
+                SetVariableState("object", "him", "string");
+                SetVariableState("possessive_a", "his", "string");
+                SetVariableState("possessive_p", "his", "string");
+                SetVariableState("reflexive", "himself", "string");
+                SetVariableState("person", "man", "string");
                 break;
             case "FEMALE":
-                SetVariableState("subject", "she");
-                SetVariableState("subject_s", "she's");
-                SetVariableState("object", "her");
-                SetVariableState("possessive_a", "her");
-                SetVariableState("possessive_p", "hers");
-                SetVariableState("reflexive", "herself");
-                SetVariableState("person", "woman");
+                SetVariableState("subject", "she", "string");
+                SetVariableState("subject_s", "she's", "string");
+                SetVariableState("object", "her", "string");
+                SetVariableState("possessive_a", "her", "string");
+                SetVariableState("possessive_p", "hers", "string");
+                SetVariableState("reflexive", "herself", "string");
+                SetVariableState("person", "woman", "string");
                 break;
             case "MALEFE":
-                SetVariableState("subject", "they");
-                SetVariableState("subject_s", "they're");
-                SetVariableState("object", "them");
-                SetVariableState("possessive_a", "their");
-                SetVariableState("possessive_p", "theirs");
-                SetVariableState("reflexive", "themselves");
-                SetVariableState("person", "person");
+                SetVariableState("subject", "they", "string");
+                SetVariableState("subject_s", "they're", "string");
+                SetVariableState("object", "them", "string");
+                SetVariableState("possessive_a", "their", "string");
+                SetVariableState("possessive_p", "theirs", "string");
+                SetVariableState("reflexive", "themselves", "string");
+                SetVariableState("person", "person", "string");
                 break;
         }
     }
 
-    public bool SetVariableState(string variable, object value)
+    public bool SetVariableState(string variable, object value, string type)
     {
         if (value == null)
         {
@@ -524,7 +524,19 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         }
         catch (Exception e)
         {
-            Debug.LogError(e.Message);
+            Debug.LogWarning(e.Message);
+            if (e.Message.Contains("FormatException"))
+            {
+                switch (type)
+                {
+                    case "string":
+                        CurrentStory.variablesState[variable] = value.ToString();
+                        break;
+                    case "int":
+                        CurrentStory.variablesState[variable] = (int)value;
+                        break;
+                }
+            }
         }
         return true;
     }
@@ -563,7 +575,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
             return false;
         }
 
-        return CurrentStory.variablesState[variable] == value;
+        return CurrentStory.variablesState[variable].Equals(value);
     }
 
     private void HandleStoryError(string message, Ink.ErrorType type)

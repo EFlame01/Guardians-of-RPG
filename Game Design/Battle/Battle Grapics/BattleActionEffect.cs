@@ -745,7 +745,7 @@ public class BattleActionEffect : MonoBehaviour
         {
             int val = i + 1;
             string variable = val >= 2 ? "text" + val.ToString() : "text";
-            DialogueManager.Instance.SetVariableState(variable, _effectText[i]);
+            DialogueManager.Instance.SetVariableState(variable, _effectText[i], "string");
         }
 
         DialogueManager.Instance.TextBox = _textBox;

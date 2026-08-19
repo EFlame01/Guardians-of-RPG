@@ -82,7 +82,7 @@ public class KnockoutState : BattleState
         TextBoxBattle.KeepTextBoxOpened = true;
         TextBoxBattle.EndNarrationNow = false;
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
-        DialogueManager.Instance.SetVariableState("text", _text);
+        DialogueManager.Instance.SetVariableState("text", _text, "string");
         DialogueManager.Instance.TextBox = _textBox;
         DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         _startedDialogue = true;
