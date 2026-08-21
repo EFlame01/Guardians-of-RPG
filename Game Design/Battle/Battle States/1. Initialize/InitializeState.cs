@@ -175,11 +175,14 @@ public class InitializeState : BattleState, IDialogue
         TextBoxBattle.KeepTextBoxOpened = true;
         TextBoxBattle.EndNarrationNow = false;
         DialogueManager.Instance.CurrentStory = new Story(_dialogueData.InkJSON.text);
-        if (DialogueManager.Instance.SetVariableState("text", _initializeText, "string"))
+        string setVariableResponse = DialogueManager.Instance.SetVariableState("text", _initializeText, "string");
+
+        if (setVariableResponse.Equals("SUCCESS"))
         {
             DialogueManager.Instance.TextBox = _narrationTextBox;
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         }
-        Debug.LogError($"There was an error that occurred when setting the variable state:\n- variable state: 'text'\n- value: {_initializeText}");
+        else
+            Debug.LogError($"There was an error that occurred when setting the variable state: \n- variable state: 'text' \n- value: {_initializeText} \n- message: {setVariableResponse}");
     }
 }

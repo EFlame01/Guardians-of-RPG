@@ -456,7 +456,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         SetVariableState("playerName", Player.Instance().Name, "string");
         SetVariableState("itemName", _itemName, "string");
         SetVariableState("pluralName", _pluralName, "string");
-        SetVariableState("_itemType", _itemType, "string");
+        SetVariableState("itemType", _itemType, "string");
 
         if (CheckVariableState("numberOfWater", 0))
             SetVariableState("numberOfWater", _number, "int");
@@ -500,27 +500,41 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         }
     }
 
-    public bool SetVariableState(string variable, object value, string type)
+    public string SetVariableState(string variable, object value, string type)
     {
+        string WARNING_MESSAGE_1 = "WARNING: The value for the ink variable " + variable + " is null.";
+        string WARNING_MESSAGE_2 = "WARNING: The name of the variable you are trying to add is null.";
+        string WARNING_MESSAGE_3 = "WARNING: The ink variable you are trying to add value to does not exist.";
+        string WARNING_MESSAGE_4 = "WARNING: There is no CurrentStory present to add value to a VariableState.";
+        string SUCCESS_MESSAGE = "SUCCESS";
+
         if (value == null)
         {
             //Debug.LogWarning($"WARNING: The value for the ink variable {variable} is null.");
-            return false;
+            //return false;
+            return WARNING_MESSAGE_1;
         }
         if (string.IsNullOrEmpty(variable))
         {
             //Debug.LogWarning($"WARNING: The name of the variable you are trying to add is null.");
-            return false;
+            //return false;
+            return WARNING_MESSAGE_2;
+        }
+        if (CurrentStory == null)
+        {
+            return WARNING_MESSAGE_4;
         }
         if (CurrentStory.variablesState[variable] == null)
         {
             //Debug.LogWarning($"WARNING: The ink variable you are trying to add value to does not exist.");
-            return false;
+            // return false;
+            return WARNING_MESSAGE_3;
         }
 
         try
         {
             CurrentStory.variablesState[variable] = value;
+            return SUCCESS_MESSAGE;
         }
         catch (Exception e)
         {
@@ -538,7 +552,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                 }
             }
         }
-        return true;
+        return SUCCESS_MESSAGE;
     }
 
     public object GetVariableState(string variable)
