@@ -232,6 +232,8 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
             if (_textBoxType != Units.DECISION)
                 _typeDialogueCoroutine = StartCoroutine(TypeDialogue(CurrentStory));
+            else
+                GameManager.Instance.EnableNarrationInputs = true;
         }//end of else...
     }
 
