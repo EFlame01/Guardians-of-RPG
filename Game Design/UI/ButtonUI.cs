@@ -52,7 +52,7 @@ public class ButtonUI : MonoBehaviour
     /// </summary>
     protected void AddButtonSound()
     {
-        if (_soundEffect == null || _soundEffect.Length < 0)
+        if (string.IsNullOrEmpty(_soundEffect))
             return;
         if (UIButton == null)
             return;

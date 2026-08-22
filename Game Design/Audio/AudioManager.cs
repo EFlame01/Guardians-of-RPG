@@ -360,7 +360,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
     private bool IsAudioValid(string name)
     {
         //if name of sfx does not exist, return false
-        if (name == null || name.Length <= 0)
+        if (string.IsNullOrEmpty(name))
         {
             Debug.LogWarning("WARNING: the name of this sfx is null or has a length of 0...");
             return false;
