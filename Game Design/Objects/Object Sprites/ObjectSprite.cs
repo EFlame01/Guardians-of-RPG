@@ -5,6 +5,7 @@ using UnityEngine;
 /// ObjectSprite is a class that controls the
 /// animation of certain objects in the game.
 /// </summary>
+[RequireComponent(typeof(Animator))]
 public class ObjectSprite : MonoBehaviour
 {
     //Serialized variables
@@ -17,7 +18,8 @@ public class ObjectSprite : MonoBehaviour
     public virtual void Start()
     {
         _animator = GetComponent<Animator>();
-        if (_startAnimation != null)
+
+        if (!string.IsNullOrEmpty(_startAnimation))
             _animator.Play(_objectID + "_" + _startAnimation);
     }
 
@@ -43,39 +45,5 @@ public class ObjectSprite : MonoBehaviour
             return;
 
         _animator.Play(_objectID + "_close");
-    }
-
-    /// <summary>
-    /// This is used to play animations that ARE ON FIRE.
-    /// This includes fire of any color.
-    /// </summary>
-    public void FireAnimation(string fireAnimation)
-    {
-        if (_animator == null)
-            return;
-        try
-        {
-            _animator.Play(_objectID + fireAnimation);
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning($"WARNING: {e.Message} \n {_objectID}{fireAnimation} not found...");
-        }
-
-        // switch (fireAnimation)
-        // {
-        //     case "_fire":
-        //         _animator.Play(_objectID + "_fire");
-        //         break;
-        //     case "_smoke":
-        //         _animator.Play(_objectID + "_smoke");
-        //         break;
-        //     case "_none":
-        //         _animator.Play(_objectID + "_none");
-        //         break;
-        //     default:
-        //         _animator.Play(_objectID + "_fire");
-        //         break;
-        // }
     }
 }

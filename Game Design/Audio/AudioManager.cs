@@ -366,7 +366,7 @@ public class AudioManager : PersistentSingleton<AudioManager>
             return false;
         }
 
-        if (_audioDictionary[name] == null)
+        if (!_audioDictionary.ContainsKey(name))
         {
             Debug.LogWarning($"WARNING: the name {name} does not exist in the audio dictionary...");
             return false;

@@ -173,7 +173,8 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
         if (_originalText == null || _originalText.Length <= 0)
         {
-            Debug.LogWarning($"Original text is not present... Ending Dialogue: {_originalText}");
+            if (_textBoxType == 1)
+                Debug.LogWarning($"Original text is not present... Ending Dialogue: {_originalText}");
             EndDialogue();
         }
         else
@@ -272,6 +273,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         DialogueContinued = false;
         DialogueStarted = false;
         CloseRightTextBox(null);
+        GameManager.Instance.EnableNarrationInputs = false;
     }
 
     private void FinishEarly()
