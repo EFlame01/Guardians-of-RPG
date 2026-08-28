@@ -23,7 +23,7 @@ public class InitializeState : BattleState, IDialogue
     private DialogueData _dialogueData;
     private int _numberOfCharacters;
     private bool _startedDialogue;
-
+    private bool _startInitializeStateDialogue;
 
     //Constructor
     public InitializeState(BattleCharacter battlePlayer, BattleCharacter[] battleAllies, BattleCharacter[] battleEnemies, EnvironmentDetail[] environmentDetails, Camera camera, DialogueData dialogueData, TextBox textBox)
@@ -48,7 +48,7 @@ public class InitializeState : BattleState, IDialogue
         if (_startedDialogue && DialogueManager.Instance.DialogueEnded)
             NextState = Units.BEFORE_ROUND_STATE;
 
-        if (!_startedDialogue && GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING))
+        if (!_startedDialogue && GameManager.Instance.PlayerState.Equals(PlayerState.NOT_MOVING) && _startInitializeStateDialogue)
             StartDialogue();
     }
 
@@ -67,7 +67,7 @@ public class InitializeState : BattleState, IDialogue
         SetUpCameraSize();
         SetUpEnvironment();
         SetUpText();
-
+        _startInitializeStateDialogue = true;
     }
 
     private void SetUpBattleCharacter(BattleCharacter battleCharacter, BattleCharacterData battleCharacterData)
