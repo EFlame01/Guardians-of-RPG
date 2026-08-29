@@ -93,7 +93,10 @@ public class InitializeState : BattleState, IDialogue
                 battleCharacter.InitializeBattleCharacter();
             }
             else
+            {
+                Debug.LogWarning($"WARNING: The character {battleCharacterData.CharacterData} does not exist in the database...");
                 return;
+            }
 
             if (battleCharacter.Character.Type.Equals("ALLY"))
                 BattleSimStatus.Allies.Add(battleCharacter.Character);

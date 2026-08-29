@@ -154,7 +154,17 @@ public class BattleOverState : BattleState
         Level.GainXP(xp);
         Level.LevelUpPlayer();
         int newLevel = Player.Instance().Level;
-        Move[] newMoves = MoveMaker.Instance.GetLevelUpMoves(newLevel, Player.Instance().Archetype.ArchetypeName, Player.Instance().Archetype.ClassName);
+        Move[] newMoves = new Move[4];
+
+        try
+        {
+            newMoves = MoveMaker.Instance.GetLevelUpMoves(newLevel, Player.Instance().Archetype.ArchetypeName, Player.Instance().Archetype.ClassName);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"WARNING: {e.Message}");
+        }
+
 
         if (bits > 0)
             _texts.Add("You gained " + xp + " XP" + " and " + bits + " bits!");

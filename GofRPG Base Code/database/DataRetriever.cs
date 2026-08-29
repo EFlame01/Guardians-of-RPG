@@ -99,7 +99,10 @@ public class DataRetriever : Singleton<DataRetriever>
 
         foreach (string row in data.Split('\n'))
         {
-            if (row.Contains("," + id + ","))
+            string[] cols = row.Split(",");
+            // if (row.Contains("," + id + ","))
+            //     rows.Add(row);
+            if (cols[0].Equals(id))
                 rows.Add(row);
         }
 
