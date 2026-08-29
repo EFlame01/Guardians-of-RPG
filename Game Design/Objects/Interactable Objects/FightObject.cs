@@ -64,6 +64,7 @@ public class FightObject : NPCObject
     {
         if (CanInteract)
         {
+            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             CanInteract = false;
             if (NpcData.foughtPlayer && !NpcData.wonAgainstPlayer)
                 ConfrontPlayer3();
@@ -84,7 +85,7 @@ public class FightObject : NPCObject
         if (!_confrontedPlayer)
         {
             _confrontedPlayer = true;
-            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+            //GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             TurnToPlayer();
             yield return StartCoroutine(TalkToPlayer());
             StartFight();
@@ -130,7 +131,7 @@ public class FightObject : NPCObject
             Debug.Log("ConfrontPlayer3");
             TalkedToPlayer = true;
             _dialogueData = DialogueDataAfterBattle;
-            GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
+            //GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
             StartCoroutine(TalkToPlayer());
         }
     }

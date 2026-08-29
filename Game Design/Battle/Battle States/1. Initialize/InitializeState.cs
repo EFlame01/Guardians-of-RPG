@@ -183,6 +183,6 @@ public class InitializeState : BattleState, IDialogue
             DialogueManager.Instance.DisplayNextDialogue(_dialogueData);
         }
         else
-            Debug.LogError($"There was an error that occurred when setting the variable state: \n- variable state: 'text' \n- value: {_initializeText} \n- message: {setVariableResponse}");
+            Debug.LogError($"There was an error that occurred when setting the variable state: \n- variable state: 'text' \n- value: {_initializeText} \n- message: {setVariableResponse} \n- current story: {DialogueManager.Instance.CurrentStory}");
     }
 }

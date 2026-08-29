@@ -9,7 +9,7 @@ public class MenuState : MonoBehaviour
     {
         AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.OPEN_UI_1);
     }
-    
+
     public void OnBackButton()
     {
         AudioManager.Instance.PlaySoundEffect(Units.SoundEffect.CLOSE_UI_4);
