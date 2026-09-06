@@ -60,7 +60,7 @@ public class ActionEffectState2 : BattleState
 
     private void CheckStatus()
     {
-        Debug.Log("Checking Status...");
+        // Debug.Log("Checking Status...");
         // TextBoxBattle.KeepTextBoxOpened = false;
         // TextBoxBattle.EndNarrationNow = true;
 

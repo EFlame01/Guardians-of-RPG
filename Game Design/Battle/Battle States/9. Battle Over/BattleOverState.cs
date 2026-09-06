@@ -80,12 +80,12 @@ public class BattleOverState : BattleState
 
         if (_winner.Equals("PLAYER"))
         {
-            text = Player.Instance().Name + " ";
+            text = Player.Instance().Name;
 
             for (int i = 0; i < allies.Count; i++)
             {
                 if (i == 0 && i + 1 == allies.Count)
-                    text += "and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
+                    text += " and " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
                 else if (i == 0)
                     text += ", " + (allies[i].Name.Contains("Wild") ? "a " + allies[i].Name.ToLower() : allies[i].Name);
                 else if (i + 1 == allies.Count)

@@ -39,6 +39,7 @@ public class GameManager : PersistentSingleton<GameManager>
     public void LoadGame()
     {
         string sceneName = SetSceneBasedOnPlayerData();
+        Player.Instance().StoryFlagManager.AddAllStoryFlags();
         AudioManager.Instance.StopCurrentMusic(false);
         SceneLoader.Instance.LoadScene(sceneName, TransitionType.FADE_TO_BLACK);
     }
@@ -110,7 +111,7 @@ public class GameManager : PersistentSingleton<GameManager>
     public bool IsPlayingAsUser()
     {
         GameDataCloud data = GetComponentInChildren<CloudSave>().GameData;
-        Debug.Log($"Username: {data.Username}");
+        // Debug.Log($"Username: {data.Username}");
         if (data.Username == null && StartScene.Username == null)
             return false;
         else

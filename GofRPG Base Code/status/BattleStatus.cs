@@ -9,25 +9,25 @@ public class BattleStatus
 {
     public Move ChosenMove;
     public Item ChosenItem;
-    public List<Character> ChosenTargets {get; private set;}
-    public Dictionary<string, StatusCondition> StatusConditions {get; private set;}
-    public string ProtectionStatus {get; private set;}
-    public TurnStatus TurnStatus {get; private set;}
-    public string TurnStatusTag {get; private set;}
+    public List<Character> ChosenTargets { get; private set; }
+    public Dictionary<string, StatusCondition> StatusConditions { get; private set; }
+    public string ProtectionStatus { get; private set; }
+    public TurnStatus TurnStatus { get; private set; }
+    public string TurnStatusTag { get; private set; }
 
-    public bool Ability {get; private set;}
-    public bool ProtectBreaker {get; private set;}
-    public Dictionary<string, bool> Immunities {get; private set;}
-    public int RechargeTime {get; private set;}
-    public bool IncludeStab {get; private set;}
-    public int ExhaustionLevel {get; private set;}
-    public double RollAdvantage {get; private set;}
-    public bool CanEscape {get; private set;}
-    public bool RollInitiative {get; private set;}
-    public int InitiativeCount {get; private set;}
-    public bool RollRun {get; private set;}
-    public bool SkipTurn {get; private set;}
-    public bool RoundCompleted {get; private set;}
+    public bool Ability { get; private set; }
+    public bool ProtectBreaker { get; private set; }
+    public Dictionary<string, bool> Immunities { get; private set; }
+    public int RechargeTime { get; private set; }
+    public bool IncludeStab { get; private set; }
+    public int ExhaustionLevel { get; private set; }
+    public double RollAdvantage { get; private set; }
+    public bool CanEscape { get; private set; }
+    public bool RollInitiative { get; private set; }
+    public int InitiativeCount { get; private set; }
+    public bool RollRun { get; private set; }
+    public bool SkipTurn { get; private set; }
+    public bool RoundCompleted { get; private set; }
     private int _rollAdvStage = 0;
 
     //Constructor
@@ -39,12 +39,18 @@ public class BattleStatus
         TurnStatus = TurnStatus.NOTHING;
         Immunities = new Dictionary<string, bool>
         {
+            { "BLIND", false },
             { "BURN", false },
-            { "POISON", false },
-            { "STUN", false },
-            { "SLEEP", false },
+            { "CHARM", false },
+            { "CONFUSE", false },
+            { "DEAFEN", false },
+            { "EXHAUSTION", false },
             { "FROZEN", false },
             { "PETRIFIED", false },
+            { "POISON", false },
+            { "RESTRAIN", false },
+            { "STUN", false },
+            { "SLEEP", false },
             { "STATUS_CONDITION", false }
         };
         ExhaustionLevel = 0;
@@ -61,7 +67,7 @@ public class BattleStatus
     public void SetTurnStatus(TurnStatus turnStatus)
     {
         TurnStatus = turnStatus;
-        
+
     }
     public void SetAbilityUse(bool useAbility)
     {
@@ -73,7 +79,7 @@ public class BattleStatus
     }
     public void SetRechargeTime(int rechargeTime)
     {
-        RechargeTime = rechargeTime  < 0 ? 0 : rechargeTime;
+        RechargeTime = rechargeTime < 0 ? 0 : rechargeTime;
     }
     public void SetStab(bool includeStab)
     {
@@ -98,9 +104,9 @@ public class BattleStatus
     }
     public void SetRollAdvantage(int stage)
     {
-        if(_rollAdvStage + stage > 6)
+        if (_rollAdvStage + stage > 6)
             RollAdvantage = Units.STAGE_POS_6;
-        else if(_rollAdvStage + stage < 6)
+        else if (_rollAdvStage + stage < 6)
             RollAdvantage = Units.STAGE_NEG_6;
         else
         {
@@ -131,12 +137,12 @@ public class BattleStatus
     {
         return InitiativeCount > 0;
     }
-    
+
     public void SetRollInitiativeTrue()
     {
-        if(!CanRollInitiative())
+        if (!CanRollInitiative())
             return;
-        
+
         RollInitiative = true;
         // InitiativeCount--;
     }

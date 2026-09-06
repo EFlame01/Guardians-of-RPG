@@ -43,12 +43,12 @@ public class ActivateObject : MonoBehaviour
             foreach (CutSceneCriteria criteria in ActivateCriteria)
             {
                 bool criteriaExists = StoryFlagManager.FlagDictionary.ContainsKey(criteria.storyFlagID);
-                bool criteriaTheSame = false;
+                bool criteriaMet = false;
 
                 if (criteriaExists)
-                    criteriaTheSame = StoryFlagManager.FlagDictionary[criteria.storyFlagID].Value == criteria.storyFlagValue;
+                    criteriaMet = StoryFlagManager.FlagDictionary[criteria.storyFlagID].Value == criteria.storyFlagValue;
 
-                if (!criteriaExists || !criteriaTheSame)
+                if (!criteriaExists || !criteriaMet)
                     return false;
             }
         }
@@ -78,12 +78,12 @@ public class ActivateObject : MonoBehaviour
             foreach (CutSceneCriteria criteria in DeactivateCriteria)
             {
                 bool criteriaExists = StoryFlagManager.FlagDictionary.ContainsKey(criteria.storyFlagID);
-                bool criteriaTheSame = false;
+                bool criteriaMet = false;
 
                 if (criteriaExists)
-                    criteriaTheSame = StoryFlagManager.FlagDictionary[criteria.storyFlagID].Value == criteria.storyFlagValue;
+                    criteriaMet = StoryFlagManager.FlagDictionary[criteria.storyFlagID].Value == criteria.storyFlagValue;
 
-                if (!criteriaExists || !criteriaTheSame)
+                if (!criteriaExists || !criteriaMet)
                     deactivate = false;
             }
 

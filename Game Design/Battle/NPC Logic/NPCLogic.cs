@@ -371,7 +371,7 @@ public class NPCLogic
                 {
                     Character allyTarget = null;
                     Character ally1 = CharacterAllies[0];
-                    Character ally2 = CharacterAllies[2];
+                    Character ally2 = CharacterAllies[1];
                     switch (move.Type)
                     {
                         case MoveType.HEALING:

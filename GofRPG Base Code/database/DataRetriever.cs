@@ -86,7 +86,10 @@ public class DataRetriever : Singleton<DataRetriever>
     {
         foreach (string row in data.Split('\n'))
         {
-            if (row.Contains(id + ","))
+            // if (row.Contains(id + ","))
+            //     return row;
+            string[] cols = row.Split(",");
+            if (cols[0].Equals(id))
                 return row;
         }
 
@@ -100,10 +103,16 @@ public class DataRetriever : Singleton<DataRetriever>
         foreach (string row in data.Split('\n'))
         {
             string[] cols = row.Split(",");
+            foreach (string col in cols)
+            {
+                if (col.Equals(id))
+                {
+                    rows.Add(row);
+                    break;
+                }
+            }
             // if (row.Contains("," + id + ","))
             //     rows.Add(row);
-            if (cols[0].Equals(id))
-                rows.Add(row);
         }
 
         return rows.ToArray();

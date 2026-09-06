@@ -85,6 +85,14 @@ public class OptionState : BattleState
         list.AddRange(BattleSimStatus.Enemies.ToArray());
         foreach (Character c in list)
         {
+            //check sto stop player from being counted as an NPC
+            //temporary code to delete once real bug has been fixed.
+            if (c.Id.Equals("0"))
+            {
+                Debug.LogWarning($"WARNING: The character {c.Name} is present in the list of allies and enemies");
+                BattleSimStatus.Allies.Remove(Player.Instance());
+                continue;
+            }
             c.BattleStatus.ResetRound();
             NPCLogic logic = new NPCLogic(c, BattleInformation.GetNPCLogicNumber(c.Id, c.Type));
             logic.DetermineBehaviour();

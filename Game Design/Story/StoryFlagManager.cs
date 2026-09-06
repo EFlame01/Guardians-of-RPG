@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// StoryFlagManager is a class that is 
@@ -20,7 +21,11 @@ public class StoryFlagManager
     {
         StoryFlag[] storyFlags = StoryFlagMaker.Instance.GetAllStoryFlags();
         foreach (StoryFlag flag in storyFlags)
+        {
+            if (FlagDictionary.ContainsKey(flag.Id))
+                continue;
             FlagDictionary.Add(flag.Id, flag);
+        }
     }
 
     /// <summary>

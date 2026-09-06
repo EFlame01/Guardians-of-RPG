@@ -28,6 +28,8 @@ public class LightCycle : MonoBehaviour
     {
         if (GameManager.Instance.StartDayNightCycle)
             SetLight();
+        else
+            SetLight2();
     }
 
     /// <summary>
@@ -44,6 +46,17 @@ public class LightCycle : MonoBehaviour
             Units.MORNING => Color.Lerp(EVENING_COLOR, MORNING_COLOR, (float)DayNightCycle.TimeRemaining / Units.TIME_PER_PART),//use day light
             Units.EVENING => Color.Lerp(NIGHT_COLOR, EVENING_COLOR, (float)DayNightCycle.TimeRemaining / Units.TIME_PER_PART),//use afternoon light
             Units.NIGHT => Color.Lerp(MORNING_COLOR, NIGHT_COLOR, (float)DayNightCycle.TimeRemaining / Units.TIME_PER_PART),//use night light
+            _ => MORNING_COLOR,//use day light
+        };
+    }
+
+    private void SetLight2()
+    {
+        Light.color = GameManager.Instance.TimeOfDay switch
+        {
+            Units.MORNING => MORNING_COLOR,//use day light
+            Units.EVENING => EVENING_COLOR,//use afternoon light
+            Units.NIGHT => NIGHT_COLOR,//use night light
             _ => MORNING_COLOR,//use day light
         };
     }

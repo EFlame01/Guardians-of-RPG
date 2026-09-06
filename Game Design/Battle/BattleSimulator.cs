@@ -53,6 +53,8 @@ public class BattleSimulator : MonoBehaviour
     private BattleState AfterRoundState;
     private BattleState BattleOverState;
 
+    private bool _endBattleCalled;
+
     private void Awake()
     {
         BattleStateMachine = new BattleStateMachine();
@@ -116,6 +118,7 @@ public class BattleSimulator : MonoBehaviour
                 break;
             case "END BATTLE":
                 EndBattle();
+                _endBattleCalled = true;
                 break;
             default:
                 Debug.LogWarning(nextState + " not found. Moving to OPTION STATE...");
@@ -126,6 +129,9 @@ public class BattleSimulator : MonoBehaviour
 
     private void EndBattle()
     {
+        if (_endBattleCalled)
+            return;
+
         bool didPlayerWin = BattleSimStatus.DidPlayerWin;
         bool gameOverScreen = BattleSimStatus.GameOverScreenIfLost;
 

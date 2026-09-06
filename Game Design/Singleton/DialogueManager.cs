@@ -214,15 +214,20 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
                     _currentTextBox = ConfirmationTextBox;
                     break;
                 case Units.DECISION:
-                    if (!DecisionTextBox.gameObject.activeSelf || DecisionTextBox.IsClosed)
+                    if (CurrentStory.currentChoices.Count <= 0)
+                        EndDialogue();
+                    else
                     {
-                        CloseRightTextBox(DecisionTextBox);
-                        yield return new WaitForSeconds(0.4f);
-                        OpenRightTextBox(DecisionTextBox);
-                        yield return new WaitForSeconds(0.25f);
+                        if (!DecisionTextBox.gameObject.activeSelf || DecisionTextBox.IsClosed)
+                        {
+                            CloseRightTextBox(DecisionTextBox);
+                            yield return new WaitForSeconds(0.4f);
+                            OpenRightTextBox(DecisionTextBox);
+                            yield return new WaitForSeconds(0.25f);
+                        }
+                        SetUpDecision();
+                        _currentTextBox = DecisionTextBox;
                     }
-                    SetUpDecision();
-                    _currentTextBox = DecisionTextBox;
                     break;
                 default:
                     CloseRightTextBox(null);
@@ -513,27 +518,13 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
         string SUCCESS_MESSAGE = "SUCCESS";
 
         if (value == null)
-        {
-            //Debug.LogWarning($"WARNING: The value for the ink variable {variable} is null.");
-            //return false;
             return WARNING_MESSAGE_1;
-        }
         if (string.IsNullOrEmpty(variable))
-        {
-            //Debug.LogWarning($"WARNING: The name of the variable you are trying to add is null.");
-            //return false;
             return WARNING_MESSAGE_2;
-        }
         if (CurrentStory == null)
-        {
             return WARNING_MESSAGE_4;
-        }
         if (CurrentStory.variablesState[variable] == null)
-        {
-            //Debug.LogWarning($"WARNING: The ink variable you are trying to add value to does not exist.");
-            // return false;
             return WARNING_MESSAGE_3;
-        }
 
         try
         {

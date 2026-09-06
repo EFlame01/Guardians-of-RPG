@@ -111,7 +111,7 @@ public class NPCObject : InteractableObject, IDialogue
         //      Before the NPC talks to the player
         GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
         yield return DialogueManager.Instance.WaitUntilDialogueIsOver();
-        Debug.Log("Dialogue Finished");
+        // Debug.Log("Dialogue Finished");
         GameManager.Instance.PlayerState = PlayerState.NOT_MOVING;
     }
 
@@ -136,7 +136,7 @@ public class NPCObject : InteractableObject, IDialogue
         textBoxCharacter.CharacterName = _characterName;
         textBoxCharacter.SetUpCharacterTextBox();
         // textBoxCharacter.OpenTextBox();
-        Debug.Log("Starting Narration");
+        // Debug.Log("Starting Narration");
         textBoxCharacter.StartNarration(_dialogueData);
         CheckForInteraction = true;
     }

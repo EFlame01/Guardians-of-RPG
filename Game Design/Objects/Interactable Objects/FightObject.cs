@@ -103,7 +103,7 @@ public class FightObject : NPCObject
     {
         if (!NpcData.foughtPlayer || NpcData.wonAgainstPlayer)
         {
-            Debug.Log("ConfrontPlayer2");
+            // Debug.Log("ConfrontPlayer2");
             _confrontedPlayer = true;
             CanInteract = false;
             GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;
@@ -128,7 +128,7 @@ public class FightObject : NPCObject
     {
         if (!TalkedToPlayer)
         {
-            Debug.Log("ConfrontPlayer3");
+            // Debug.Log("ConfrontPlayer3");
             TalkedToPlayer = true;
             _dialogueData = DialogueDataAfterBattle;
             //GameManager.Instance.PlayerState = PlayerState.INTERACTING_WITH_OBJECT;

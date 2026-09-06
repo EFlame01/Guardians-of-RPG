@@ -20,13 +20,13 @@ public class DiscardMenuOption : MonoBehaviour
         itemAmountText.text = "1";
         incrementButton.onClick.AddListener(() =>
         {
-            int amount = int.Parse(itemAmountText.text) + 1;
+            int amount = (int.TryParse(itemAmountText.text, out int value) ? value : 0) + 1;
             amount = amount > maxAmount ? maxAmount : amount;
             itemAmountText.text = amount.ToString();
         });
         decrementButton.onClick.AddListener(() =>
         {
-            int amount = int.Parse(itemAmountText.text) - 1;
+            int amount = (int.TryParse(itemAmountText.text, out int value) ? value : 0) - 1;
             amount = amount < 1 ? 1 : amount;
             itemAmountText.text = amount.ToString();
         });
@@ -40,7 +40,7 @@ public class DiscardMenuOption : MonoBehaviour
 
     public int GetItemAmount()
     {
-        return int.Parse(itemAmountText.text);
+        return int.TryParse(itemAmountText.text, out int value) ? value : 0;
     }
     public IEnumerator ResetWindow()
     {

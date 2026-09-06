@@ -177,10 +177,16 @@ public class BattleSimStatus
                     return;
                 else
                 {
-                    if (character.Type.Equals("ALLY") || character.Type.Equals("PLAYER"))
+                    if (character.Type.Equals("ALLY") /*|| character.Type.Equals("PLAYER")*/)
+                    {
                         Allies.Add(character);
+                        Graveyard.Remove(character);
+                    }
                     if (character.Type.Equals("ENEMY") || character.Type.Equals("BOSS"))
+                    {
                         Enemies.Add(character);
+                        Graveyard.Remove(character);
+                    }
                 }
                 break;
             default:
@@ -219,15 +225,20 @@ public class BattleSimStatus
     {
         return name switch
         {
+            "BLIND" => BlindSymbol,
             "BURN" => BurnSymbol,
-            "POISON" => PoisonSymbol,
-            "STUN" => StunSymbol,
-            "SLEEP" => SleepSymbol,
-            "PETRIFIED" => PetrifiedSymbol,
+            "CHARM" => CharmSymbol,
+            "CONFUSE" => ConfuseSymbol,
+            "DEAFEN" => DeafenSymbol,
+            "EXHAUSTION" => ExhaustionSymbol,
             "FROZEN" => FrozenSymbol,
+            "PETRIFIED" => PetrifiedSymbol,
+            "POISON" => PoisonSymbol,
+            "RESTRAIN" => RestrainSymbol,
+            "SLEEP" => SleepSymbol,
+            "STUN" => StunSymbol,
             _ => null,
         };
-
     }
 
     public static void AddToGraveYard(Character character)

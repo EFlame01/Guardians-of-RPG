@@ -15,6 +15,19 @@ public class MoveMaker : Singleton<MoveMaker>
     private const int STAT_CHANGING_MOVE_INDEX = 15;
     private const int STATUS_CHANGING_MOVE_INDEX = 16;
 
+    private const int MOVE_DATA_LENGTH = 10;
+    private const int PRIORITY_MOVE_DATA_LENGTH = 2;
+    private const int PROTECT_MOVE_DATA_LENGTH = 3;
+    private const int STAT_CHANGING_MOVE_DATA_LENGTH = 3;
+    private const int STATUS_CHANGING_MOVE_DATA_LENGTH = 10;
+
+    public string[] GENERIC_BASE_MOVE_DATA = new string[10] { "Base Attack", "This move is replaced with the Base Attack because the original move could not be found in the database. Please report bug if found.", "0.4", "ENEMY", "1", "REGULAR", "NONE", "1", "", "0" };
+    public string[] GENERIC_PRIORITY_MOVE_DATA = new string[2] { "Unknown Priority Move", "3" };
+    public string[] GENERIC_PROTECT_MOVE_DATA = new string[3] { "Unknown Protect Move", "PROTECT", "1" };
+    public string[] GENERIC_STAT_CHANGING_MOVE_DATA = new string[3] { "Unknown Stat Changing Move", "ATK~ATK", "1~-1" };
+    public string[] GENERIC_STATUS_CHANGING_MOVE_DATA = new string[10] { "Unkown Status Changing Move", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
+
+
     /// <summary>
     /// Gets and returns the <c>Move</c> object based on the <paramref name="name"/>.
     /// </summary>
@@ -25,8 +38,13 @@ public class MoveMaker : Singleton<MoveMaker>
         if (string.IsNullOrEmpty(name))
             return null;
 
-        string[] moveAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[MOVE_INDEX], name).Split(',');
-
+        string moveData = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[MOVE_INDEX], name);
+        if (string.IsNullOrEmpty(moveData) || moveData.Split(',').Length != MOVE_DATA_LENGTH)
+        {
+            Debug.LogWarning($"WARNING: The move {name} could not be found in the database. The move has been replaced with the Base Attack instead. Please report this bug.");
+            return Units.BASE_ATTACK;
+        }
+        string[] moveAttributes = moveData.Split(',');
         return GetMove(moveAttributes, moveAttributes[5]);
     }
 
@@ -43,7 +61,6 @@ public class MoveMaker : Singleton<MoveMaker>
     {
         string[] moveListData;
         List<Move> listOfMoves = new();
-
         moveListData = DataRetriever.Instance.SplitDataBasedOnRow(DataRetriever.Instance.Database[MOVE_INDEX]);
         foreach (string moveData in moveListData)
         {
@@ -52,9 +69,10 @@ public class MoveMaker : Singleton<MoveMaker>
                 if (string.IsNullOrEmpty(moveData))
                     continue;
 
-                string[] moveAttributes = moveData.Split(',');
+                string[] moveAttributes = moveData.Split(',').Length != MOVE_DATA_LENGTH ? GENERIC_BASE_MOVE_DATA : moveData.Split(",");
 
-                if (int.Parse(moveAttributes[7]) <= level && (moveAttributes[8].Equals(archetype) || moveAttributes[8].Equals(classtype)))
+                int moveLevel = int.TryParse(moveAttributes[7], out int value) ? value : 0;
+                if (moveLevel <= level && (moveAttributes[8].Equals(archetype) || moveAttributes[8].Equals(classtype)))
                 {
                     Move move = GetMove(moveAttributes, moveAttributes[5]);
                     if (move != null)
@@ -82,6 +100,7 @@ public class MoveMaker : Singleton<MoveMaker>
     private Move GetMove(string[] moveAttributes, string moveType)
     {
         Move move = null;
+        string additionalData;
         string[] additionalAttributes;
 
         switch (moveType)
@@ -91,32 +110,33 @@ public class MoveMaker : Singleton<MoveMaker>
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[2]),
-                    double.Parse(moveAttributes[4]),
+                    double.TryParse(moveAttributes[2], out double regMovePower) ? regMovePower : 0.4,
+                    double.TryParse(moveAttributes[4], out double regMoveAccuracy) ? regMoveAccuracy : 1.0,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int regMoveLevel) ? regMoveLevel : 0,
                     Move.ConvertToMoveTarget(moveAttributes[3]),
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double regMoveElixirPoints) ? regMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
             case "PRIORITY":
-                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[PRIORITY_MOVE_INDEX], moveAttributes[0]).Split(',');
+                additionalData = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[PRIORITY_MOVE_INDEX], moveAttributes[0]);
+                additionalAttributes = (string.IsNullOrEmpty(additionalData) || additionalData.Split(',').Length != PRIORITY_MOVE_DATA_LENGTH) ? GENERIC_PRIORITY_MOVE_DATA : additionalData.Split(',');
 
                 move = new PriorityMove
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[2]),
-                    double.Parse(moveAttributes[4]),
+                    double.TryParse(moveAttributes[2], out double priorityMovePower) ? priorityMovePower : 0.4,
+                    double.TryParse(moveAttributes[4], out double priorityMoveAccuracy) ? priorityMoveAccuracy : 1.0,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int priorityMoveLevel) ? priorityMoveLevel : 3,
                     Move.ConvertToMoveTarget(moveAttributes[3]),
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double priorityMoveElixirPoints) ? priorityMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
-                    int.Parse(additionalAttributes[1])
+                    int.TryParse(additionalAttributes[1], out int priorityMovePriorityLevel) ? priorityMovePriorityLevel : 1
                 );
                 break;
             case "HEALING":
@@ -124,13 +144,13 @@ public class MoveMaker : Singleton<MoveMaker>
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[2]),
-                    double.Parse(moveAttributes[4]),
+                    double.TryParse(moveAttributes[2], out double healingMovePower) ? healingMovePower : 0.4,
+                    double.TryParse(moveAttributes[4], out double healingMoveAccuracy) ? healingMoveAccuracy : 1.0,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int healingMoveLevel) ? healingMoveLevel : 0,
                     Move.ConvertToMoveTarget(moveAttributes[3]),
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double healingMoveElixirPoints) ? healingMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
@@ -139,31 +159,32 @@ public class MoveMaker : Singleton<MoveMaker>
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[4]),
+                    double.TryParse(moveAttributes[4], out double knockoutMoveAccuracy) ? knockoutMoveAccuracy : 1.0,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int knockoutMoveLevel) ? knockoutMoveLevel : 3,
                     Move.ConvertToMoveTarget(moveAttributes[3]),
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double knockoutMoveElixirPoints) ? knockoutMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
             case "PROTECT":
-                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[PROTECT_MOVE_INDEX], moveAttributes[0]).Split(',');
+                additionalData = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[PROTECT_MOVE_INDEX], moveAttributes[0]);
+                additionalAttributes = (string.IsNullOrEmpty(additionalData) || additionalData.Split(',').Length != PROTECT_MOVE_DATA_LENGTH) ? GENERIC_PROTECT_MOVE_DATA : additionalData.Split(',');
 
                 move = new ProtectMove
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[2]),
+                    double.TryParse(moveAttributes[2], out double protectMovePower) ? protectMovePower : 0.4,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int protectMoveLevel) ? protectMoveLevel : 0,
                     Move.ConvertToMoveTarget(moveAttributes[3]),
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double protectMoveElixirPoints) ? protectMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
                     additionalAttributes[1],
-                    int.Parse(additionalAttributes[2])
+                    int.TryParse(additionalAttributes[2], out int protectMoveRate) ? protectMoveRate : 1
                 );
                 break;
             case "COUNTER":
@@ -171,60 +192,62 @@ public class MoveMaker : Singleton<MoveMaker>
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[2]),
-                    double.Parse(moveAttributes[4]),
+                    double.TryParse(moveAttributes[2], out double counterMovePower) ? counterMovePower : 0.4,
+                    double.TryParse(moveAttributes[4], out double counterMoveAccuracy) ? counterMoveAccuracy : 1.0,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int counterMoveLevel) ? counterMoveLevel : 0,
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double counterMoveElixirPoints) ? counterMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0])
                 );
                 break;
             case "STAT_CHANGING":
-                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STAT_CHANGING_MOVE_INDEX], moveAttributes[0]).Split(',');
+                additionalData = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STAT_CHANGING_MOVE_INDEX], moveAttributes[0]);
+                additionalAttributes = (string.IsNullOrEmpty(additionalData) || additionalData.Split(',').Length != STAT_CHANGING_MOVE_DATA_LENGTH) ? GENERIC_STAT_CHANGING_MOVE_DATA : additionalData.Split(',');
 
                 move = new StatChangingMove
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[2]),
-                    double.Parse(moveAttributes[4]),
+                    double.TryParse(moveAttributes[2], out double statChangingMovePower) ? statChangingMovePower : 0.4,
+                    double.TryParse(moveAttributes[4], out double statChangingMoveAccuracy) ? statChangingMoveAccuracy : 1.0,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int statChangingMoveLevel) ? statChangingMoveLevel : 0,
                     Move.ConvertToMoveTarget(moveAttributes[3]),
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double statChangingMoveElixirPoints) ? statChangingMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
                     additionalAttributes[1].Split('~'),
                     Array.ConvertAll(additionalAttributes[2].Split('~'), int.Parse)
                 );
                 break;
             case "STATUS_CHANGING":
-                additionalAttributes = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STATUS_CHANGING_MOVE_INDEX], moveAttributes[0]).Split(',');
+                additionalData = DataRetriever.Instance.GetDataBasedOnID(DataRetriever.Instance.Database[STATUS_CHANGING_MOVE_INDEX], moveAttributes[0]);
+                additionalAttributes = (string.IsNullOrEmpty(additionalData) || additionalData.Split(',').Length != STATUS_CHANGING_MOVE_DATA_LENGTH) ? GENERIC_STATUS_CHANGING_MOVE_DATA : additionalData.Split(',');
 
                 move = new StatusChangingMove
                 (
                     moveAttributes[0],
                     moveAttributes[1].Replace('~', ','),
-                    double.Parse(moveAttributes[2]),
-                    double.Parse(moveAttributes[4]),
+                    double.TryParse(moveAttributes[2], out double statusChangingMovePower) ? statusChangingMovePower : 0.4,
+                    double.TryParse(moveAttributes[4], out double statusChangingMoveAccuracy) ? statusChangingMoveAccuracy : 1.0,
                     moveAttributes[8],
-                    int.Parse(moveAttributes[7]),
+                    int.TryParse(moveAttributes[7], out int statusChangingMoveLevel) ? statusChangingMoveLevel : 0,
                     Move.ConvertToMoveTarget(moveAttributes[3]),
                     Move.ConvertToMoveType(moveAttributes[5]),
-                    double.Parse(moveAttributes[9]),
+                    double.TryParse(moveAttributes[9], out double statusChangingMoveElixirPoints) ? statusChangingMoveElixirPoints : 5,
                     EffectMaker.Instance.GetEffectsBasedOnName(moveAttributes[0]),
                     StatusCondition.GenerateStatusCondition
                     (
                         additionalAttributes[1],
-                        int.Parse(additionalAttributes[2]),
-                        int.Parse(additionalAttributes[3]),
-                        int.Parse(additionalAttributes[4]),
-                        int.Parse(additionalAttributes[5]),
-                        int.Parse(additionalAttributes[6]),
-                        int.Parse(additionalAttributes[7]),
-                        int.Parse(additionalAttributes[8]),
-                        int.Parse(additionalAttributes[9])
+                        int.TryParse(additionalAttributes[2], out int charmDuration) ? charmDuration : 0,
+                        int.TryParse(additionalAttributes[3], out int confuseDuration) ? confuseDuration : 0,
+                        int.TryParse(additionalAttributes[4], out int rollAdvantage) ? rollAdvantage : 0,
+                        int.TryParse(additionalAttributes[5], out int freezeRate) ? freezeRate : 0,
+                        int.TryParse(additionalAttributes[6], out int poisonRate) ? poisonRate : 0,
+                        int.TryParse(additionalAttributes[7], out int restrainRate) ? restrainRate : 0,
+                        int.TryParse(additionalAttributes[8], out int sleepRate) ? sleepRate : 0,
+                        int.TryParse(additionalAttributes[9], out int stunRate) ? stunRate : 0
                     )
                 );
                 break;

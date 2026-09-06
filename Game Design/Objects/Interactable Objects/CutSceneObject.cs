@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -17,6 +16,7 @@ public class CutSceneObject : InteractableObject
     {
         if (CanInteract && !_startedCutScene)
         {
+            //Debug.Log($"InteractWithObject() Activated\n- Can Interact: {CanInteract}\n- Started Cut Scene: {_startedCutScene}");
             CanInteract = false;
             _startedCutScene = true;
             CutScene.StartCutScene();
@@ -58,9 +58,10 @@ public class CutSceneObject : InteractableObject
         if (collider2D.gameObject.CompareTag("Player"))
         {
             _startedCutScene = false;
-            CanInteract = false;
-            IsThisObjectDetected = false;
-            HideInputSymbol();
+            // CanInteract = false;
+            // IsThisObjectDetected = false;
+            // HideInputSymbol();
+            RevealObjectIsInteractable(false);
         }
     }
 }

@@ -91,9 +91,12 @@ public class CharacterActionState : BattleState, IDialogue
             return;
         }
 
+        if(character.BattleStatus.StatusConditions.ContainsKey("FLINCH"))
+            character.BattleStatus.StatusConditions["FLINCH"].ImplementStatusCondition(character);
+        
         foreach (StatusCondition sc in character.BattleStatus.StatusConditions.Values)
         {
-            if (sc.Condition.Equals("DURING ROUND"))
+            if (sc != null && sc.Condition.Equals("DURING ROUND") && !sc.Name.Equals("FLINCH"))
             {
                 sc.ImplementStatusCondition(character);
             }

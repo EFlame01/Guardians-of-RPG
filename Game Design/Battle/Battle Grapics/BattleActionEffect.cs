@@ -394,7 +394,7 @@ public class BattleActionEffect : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log(" - done with secondary effects");
+        // Debug.Log(" - done with secondary effects");
         DoneWithSecondaryEffects = true;
     }
     private IEnumerator PerformAfterRoundAction()
