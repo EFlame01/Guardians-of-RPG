@@ -37,7 +37,7 @@ public class KnockoutMove : Move
         target.BaseStats.SetHp(0);
     }
 
-    public override void UseMove(Character user, Character target, int epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplier)
     {
         UseMove(user, target);
     }

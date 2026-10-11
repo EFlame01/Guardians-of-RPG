@@ -35,11 +35,11 @@ public class RegularMove : Move
     ///</summary>
     ///<param name="user"> the user of the move. </param>
     ///<param name="target"> the target for the move. </param>
-    ///<param name="epMultiplyer"> the elixir point multiplyer. </param>
-    public override void UseMove(Character user, Character target, int epMultiplyer)
+    ///<param name="epMultiplier"> the elixir point multiplyer. </param>
+    public override void UseMove(Character user, Character target, int epMultiplier)
     {
-        base.UseMove(user, target, epMultiplyer);
-        int dmg = CalculateDamage(user, target, epMultiplyer);
+        base.UseMove(user, target, epMultiplier);
+        int dmg = CalculateDamage(user, target, epMultiplier);
         target.BaseStats.SetHp(target.BaseStats.Hp - dmg);
     }
 }

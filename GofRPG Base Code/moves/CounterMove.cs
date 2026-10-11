@@ -36,7 +36,7 @@ public class CounterMove : Move
             target.BattleStatus.SetProtectionStatus("COUNTER");
     }
 
-    public override void UseMove(Character user, Character target, int epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplier)
     {
         UseMove(user, target);
     }

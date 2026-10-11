@@ -41,7 +41,7 @@ public class StatusChangingMove : Move
             target.BattleStatus.StatusConditions.Add(_statusCondition.Name, _statusCondition);
     }
 
-    public override void UseMove(Character user, Character target, int epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplier)
     {
         UseMove(user, target);
     }

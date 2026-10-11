@@ -54,7 +54,7 @@ public class ProtectMove : Move
             _tempAccuracy = Accuracy;
     }
 
-    public override void UseMove(Character user, Character target, int epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplier)
     {
         UseMove(user, target);
     }

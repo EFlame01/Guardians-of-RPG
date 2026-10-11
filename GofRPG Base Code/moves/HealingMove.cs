@@ -37,11 +37,11 @@ public class HealingMove : Move
     ///</summary>
     ///<param name="user"> the user of the move. </param>
     ///<param name="target"> the target for the move. </param>
-    ///<param name="epMultiplyer"> the elixir point multiplyer. </param>
-    public override void UseMove(Character user, Character target, int epMultiplyer)
+    ///<param name="epMultiplier"> the elixir point multiplyer. </param>
+    public override void UseMove(Character user, Character target, int epMultiplier)
     {
-        base.UseMove(user, target, epMultiplyer);
-        int healAmount = CalculateHealingPower(user, target, epMultiplyer);
+        base.UseMove(user, target, epMultiplier);
+        int healAmount = CalculateHealingPower(user, target, epMultiplier);
         int targetHp = target.BaseStats.Hp + healAmount;
         target.BaseStats.SetHp(targetHp);
     }
@@ -49,16 +49,16 @@ public class HealingMove : Move
     /// <summary>
     /// Calculates the heal amount based on the 
     /// <paramref name="user"/> stats, and the 
-    /// <paramref name="epMultiplyer"/>, and the 
+    /// <paramref name="epMultiplier"/>, and the 
     /// max amount that can be transfered to the
     /// <paramref name="target"/>
     /// </summary>
     /// <param name="user">user of the move</param>
     /// <param name="target">target of the move</param>
-    /// <param name="epMultiplyer">multiplyer based on extra elixir poured into move</param>
+    /// <param name="epMultiplier">multiplyer based on extra elixir poured into move</param>
     /// <returns>the amount of HP the <paramref name="user"/> can give the
     /// <paramref name="target"/></returns>
-    private int CalculateHealingPower(Character user, Character target, double epMultiplyer)
+    private int CalculateHealingPower(Character user, Character target, double epMultiplier)
     {
         int healingPower = user.BaseStats.Atk;
         int max = target.BaseStats.FullHp - target.BaseStats.Hp;
@@ -67,8 +67,8 @@ public class HealingMove : Move
 
         if (user.Archetype.ClassName == ArchetypeName || user.Archetype.ClassName == ArchetypeName)
             healingPower += (int)(healingPower * Units.STAB_DMG);
-        if (epMultiplyer != 0)
-            healingPower += (int)(healingPower * epMultiplyer);
+        if (epMultiplier != 0)
+            healingPower += (int)(healingPower * epMultiplier);
 
         return Mathf.Clamp(healingPower, 1, max);
     }

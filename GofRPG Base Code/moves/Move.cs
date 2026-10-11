@@ -31,7 +31,7 @@ public class Move
         // user.BaseStats.SetElx(user.BaseStats.Elx - (int)EP);
         return;
     }
-    public virtual void UseMove(Character user, Character target, int epMultiplyer)
+    public virtual void UseMove(Character user, Character target, int epMultiplier)
     {
         // user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplyer));
         return;
@@ -78,12 +78,12 @@ public class Move
     ///<param name="user"> the user of the move.</param>
     ///<param name="target"> the target for the move.</param>
     ///<returns> The calculated damage for said move.</returns>
-    protected int CalculateDamage(Character user, Character target, int epMultiplyer)
+    protected int CalculateDamage(Character user, Character target, int epMultiplier)
     {
         int userAtk = UpdateAtkForCriticalHit(user);
         int targetDef = UpdateDefForBlock(target);
         int dmg;
-        double newPower = UpdatePower(user, epMultiplyer);
+        double newPower = UpdatePower(user, epMultiplier);
 
         //Boost move POWER based on STAB and EPM
 
@@ -140,19 +140,19 @@ public class Move
 
     }
 
-    public void UpdateElixir(Character user, double epMultiplyer)
+    public void UpdateElixir(Character user, double epMultiplier)
     {
-        user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplyer));
+        user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplier));
     }
 
-    private double UpdatePower(Character user, int epMultiplyer)
+    private double UpdatePower(Character user, int epMultiplier)
     {
         double newPower = Power;
 
         if (user.Archetype != null && (user.Archetype.ClassName == ArchetypeName || user.Archetype.ArchetypeName == ArchetypeName))
             newPower += newPower * Units.STAB_DMG;
-        if (epMultiplyer > 0 && EP > 0)
-            newPower += newPower * (epMultiplyer / EP);
+        if (epMultiplier > 0 && EP > 0)
+            newPower += newPower * (epMultiplier / EP);
 
         return newPower;
     }
