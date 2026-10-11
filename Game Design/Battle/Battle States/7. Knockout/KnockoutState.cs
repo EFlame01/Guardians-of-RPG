@@ -40,12 +40,10 @@ public class KnockoutState : BattleState
                 NextState = Units.BATTLE_OVER_STATE;
             else
             {
-                //May need to check if prev state was character action or after round
-                NextState = "CHARACTER ACTION STATE";
-                if (PrevState.Equals(Units.CHARACTER_ACTION_STATE))
-                    NextState = Units.CHARACTER_ACTION_STATE;
-                else if (PrevState.Equals(Units.AFTER_ROUND_STATE))
+                if (PrevState.Equals(Units.AFTER_ROUND_STATE))
                     NextState = Units.AFTER_ROUND_STATE;
+                else
+                    NextState = Units.CHARACTER_ACTION_STATE;
             }
         }
     }

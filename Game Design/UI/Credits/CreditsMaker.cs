@@ -9,6 +9,7 @@ public class CreditsMaker : MonoBehaviour
     public GameObject logo;
     public GameObject playAgainButton;
     public float ScrollSpeed;
+    public float AnchorPosY = 11700f;
     public Transform CreditsLayout;
     public TitleCredit TitleCreditPrefab;
     public RoleCredit RoleCreditPrefab;
@@ -45,6 +46,7 @@ public class CreditsMaker : MonoBehaviour
 
     IEnumerator FinishCreditsAnimation()
     {
+        yield return new WaitForSeconds(1f);
         logo.SetActive(true);
         logo.GetComponent<Animator>().Play("fade_to_ui");
         yield return new WaitForSeconds(3f);
@@ -75,6 +77,6 @@ public class CreditsMaker : MonoBehaviour
     bool StopScroll()
     {
         //TODO: It stops at a preset number. Will have to make more dynamic in the future
-        return CreditsLayout.GetComponent<RectTransform>().anchoredPosition.y >= 11700f;
+        return CreditsLayout.GetComponent<RectTransform>().anchoredPosition.y >= AnchorPosY;
     }
 }

@@ -16,12 +16,14 @@ public class BattleCharacter : MonoBehaviour
     public string AnimationPosition;
     public MoveEffects MoveEffects;
     [SerializeField] protected Animator Animator;
+    public Animator DieAnimator;
     [SerializeField] protected SpriteRenderer CharacterSprite;
     [SerializeField] protected SpriteRenderer PlatformSprite;
     public CharacterHUD CharacterHUD;
 
     [Header("Move Details")]
     public string MoveHitWith;
+    public int RollInitiativeNumber;
 
     /// <summary>
     /// Sets up the <c>CharacterHUD</c> and the position

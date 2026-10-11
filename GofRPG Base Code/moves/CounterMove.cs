@@ -32,11 +32,11 @@ public class CounterMove : Move
     public override void UseMove(Character user, Character target)
     {
         base.UseMove(user, target);
-        if(target.BattleStatus.ProtectionStatus == "NONE")
+        if (target.BattleStatus.ProtectionStatus == "NONE")
             target.BattleStatus.SetProtectionStatus("COUNTER");
     }
 
-    public override void UseMove(Character user, Character target, double epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplyer)
     {
         UseMove(user, target);
     }

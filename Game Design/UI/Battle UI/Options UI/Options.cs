@@ -14,6 +14,7 @@ public class Options : MonoBehaviour
     public GameObject ItemOption;
     public GameObject TargetOption;
     public GameObject InitiativeOption;
+    public GameObject BlockOption;
     public BattleOptions BattleOptions;
     public Animator Animator;
     public Button NextButton;
@@ -68,6 +69,9 @@ public class Options : MonoBehaviour
             case "INITIATIVE":
                 SetOption("MOVE");
                 break;
+            case "BLOCK":
+                SetOption("INITIATIVE");
+                break;
             default:
                 StartCoroutine(CloseOptions());
                 BattleOptions.gameObject.SetActive(true);
@@ -112,11 +116,12 @@ public class Options : MonoBehaviour
                             break;
                         }
                     }
-                    // if(player.BattleStatus.InitiativeCount > 0)
-                    //     SetOption("INITIATIVE");
-                    // else
-                    //     EndTurn();
-                    EndTurn();
+                    if (player.BattleStatus.InitiativeStatus.CanRollInitiative())
+                        SetOption("INITIATIVE");
+                    else if (player.BattleStatus.BlockStatus.CanRollBlock())
+                        SetOption("BLOCK");
+                    else
+                        EndTurn();
                 }
                 else if (BattleSimStatus.Allies.Count == 1 && player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALLY))
                 {
@@ -129,11 +134,12 @@ public class Options : MonoBehaviour
                             break;
                         }
                     }
-                    // if(player.BattleStatus.InitiativeCount > 0)
-                    //     SetOption("INITIATIVE");
-                    // else
-                    //     EndTurn();
-                    EndTurn();
+                    if (player.BattleStatus.InitiativeStatus.CanRollInitiative())
+                        SetOption("INITIATIVE");
+                    else if (player.BattleStatus.BlockStatus.CanRollBlock())
+                        SetOption("BLOCK");
+                    else
+                        EndTurn();
                 }
                 else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALL_ENEMIES))
                 {
@@ -143,7 +149,12 @@ public class Options : MonoBehaviour
                         if (enemy != null)
                             player.BattleStatus.ChosenTargets.Add(enemy);
                     }
-                    EndTurn();
+                    if (player.BattleStatus.InitiativeStatus.CanRollInitiative())
+                        SetOption("INITIATIVE");
+                    else if (player.BattleStatus.BlockStatus.CanRollBlock())
+                        SetOption("BLOCK");
+                    else
+                        EndTurn();
                 }
                 else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALL_ALLIES))
                 {
@@ -153,7 +164,12 @@ public class Options : MonoBehaviour
                         if (ally != null)
                             player.BattleStatus.ChosenTargets.Add(ally);
                     }
-                    EndTurn();
+                    if (player.BattleStatus.InitiativeStatus.CanRollInitiative())
+                        SetOption("INITIATIVE");
+                    else if (player.BattleStatus.BlockStatus.CanRollBlock())
+                        SetOption("BLOCK");
+                    else
+                        EndTurn();
                 }
                 else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.ALLY_SIDE))
                 {
@@ -164,12 +180,17 @@ public class Options : MonoBehaviour
                         if (ally != null)
                             player.BattleStatus.ChosenTargets.Add(ally);
                     }
-
-                    EndTurn();
+                    if (player.BattleStatus.InitiativeStatus.CanRollInitiative())
+                        SetOption("INITIATIVE");
+                    else if (player.BattleStatus.BlockStatus.CanRollBlock())
+                        SetOption("BLOCK");
+                    else
+                        EndTurn();
                 }
                 else if (player.BattleStatus.ChosenMove.Target.Equals(MoveTarget.EVERYONE))
                 {
                     player.BattleStatus.ChosenTargets.Clear();
+
                     foreach (Character enemy in BattleSimStatus.Enemies)
                     {
                         if (enemy != null)
@@ -182,7 +203,12 @@ public class Options : MonoBehaviour
                             player.BattleStatus.ChosenTargets.Add(ally);
                     }
 
-                    EndTurn();
+                    if (player.BattleStatus.InitiativeStatus.CanRollInitiative())
+                        SetOption("INITIATIVE");
+                    else if (player.BattleStatus.BlockStatus.CanRollBlock())
+                        SetOption("BLOCK");
+                    else
+                        EndTurn();
                 }
                 else
                     SetOption("TARGET");
@@ -199,14 +225,22 @@ public class Options : MonoBehaviour
                 }
                 break;
             case "TARGET":
-                // //if player is out of initiatives, end turn
-                // if(player.BattleStatus.ChosenMove != null && player.BattleStatus.InitiativeCount > 0)
-                //     SetOption("INITIATIVE");
-                // else
-                //     EndTurn();
-                EndTurn();
+                //if player is out of initiatives, end turn
+                if (player.BattleStatus.ChosenMove != null && player.BattleStatus.InitiativeStatus.CanRollInitiative())
+                    SetOption("INITIATIVE");
+                else if (player.BattleStatus.BlockStatus.CanRollBlock())
+                    SetOption("BLOCK");
+                else
+                    EndTurn();
                 break;
             case "INITIATIVE":
+                //if player is out of blocks, end turn
+                if (player.BattleStatus.BlockStatus.CanRollBlock())
+                    SetOption("BLOCK");
+                else
+                    EndTurn();
+                break;
+            case "BLOCK":
                 //end turn
                 EndTurn();
                 break;
@@ -227,6 +261,7 @@ public class Options : MonoBehaviour
         ItemOption.SetActive(false);
         TargetOption.SetActive(false);
         InitiativeOption.SetActive(false);
+        BlockOption.SetActive(false);
 
         Option = option;
 
@@ -244,6 +279,9 @@ public class Options : MonoBehaviour
             case "INITIATIVE":
                 InitiativeOption.SetActive(true);
                 break;
+            case "BLOCK":
+                BlockOption.SetActive(true);
+                break;
             default:
                 break;
         }
@@ -256,7 +294,7 @@ public class Options : MonoBehaviour
     {
         Animator.Play("ui_to_fade");
         yield return new WaitForSeconds(0.3f);
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     private void EndTurn()

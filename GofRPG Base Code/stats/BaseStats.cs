@@ -19,6 +19,7 @@ public class BaseStats
     public double Acc { get; private set; }
     public double Crt { get; private set; }
     public int Elx { get; private set; }
+    public double Adv { get; private set; }
     private int _regAtk;
     private int _regDef;
     private int _regEva;
@@ -32,6 +33,7 @@ public class BaseStats
     private int _spdStage;
     private int _accStage;
     private int _crtStage;
+    private int _advStage;
 
     //Constructor
     public BaseStats(int atk, int def, int eva, int hp, int spd)
@@ -45,6 +47,7 @@ public class BaseStats
         Elx = 5;
         Acc = Units.BASE_ACC;
         Crt = Units.BASE_CRT;
+        Adv = Units.STAGE_0;
 
         _regAtk = atk;
         _regDef = def;
@@ -65,6 +68,7 @@ public class BaseStats
         Elx = elx;
         Acc = Units.BASE_ACC;
         Crt = Units.BASE_CRT;
+        Adv = Units.STAGE_0;
 
         _regAtk = atk;
         _regDef = def;
@@ -77,27 +81,19 @@ public class BaseStats
     //Getters and Setters
     public void SetAtk(int atk)
     {
-        if (atk < 0)
-            atk = 0;
-        Atk = atk;
+        Atk = Mathf.Clamp(atk, 0, (int)(_regAtk * Units.STAGE_POS_6));
     }
     public void SetDef(int def)
     {
-        if (def < 0)
-            def = 0;
-        Def = def;
+        Def = Mathf.Clamp(def, 0, (int)(_regDef * Units.STAGE_POS_6));
     }
     public void SetEva(int eva)
     {
-        if (eva < 0)
-            eva = 0;
-        Eva = eva;
+        Eva = Mathf.Clamp(eva, 0, (int)(_regEva * Units.STAGE_POS_6));
     }
     public void SetSpd(int spd)
     {
-        if (spd < 0)
-            spd = 0;
-        Spd = spd;
+        Spd = Mathf.Clamp(spd, 0, (int)(_regSpd * Units.STAGE_POS_6));
     }
     public void SetHp(int hp)
     {
@@ -105,9 +101,7 @@ public class BaseStats
     }
     public void SetFullHp(int fullHp)
     {
-        if (fullHp < 1)
-            fullHp = 1;
-        FullHp = fullHp;
+        FullHp = Mathf.Clamp(1, fullHp, (int)(_regHp * Units.STAGE_POS_6));
         SetHp(Hp);
     }
     public void SetAcc(double acc)
@@ -129,6 +123,12 @@ public class BaseStats
     public void SetElx(int elx)
     {
         Elx = Mathf.Clamp(elx, 0, _regElx);
+    }
+    public void SetAdv(double adv)
+    {
+        if (adv < Units.STAGE_NEG_6)
+            adv = Units.STAGE_NEG_6;
+        Adv = adv;
     }
 
     /// <summary>
@@ -192,10 +192,14 @@ public class BaseStats
         Crt = Units.BASE_CRT;
     }
 
+    /// <summary>
+    /// This method resets the health of the player to 
+    /// 10% of their <c>FullHp</c>. 
+    /// </summary>
     public void ResetHealth()
     {
         int newHp = (int)(FullHp * 0.10);
-        newHp = newHp == 0 ? 1 : newHp;
+        newHp = Mathf.Clamp(newHp, 1, FullHp);
         SetHp(newHp);
     }
 
@@ -232,6 +236,9 @@ public class BaseStats
                 break;
             case "CRT":
                 SetCrt(ChangeStatHelper(Crt, Crt, _crtStage, stage));
+                break;
+            case "ADV":
+                SetAdv(ChangeStatHelper(Adv, Adv, _advStage, stage));
                 break;
         }
     }

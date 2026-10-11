@@ -17,7 +17,7 @@ public static class Units
     public const float MIN_TEXT_SPEED = 0.03f;
     public const float PLAYER_SPEED = 6f;
 
-    public const double CRIT_DMG = 0.25;
+    public const double CRIT_DMG = 3.0;
 
     public const int PRIORITY_ITEM_STAGE_1 = 20;
     public const int PRIORITY_ITEM_STAGE_2 = 10;
@@ -107,7 +107,7 @@ public static class Units
     public const double SUCCESSION_RATE_3 = 3.0 / 4.0;
     public const double SUCCESSION_RATE_4 = 4.0 / 4.0;
 
-    public const double ELIXIR_REGEN_RATE = 1.0 / 10.0;
+    public const double ELIXIR_REGEN_RATE = 5.0 / 10.0;
 
     public const string INITIALIZE_STATE = "INITIALIZE STATE";
     public const string BEFORE_ROUND_STATE = "BEFORE ROUND STATE";

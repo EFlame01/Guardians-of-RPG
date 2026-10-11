@@ -15,7 +15,7 @@ using Ink.Runtime;
 public class BattleActionEffect : MonoBehaviour
 {
     //serialize variables
-    public RollMechanic RollMechanic;
+    public DiceEffect DiceEffect;
     public bool StartedDialogue;
 
     //public variables
@@ -171,8 +171,8 @@ public class BattleActionEffect : MonoBehaviour
         StartCoroutine(PerformAfterRoundAction());
     }
 
-    //=============== PRIVATE HELPER METHODS ==============//
-
+    //================================= PRIVATE HELPER METHODS ================================//
+    //Helper methods to determine the effect and the target
     private void AddTargetsToQueue()
     {
         TargetQueue.Clear();
@@ -185,6 +185,7 @@ public class BattleActionEffect : MonoBehaviour
                     TargetQueue.Enqueue(c);
                 break;
             case "RUN":
+            case "INITIATIVE":
                 TargetQueue.Enqueue(_user);
                 break;
             case "BEFORE ROUND":
@@ -221,6 +222,8 @@ public class BattleActionEffect : MonoBehaviour
                 _effect = "SKIP";
             else if (_user.BattleStatus.TurnStatus.Equals(TurnStatus.RUN))
                 _effect = "RUN";
+            if (_user.BattleStatus.TurnStatus.Equals(TurnStatus.INITIATIVE))
+                _effect = "INITIATIVE";
         }
         else if (_prevState.Equals(Units.AFTER_ROUND_STATE))
             _effect = "STATUS";
@@ -265,7 +268,7 @@ public class BattleActionEffect : MonoBehaviour
         return null;
     }
 
-
+    //Helper methods that help perform the action of the effects to the targets
     private IEnumerator PerformBeforeRoundAction()
     {
         _effectText.Clear();
@@ -349,6 +352,9 @@ public class BattleActionEffect : MonoBehaviour
                         break;
                     case "RUN":
                         yield return StartCoroutine(RollToRunAnimation());
+                        break;
+                    case "INITIATIVE":
+                        yield return StartCoroutine(RollForInitiativeAnimation());
                         break;
                     default:
                         break;
@@ -434,16 +440,30 @@ public class BattleActionEffect : MonoBehaviour
         }
     }
 
-
+    //Helper methods that display the animaiton for the effects
     private IEnumerator ActionAnimation()
     {
+        //check if target blocked physical attack
+        Move move = _user.BattleStatus.ChosenMove;
+        switch (move.Type)
+        {
+            case MoveType.REGULAR:
+            case MoveType.PRIORITY:
+                if (Target.BattleStatus.BlockStatus.RollBlock)
+                    yield return RollForBlockAnimation();
+                break;
+            default:
+                break;
+        }
+
+        //perform action animation as normal
         string offset = Target.Type.Equals("ENEMY") ? "enemy" : "ally";
         EnableAllCharacterHUD(false);
         yield return StartCoroutine(moveEffects.ActionAnimationRoutine(_user.BattleStatus.ChosenMove.Name, offset));
     }
     private IEnumerator EffectAnimation(string afterEffect)
     {
-        //TODO: Create animation for effect        Debug.Log(" - " + afterEffect + " animation");
+        //TODO: Create animation for effect        
         yield return new WaitForSeconds(0.25f);
         switch (afterEffect)
         {
@@ -464,10 +484,10 @@ public class BattleActionEffect : MonoBehaviour
     }
     private IEnumerator RollToRunAnimation()
     {
-        RollMechanic.gameObject.SetActive(true);
-        yield return StartCoroutine(RollMechanic.RollRun());
+        DiceEffect.gameObject.SetActive(true);
+        yield return StartCoroutine(DiceEffect.RollRun(_user));
 
-        if (RollMechanic.RollNumber > 10)
+        if (DiceEffect.RollNumber > 10)
         {
             _effectText.Add("You got away safely!");
             BattleSimStatus.RunSuccessful = true;
@@ -475,11 +495,29 @@ public class BattleActionEffect : MonoBehaviour
         else
             _effectText.Add("You were unable to escape!");
 
-        Target.BattleStatus.SetRollRun(false);
-        RollMechanic.gameObject.SetActive(false);
+        Target.BattleStatus.RunStatus.SetRollRun(false);
+        DiceEffect.gameObject.SetActive(false);
+    }
+    private IEnumerator RollForInitiativeAnimation()
+    {
+        EnableAllCharacterHUD(false);
+        DiceEffect.gameObject.SetActive(true);
+        yield return StartCoroutine(DiceEffect.RollInitiative());
+
+        BattleSimStatus.RoundStarted = false;
+
+        _effectText.Add("The order was changed!");
+        EnableAllCharacterHUD(true);
+    }
+    private IEnumerator RollForBlockAnimation()
+    {
+        EnableAllCharacterHUD(false);
+        DiceEffect.gameObject.SetActive(true);
+        yield return StartCoroutine(DiceEffect.RollBlock(Target));
+        yield return new WaitForSeconds(0.33f);
     }
 
-
+    //Helper methods that calculate the impact of the effects on the targets
     private IEnumerator MoveEffect()
     {
         _user.BattleStatus.ChosenMove.UseMove(_user, Target, 1);
@@ -537,7 +575,7 @@ public class BattleActionEffect : MonoBehaviour
         yield return new WaitForSeconds(1f);
     }
 
-
+    //Helper methods that update the impacts of the effects in the UI
     private void UpdateInventory(Item item)
     {
         if (!_user.Equals(Player.Instance()))
@@ -576,7 +614,7 @@ public class BattleActionEffect : MonoBehaviour
             enemy.EnableHUD(enable);
     }
 
-
+    //Helper methods that determine if the effect/action was successful
     private bool ActionSuccessful()
     {
         if (_effect == "ITEM")
@@ -661,12 +699,12 @@ public class BattleActionEffect : MonoBehaviour
             if (!bc.MoveHitWith.Equals(move.Name))
                 continue;
 
-            return (effect.Accuracy * 100) > UnityEngine.Random.Range(0, 100);
+            return (effect.Accuracy * 100) > Random.Range(0, 100);
         }
         return false;
     }
 
-
+    //Helper methods that describe the impact of the effects on the characters
     private void SetMoveEffectString()
     {
         if (_effect.Equals("MOVE"))
@@ -678,6 +716,20 @@ public class BattleActionEffect : MonoBehaviour
                 case MoveType.REGULAR:
                 case MoveType.PRIORITY:
                     _effectText.Add("It hit " + Target.Name + "!");
+                    if (move.DidCriticalDamage)
+                        _effectText.Add("It was a critical hit!");
+                    if (Target.BattleStatus.BlockStatus.RollBlock)
+                    {
+                        if (Target.BattleStatus.BlockStatus.BlockValue <= 5)
+                            _effectText.Add(Target.Name + " tried to block but failed!");
+                        else if (Target.BattleStatus.BlockStatus.BlockValue >= 11 && Target.BattleStatus.BlockStatus.BlockValue <= 15)
+                            _effectText.Add(Target.Name + " blocked some of the damage!");
+                        else if (Target.BattleStatus.BlockStatus.BlockValue >= 16 && Target.BattleStatus.BlockStatus.BlockValue <= 19)
+                            _effectText.Add(Target.Name + " blocked a lot of the damage!");
+                        else if (Target.BattleStatus.BlockStatus.BlockValue == 20)
+                            _effectText.Add(Target.Name + " came out practically unscathed!");
+                        Target.BattleStatus.BlockStatus.SetRollBlock(false);
+                    }
                     break;
                 case MoveType.HEALING:
                     _effectText.Add(_user.Name + " healed " + Target.Name + "!");
@@ -755,5 +807,4 @@ public class BattleActionEffect : MonoBehaviour
         // _textBox.StartNarration(_dialogueData);
         StartedDialogue = true;
     }
-
 }

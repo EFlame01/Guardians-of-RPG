@@ -49,7 +49,7 @@ public class BattleOptions : MonoBehaviour
     public void OnRunButtonPressed()
     {
         StartCoroutine(CloseBattleOptions());
-        Player.Instance().BattleStatus.SetRollRun(true);
+        Player.Instance().BattleStatus.RunStatus.SetRollRun(true);
         Player.Instance().BattleStatus.SetTurnStatus(TurnStatus.RUN);
         BattleSimStatus.EndPlayerOption = true;
     }

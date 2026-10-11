@@ -53,12 +53,7 @@ public class AfterRoundState : BattleState
 
     public override void Exit()
     {
-        // BattleSimStatus.AfterRoundStarted = false;
-        // BattleSimStatus.AfterRoundStarted = NextState switch
-        // {
-        //     Units.KNOCK_OUT_STATE => true,
-        //     _ => false
-        // };
+
     }
 
     private void DisplayAfterRoundEffect()

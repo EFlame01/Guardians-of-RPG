@@ -39,7 +39,7 @@ public class Frighten : StatusCondition
 
     public override void ImplementStatusCondition(Character character)
     {
-        character.BattleStatus.SetRollAdvantage(_rollAdvantage);
+        character.BaseStats.ChangeStat("Adv", _rollAdvantage);
         RemoveStatusCondition(character, Name);
     }
 }

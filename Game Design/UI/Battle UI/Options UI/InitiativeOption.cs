@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class InitiativeOption : MonoBehaviour
 {
     //serialized variable
     public Button NextButton;
+    public TextMeshProUGUI rollsLeftText;
 
     //private variable
     private int _rollInitiative;
@@ -17,6 +19,7 @@ public class InitiativeOption : MonoBehaviour
     public void OnEnable()
     {
         _rollInitiative = 0;
+        rollsLeftText.text = "(" + Player.Instance().BattleStatus.InitiativeStatus.InitiativeCount + " left)";
     }
 
     public void Update()
@@ -36,10 +39,11 @@ public class InitiativeOption : MonoBehaviour
         switch (value)
         {
             case 1:
-                Player.Instance().BattleStatus.SetRollInitiativeTrue();
+                Player.Instance().BattleStatus.InitiativeStatus.SetRollInitiative(true);
+                Player.Instance().BattleStatus.SetTurnStatus(TurnStatus.INITIATIVE);
                 break;
             case 2:
-                Player.Instance().BattleStatus.SetRollInitiativeFalse();
+                Player.Instance().BattleStatus.InitiativeStatus.SetRollInitiative(false);
                 break;
             default:
                 _rollInitiative = 0;

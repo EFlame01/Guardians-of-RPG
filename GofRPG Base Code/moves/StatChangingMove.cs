@@ -39,11 +39,11 @@ public class StatChangingMove : Move
     public override void UseMove(Character user, Character target)
     {
         base.UseMove(user, target);
-        for(int i = 0; i < _stats.Length; i++)
+        for (int i = 0; i < _stats.Length; i++)
             target.BaseStats.ChangeStat(_stats[i], _stages[i]);
     }
 
-    public override void UseMove(Character user, Character target, double epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplyer)
     {
         UseMove(user, target);
     }

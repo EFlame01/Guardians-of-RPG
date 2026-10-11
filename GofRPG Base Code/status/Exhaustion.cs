@@ -46,7 +46,7 @@ public class Exhaustion : StatusCondition
         switch (character.BattleStatus.ExhaustionLevel)
         {
             case Units.EXHAUSTION_LEVEL_1:
-                character.BattleStatus.SetRollAdvantage(-2);
+                character.BaseStats.ChangeStat("Adv", -2);
                 break;
             case Units.EXHAUSTION_LEVEL_2:
                 character.BaseStats.SetSpd((int)(character.BaseStats.Spd * Units.STAGE_NEG_2));

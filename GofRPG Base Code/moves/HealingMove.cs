@@ -38,7 +38,7 @@ public class HealingMove : Move
     ///<param name="user"> the user of the move. </param>
     ///<param name="target"> the target for the move. </param>
     ///<param name="epMultiplyer"> the elixir point multiplyer. </param>
-    public override void UseMove(Character user, Character target, double epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplyer)
     {
         base.UseMove(user, target, epMultiplyer);
         int healAmount = CalculateHealingPower(user, target, epMultiplyer);
@@ -65,11 +65,11 @@ public class HealingMove : Move
 
         healingPower += (int)(healingPower * Power);
 
-        if(user.Archetype.ClassName == ArchetypeName || user.Archetype.ClassName == ArchetypeName)
+        if (user.Archetype.ClassName == ArchetypeName || user.Archetype.ClassName == ArchetypeName)
             healingPower += (int)(healingPower * Units.STAB_DMG);
-        if(epMultiplyer != 0)
+        if (epMultiplyer != 0)
             healingPower += (int)(healingPower * epMultiplyer);
-        
+
         return Mathf.Clamp(healingPower, 1, max);
     }
 }

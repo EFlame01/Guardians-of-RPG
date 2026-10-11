@@ -41,15 +41,17 @@ public class BattleOrderBST
     /// in battle into a BST. The BST is arranged by 
     /// the following order:
     /// <list type="bullet">
+    ///     <item>INITIATIVE</item>
+    ///     <item>MOVE FIRST</item>
     ///     <item>RUNNING</item>
     ///     <item>ITEM SELECTION</item>
-    ///     <item>INITIATIVE</item>
     ///     <item>PROTECT MOVE</item>
     ///     <item>COUNTER MOVE</item>
     ///     <item>PRIORITY 1</item>
     ///     <item>PRIORITY 2</item>
     ///     <item>PRIORITY 3</item>
     ///     <item>FIGHT</item>
+    ///     <item>MOVE LAST</item>
     ///     <item>SKIP</item>
     ///     <item>NOTHING</item>
     /// </list>
@@ -92,18 +94,24 @@ public class BattleOrderBST
 
     private void DetermineTurn(Character c)
     {
-        if (c.BattleStatus.RollRun)
+        if (c.BattleStatus.InitiativeStatus.RollInitiative)
+        {
+            c.BattleStatus.SetTurnStatus(TurnStatus.INITIATIVE);
+            return;
+        }
+        else if (c.BattleStatus.RunStatus.RollRun)
         {
             c.BattleStatus.SetTurnStatus(TurnStatus.RUN);
+            return;
+        }
+        else if (!c.BattleStatus.InitiativeStatus.InitiativeLevel.Equals(TurnStatus.NOTHING))
+        {
+            c.BattleStatus.SetTurnStatus(c.BattleStatus.InitiativeStatus.InitiativeLevel);
             return;
         }
         if (c.BattleStatus.ChosenItem != null)
         {
             c.BattleStatus.SetTurnStatus(TurnStatus.ITEM);
-        }
-        else if (c.BattleStatus.RollInitiative)
-        {
-            c.BattleStatus.SetTurnStatus(TurnStatus.INITIATIVE);
         }
         else if (c.BattleStatus.ChosenMove != null)
         {
@@ -130,7 +138,6 @@ public class BattleOrderBST
                             c.BattleStatus.SetTurnStatus(TurnStatus.PRIORITY_3);
                             break;
                     }
-                    ;
                     break;
                 default:
                     c.BattleStatus.SetTurnStatus(TurnStatus.FIGHT);
@@ -164,7 +171,45 @@ public class BattleOrderBST
             AddBST(ref bst.left, c);
         else
         {
-            //determine who's faster
+            //check if they've both rolled for initiative
+            if (bst.character.BattleStatus.InitiativeStatus.CheckRollValue && c.BattleStatus.InitiativeStatus.CheckRollValue)
+            {
+                //determine who had the higher roll
+                if (bst.character.BattleStatus.InitiativeStatus.InitiativeValue > c.BattleStatus.InitiativeStatus.InitiativeValue)
+                {
+                    AddBST(ref bst.right, c);
+                    bst.character.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                    c.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                    return;
+                }
+                else if (bst.character.BattleStatus.InitiativeStatus.InitiativeValue < c.BattleStatus.InitiativeStatus.InitiativeValue)
+                {
+                    AddBST(ref bst.left, c);
+                    bst.character.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                    c.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                    return;
+                }
+                bst.character.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                c.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+            }
+            //if bst.character rolled for initiative, have them move first
+            else if (bst.character.BattleStatus.InitiativeStatus.CheckRollValue && !c.BattleStatus.InitiativeStatus.CheckRollValue)
+            {
+                AddBST(ref bst.right, c);
+                bst.character.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                c.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                return;
+            }
+            //if c rolled for initiative, have them move first
+            else if (!bst.character.BattleStatus.InitiativeStatus.CheckRollValue && c.BattleStatus.InitiativeStatus.CheckRollValue)
+            {
+                AddBST(ref bst.left, c);
+                bst.character.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                c.BattleStatus.InitiativeStatus.SetCheckRollValue(false);
+                return;
+            }
+
+            //if it falls to this condition statement, determine who's faster
             if (bst.character.BaseStats.Spd >= c.BaseStats.Spd)
                 AddBST(ref bst.right, c);
             else

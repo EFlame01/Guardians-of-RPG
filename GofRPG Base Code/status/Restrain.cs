@@ -42,13 +42,13 @@ public class Restrain : StatusCondition
         if (_roundsLeft <= 0)
         {
             character.BaseStats.ChangeStat("SPD", 0);
-            character.BattleStatus.SetCanEscape(true);
+            character.BattleStatus.RunStatus.SetCanEscape(true);
             RemoveStatusCondition(character, Name);
         }
         else
         {
             character.BaseStats.SetSpd(0);
-            character.BattleStatus.SetCanEscape(false);
+            character.BattleStatus.RunStatus.SetCanEscape(false);
             _roundsLeft--;
         }
     }

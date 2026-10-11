@@ -91,9 +91,9 @@ public class CharacterActionState : BattleState, IDialogue
             return;
         }
 
-        if(character.BattleStatus.StatusConditions.ContainsKey("FLINCH"))
+        if (character.BattleStatus.StatusConditions.ContainsKey("FLINCH"))
             character.BattleStatus.StatusConditions["FLINCH"].ImplementStatusCondition(character);
-        
+
         foreach (StatusCondition sc in character.BattleStatus.StatusConditions.Values)
         {
             if (sc != null && sc.Condition.Equals("DURING ROUND") && !sc.Name.Equals("FLINCH"))
@@ -110,16 +110,17 @@ public class CharacterActionState : BattleState, IDialogue
 
         _characterActionText = character.BattleStatus.TurnStatus switch
         {
-            TurnStatus.ITEM => character.Name + " uses the " + character.BattleStatus.ChosenItem.Name + "!",
-            TurnStatus.RUN => character.Name + " rolled to run!",
-            TurnStatus.MOVE_FIRST => character.Name + " was able to move first!",
             TurnStatus.INITIATIVE => character.Name + " rolled for initiative!",
+            TurnStatus.MOVE_FIRST => character.Name + " gains priority and uses " + character.BattleStatus.ChosenMove.Name + "!",
+            TurnStatus.RUN => character.Name + " rolled to run!",
+            TurnStatus.ITEM => character.Name + " uses the " + character.BattleStatus.ChosenItem.Name + "!",
             TurnStatus.PROTECT => character.Name + " uses " + character.BattleStatus.ChosenMove.Name + "!",
             TurnStatus.COUNTER => character.Name + " uses " + character.BattleStatus.ChosenMove.Name + "!",
             TurnStatus.PRIORITY_1 => character.Name + " uses " + character.BattleStatus.ChosenMove.Name + "!",
             TurnStatus.PRIORITY_2 => character.Name + " uses " + character.BattleStatus.ChosenMove.Name + "!",
             TurnStatus.PRIORITY_3 => character.Name + " uses " + character.BattleStatus.ChosenMove.Name + "!",
             TurnStatus.FIGHT => character.Name + " uses " + character.BattleStatus.ChosenMove.Name + "!",
+            TurnStatus.MOVE_LAST => character.Name + " uses " + character.BattleStatus.ChosenMove.Name + "!",
             TurnStatus.CANNOT_MOVE => character.BattleStatus.TurnStatusTag,
             _ => character.Name + " skips their turn..."
         };

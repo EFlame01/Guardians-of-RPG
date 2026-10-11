@@ -16,6 +16,7 @@ public class NPCLogic
     public List<Character> CharacterEnemies { get; private set; }
     public int NPCLevel { get; private set; }
 
+
     //Constructors
     public NPCLogic(Character c)
     {
@@ -59,6 +60,56 @@ public class NPCLogic
                 LevelZeroBehavior();
                 break;
         }
+
+        //TODO: new methods to add extra functionality 
+        //      to battle simulator
+        if (character.Level >= 0 && !character.Id.Contains("wild"))
+        {
+            DetermineRollInitiative();
+            DetermineRollBlock();
+        }
+    }
+
+    /// <summary>
+    /// DetermineRollInitiative is a method
+    /// that expands the odds that the NPC
+    /// chooses to roll for initiative or not.
+    /// </summary>
+    private void DetermineRollInitiative()
+    {
+        int chanceBoost = 0;
+        if (character.BaseStats.Hp == character.BaseStats.FullHp)
+            chanceBoost += 50;
+        else if (character.BaseStats.Hp == character.BaseStats.FullHp / 2)
+            chanceBoost += 100;
+        else if (character.BaseStats.Hp <= character.BaseStats.FullHp / 4)
+            chanceBoost += 50;
+
+        int chanceToRoll = Random.Range(0, 100) + 1 + chanceBoost;
+        if (chanceToRoll > 100)
+            character.BattleStatus.InitiativeStatus.SetRollInitiative(true);
+    }
+
+    /// <summary>
+    /// DetermineRollBlock is a method
+    /// that expands the odds that the NPC
+    /// chooses to roll to block or not.
+    /// </summary>
+    private void DetermineRollBlock()
+    {
+        int chanceThreashold;
+
+        if (character.BaseStats.Hp == character.BaseStats.FullHp)
+            chanceThreashold = 50;
+        else if (character.BaseStats.Hp == character.BaseStats.FullHp / 2)
+            chanceThreashold = 25;
+        else if (character.BaseStats.Hp <= character.BaseStats.FullHp / 4)
+            chanceThreashold = 50;
+        else
+            chanceThreashold = 100;
+
+        if (chanceThreashold <= Random.Range(0, 100) + 1)
+            character.BattleStatus.BlockStatus.SetRollBlock(true);
     }
 
     /// <summary>

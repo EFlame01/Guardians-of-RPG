@@ -60,10 +60,6 @@ public class ActionEffectState2 : BattleState
 
     private void CheckStatus()
     {
-        // Debug.Log("Checking Status...");
-        // TextBoxBattle.KeepTextBoxOpened = false;
-        // TextBoxBattle.EndNarrationNow = true;
-
         if (_battleActionEffect.Target != null && _battleActionEffect.Target.BaseStats.Hp == 0)
             BattleSimStatus.AddToGraveYard(_battleActionEffect.Target);
 

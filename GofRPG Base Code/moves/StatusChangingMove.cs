@@ -10,7 +10,7 @@ public class StatusChangingMove : Move
     public StatusCondition _statusCondition;
 
     //Constructor
-    public StatusChangingMove(string name, string description, double power, double accuracy, string archetypeName, int level, MoveTarget target, MoveType type,  double elixirPoints, Effect[] secondaryEffects, StatusCondition statusCondition)
+    public StatusChangingMove(string name, string description, double power, double accuracy, string archetypeName, int level, MoveTarget target, MoveType type, double elixirPoints, Effect[] secondaryEffects, StatusCondition statusCondition)
     {
         Name = name;
         Description = description;
@@ -25,7 +25,7 @@ public class StatusChangingMove : Move
 
         _statusCondition = statusCondition;
     }
-    
+
     ///<summary>
     /// Loops though the list of status conditions
     /// and applies them to the <paramref name="target"/>. If the status condition
@@ -37,11 +37,11 @@ public class StatusChangingMove : Move
     public override void UseMove(Character user, Character target)
     {
         base.UseMove(user, target);
-        if(StatusCondition.CanStackStatusCondition(target, _statusCondition.Name))
+        if (StatusCondition.CanStackStatusCondition(target, _statusCondition.Name))
             target.BattleStatus.StatusConditions.Add(_statusCondition.Name, _statusCondition);
     }
 
-    public override void UseMove(Character user, Character target, double epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplyer)
     {
         UseMove(user, target);
     }

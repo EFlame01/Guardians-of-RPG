@@ -45,7 +45,7 @@ public class ProtectMove : Move
     public override void UseMove(Character user, Character target)
     {
         base.UseMove(user, target);
-        if(ProtectMoveWork(target))
+        if (ProtectMoveWork(target))
         {
             target.BattleStatus.SetProtectionStatus(_protectType);
             _tempAccuracy *= _successionRate;
@@ -54,7 +54,7 @@ public class ProtectMove : Move
             _tempAccuracy = Accuracy;
     }
 
-    public override void UseMove(Character user, Character target, global::System.Double epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplyer)
     {
         UseMove(user, target);
     }
@@ -73,10 +73,10 @@ public class ProtectMove : Move
     /// <returns><c>TRUE</c> if it works. <c>FALSE</c> if it does not work.</returns>
     private bool ProtectMoveWork(Character character)
     {
-        double percent = Random.Range(1, 100)/100;
-        if(_tempAccuracy < percent)
+        double percent = Random.Range(1, 100) / 100;
+        if (_tempAccuracy < percent)
             return false;
-        if(character.BattleStatus.ProtectionStatus != "NONE")
+        if (character.BattleStatus.ProtectionStatus != "NONE")
             return false;
         return true;
     }

@@ -154,7 +154,7 @@ public class TargetOption : MonoBehaviour
     {
         Player player = Player.Instance();
         player.BattleStatus.ChosenTargets.AddRange(targets);
-        Options.OnNextButtonPressed();
+        // Options.OnNextButtonPressed();
     }
 
     private void ClearTargets()

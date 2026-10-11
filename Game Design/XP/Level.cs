@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,18 +33,25 @@ public class Level
 
     public static void LevelUpPlayer()
     {
-        Player player = Player.Instance();
+        try
+        {
+            Player player = Player.Instance();
 
-        if (!CanLevelUp())
-            return;
+            if (!CanLevelUp())
+                return;
 
-        player.SetLevel(player.Level + 1);
-        player.SetCurrentXP(player.CurrXP - player.LimXP);
-        player.SetLimitXP((int)(Mathf.Pow(player.Level, (float)Units.STAGE_POS_1) * Units.STAGE_POS_1));
-        player.BaseStats.LevelUpStats(player.Archetype.ChooseStatBoostRandomly());
+            player.SetLevel(player.Level + 1);
+            player.SetCurrentXP(player.CurrXP - player.LimXP);
+            player.SetLimitXP((int)(Mathf.Pow(player.Level, (float)Units.STAGE_POS_1) * Units.STAGE_POS_1));
+            player.BaseStats.LevelUpStats(player.Archetype.ChooseStatBoostRandomly());
 
-        if (CanLevelUp())
-            LevelUpPlayer();
+            if (CanLevelUp())
+                LevelUpPlayer();
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"WARNING: {e.Message}");
+        }
     }
 
     public static Move[] DetermineLearnedMoves()

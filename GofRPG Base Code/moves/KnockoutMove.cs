@@ -21,7 +21,7 @@ public class KnockoutMove : Move
         EP = elixirPoints;
         SecondaryEffects = secondaryEffects;
     }
-    
+
     ///<summary>
     /// Sets the <paramref name="target"/>'s base hp to 0.
     /// There will be exceptions if the <paramref name="target"/>
@@ -37,7 +37,7 @@ public class KnockoutMove : Move
         target.BaseStats.SetHp(0);
     }
 
-    public override void UseMove(Character user, Character target, double epMultiplyer)
+    public override void UseMove(Character user, Character target, int epMultiplyer)
     {
         UseMove(user, target);
     }

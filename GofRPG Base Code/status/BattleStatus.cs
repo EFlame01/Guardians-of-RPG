@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 
 ///<summary>
@@ -14,21 +13,17 @@ public class BattleStatus
     public string ProtectionStatus { get; private set; }
     public TurnStatus TurnStatus { get; private set; }
     public string TurnStatusTag { get; private set; }
-
     public bool Ability { get; private set; }
     public bool ProtectBreaker { get; private set; }
     public Dictionary<string, bool> Immunities { get; private set; }
     public int RechargeTime { get; private set; }
     public bool IncludeStab { get; private set; }
     public int ExhaustionLevel { get; private set; }
-    public double RollAdvantage { get; private set; }
-    public bool CanEscape { get; private set; }
-    public bool RollInitiative { get; private set; }
-    public int InitiativeCount { get; private set; }
-    public bool RollRun { get; private set; }
+    public InitiativeStatus InitiativeStatus { get; private set; }
+    public BlockStatus BlockStatus { get; private set; }
+    public RunStatus RunStatus { get; private set; }
     public bool SkipTurn { get; private set; }
     public bool RoundCompleted { get; private set; }
-    private int _rollAdvStage = 0;
 
     //Constructor
     public BattleStatus()
@@ -54,9 +49,9 @@ public class BattleStatus
             { "STATUS_CONDITION", false }
         };
         ExhaustionLevel = 0;
-        RollAdvantage = Units.STAGE_0;
-        CanEscape = true;
-        InitiativeCount = 3;
+        InitiativeStatus = new InitiativeStatus();
+        BlockStatus = new BlockStatus();
+        RunStatus = new RunStatus();
     }
 
     //Getters and Setters
@@ -102,61 +97,6 @@ public class BattleStatus
         };
 
     }
-    public void SetRollAdvantage(int stage)
-    {
-        if (_rollAdvStage + stage > 6)
-            RollAdvantage = Units.STAGE_POS_6;
-        else if (_rollAdvStage + stage < 6)
-            RollAdvantage = Units.STAGE_NEG_6;
-        else
-        {
-            RollAdvantage = _rollAdvStage + stage switch
-            {
-                6 => Units.STAGE_POS_6,
-                5 => Units.STAGE_POS_5,
-                4 => Units.STAGE_POS_4,
-                3 => Units.STAGE_POS_3,
-                2 => Units.STAGE_POS_2,
-                1 => Units.STAGE_POS_1,
-                -6 => Units.STAGE_POS_6,
-                -5 => Units.STAGE_NEG_5,
-                -4 => Units.STAGE_NEG_4,
-                -3 => Units.STAGE_NEG_3,
-                -2 => Units.STAGE_NEG_2,
-                -1 => Units.STAGE_NEG_1,
-                _ => Units.STAGE_0,
-            };
-        }
-    }
-    public void SetCanEscape(bool canEscape)
-    {
-        CanEscape = canEscape;
-    }
-
-    public bool CanRollInitiative()
-    {
-        return InitiativeCount > 0;
-    }
-
-    public void SetRollInitiativeTrue()
-    {
-        if (!CanRollInitiative())
-            return;
-
-        RollInitiative = true;
-        // InitiativeCount--;
-    }
-
-    public void SetRollInitiativeFalse()
-    {
-        RollInitiative = false;
-    }
-
-    public void SetRollRun(bool value)
-    {
-        RollRun = value;
-    }
-
     public void SetRoundCompleted(bool value)
     {
         RoundCompleted = value;
@@ -164,7 +104,7 @@ public class BattleStatus
 
     ///<summary>
     /// Resets the battle
-    /// status of the player, but does not
+    /// status of the <c>Character</c>, but does not
     /// remove status conditions that are
     /// BURN, POISON, or STUN from the character.
     ///</summary>
@@ -184,10 +124,15 @@ public class BattleStatus
         StatusConditions.Remove("RESTRAIN");
         StatusConditions.Remove("SLEEP");
         ExhaustionLevel = 0;
-        CanEscape = true;
-        SetRollAdvantage(0);
+        InitiativeStatus = new InitiativeStatus();
+        BlockStatus = new BlockStatus();
+        RunStatus = new RunStatus();
     }
 
+    /// <summary>
+    /// Resets the battle status for the
+    /// <c>Character</c> for the round.
+    /// </summary>
     public void ResetRound()
     {
         ChosenItem = null;

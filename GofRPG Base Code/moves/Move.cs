@@ -17,6 +17,7 @@ public class Move
     public MoveType Type { get; protected set; }
     public double EP { get; protected set; }
     public Effect[] SecondaryEffects { get; protected set; }
+    public bool DidCriticalDamage { get; private set; }
 
     ///<summary>
     /// Let's the <paramref name="user"/> perform
@@ -30,7 +31,7 @@ public class Move
         // user.BaseStats.SetElx(user.BaseStats.Elx - (int)EP);
         return;
     }
-    public virtual void UseMove(Character user, Character target, double epMultiplyer)
+    public virtual void UseMove(Character user, Character target, int epMultiplyer)
     {
         // user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplyer));
         return;
@@ -77,32 +78,18 @@ public class Move
     ///<param name="user"> the user of the move.</param>
     ///<param name="target"> the target for the move.</param>
     ///<returns> The calculated damage for said move.</returns>
-    protected int CalculateDamage(Character user, Character target, double epMultiplyer)
+    protected int CalculateDamage(Character user, Character target, int epMultiplyer)
     {
-        double critPercent = (double)((Random.Range(0, 100) + 1) / 100.0);
-        int userAtk = user.BaseStats.Atk;
-        int targetDef = target.BaseStats.Def;
+        int userAtk = UpdateAtkForCriticalHit(user);
+        int targetDef = UpdateDefForBlock(target);
         int dmg;
-        double newPower = Power;
-        double chanceOfCrit = user.BaseStats.Crt;
-        int rollDef = Random.Range(1, 20) + 1;
+        double newPower = UpdatePower(user, epMultiplyer);
 
-        if (user.Archetype.ClassName == ArchetypeName || user.Archetype.ArchetypeName == ArchetypeName)
-            newPower += Power * Units.STAB_DMG;
-        if (chanceOfCrit >= critPercent)
-            newPower += Mathf.Ceil((float)(Power * Units.CRIT_DMG));
-        if (epMultiplyer > 0)
-            newPower += Power * epMultiplyer;
+        //Boost move POWER based on STAB and EPM
 
-        if (rollDef <= 5)
-            targetDef -= (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG));
-        if (rollDef <= 10)
-            targetDef += 0;
-        if (rollDef <= 15)
-            targetDef += (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG));
-        if (rollDef == 20)
-            targetDef *= 2;
 
+
+        //Calculate damage by taking (the attack) - (the defense)
         userAtk = (int)(userAtk * newPower);
         dmg = Mathf.Clamp(userAtk - targetDef, 1, userAtk);
         return dmg;
@@ -156,5 +143,59 @@ public class Move
     public void UpdateElixir(Character user, double epMultiplyer)
     {
         user.BaseStats.SetElx(user.BaseStats.Elx - (int)(EP * epMultiplyer));
+    }
+
+    private double UpdatePower(Character user, int epMultiplyer)
+    {
+        double newPower = Power;
+
+        if (user.Archetype != null && (user.Archetype.ClassName == ArchetypeName || user.Archetype.ArchetypeName == ArchetypeName))
+            newPower += newPower * Units.STAB_DMG;
+        if (epMultiplyer > 0 && EP > 0)
+            newPower += newPower * (epMultiplyer / EP);
+
+        return newPower;
+    }
+
+    private int UpdateAtkForCriticalHit(Character user)
+    {
+        int critRollValue = DiceRolls.GetInstance().RollD8(user);
+        int userAtk = user.BaseStats.Atk;
+        if (critRollValue == 1)
+        {
+            userAtk = (int)Mathf.Ceil(user.BaseStats.Atk * (float)Units.STAGE_NEG_1);
+            DidCriticalDamage = false;
+        }
+        else if (critRollValue == 8)
+        {
+            userAtk += (int)Mathf.Ceil(userAtk * (float)Units.CRIT_DMG);
+            DidCriticalDamage = true;
+        }
+        else
+            DidCriticalDamage = false;
+        return userAtk;
+    }
+
+    private int UpdateDefForBlock(Character target)
+    {
+        int targetDef = target.BaseStats.Def;
+        int blockRoll = DiceRolls.GetInstance().RollD20(target);
+
+        if (target.BattleStatus.BlockStatus.RollBlock)
+        {
+            if (blockRoll <= 5)
+                targetDef -= (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG));
+            else if (blockRoll >= 6 && blockRoll <= 10)
+                targetDef += (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.STAGE_0));
+            else if (blockRoll >= 11 && blockRoll <= 15)
+                targetDef += (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.CRIT_DMG));
+            else if (blockRoll >= 16 && blockRoll <= 19)
+                targetDef += (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.STAGE_POS_1));
+            else if (blockRoll == 20)
+                targetDef += (int)Mathf.Ceil((float)(target.BaseStats.Def * Units.STAGE_POS_2));
+
+            // target.BattleStatus.SetRollBlockFalse();
+        }
+        return targetDef;
     }
 }

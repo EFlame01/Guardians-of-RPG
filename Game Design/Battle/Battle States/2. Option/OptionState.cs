@@ -34,6 +34,7 @@ public class OptionState : BattleState
         TextBoxBattle.KeepTextBoxOpened = false;
         TextBoxBattle.EndNarrationNow = true;
         BattleSimStatus.RoundStarted = false;
+        BattleSimStatus.ResetOptionForPlayer();
         InitializeBattleOptions();
     }
 
@@ -41,22 +42,6 @@ public class OptionState : BattleState
     {
         if (BattleSimStatus.EndPlayerOption)
         {
-            //TODO: Add this once Roll Mechanic is implemented
-            // Player player = Player.Instance();
-
-            // if(player.BattleStatus.RollInitiative)
-            // {
-            //     player.BattleStatus.SetRollInitiativeFalse();
-            //     NextState = "ROLL INITIATIVE STATE";
-            // }
-            // else if(player.BattleStatus.RollRun)
-            // {
-            //     player.BattleStatus.SetRollRun(false);
-            //     NextState = "ROLL RUN STATE";
-            // }
-            // else
-            //    NextState = "CHARACTER ACTION STATE";
-
             NextState = Units.CHARACTER_ACTION_STATE;
         }
     }
